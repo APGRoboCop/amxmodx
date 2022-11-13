@@ -300,7 +300,7 @@ size_t CAmxxReader::GetBufferSize()
 		m_pFile = NULL; \
 		delete[] tempBuffer;\
 		return m_Status; \
-	}
+	}*
 CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 {
 	if (!m_pFile)
@@ -312,7 +312,8 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		fseek(m_pFile, 0, SEEK_END);
 		long filesize = ftell(m_pFile);
 		rewind(m_pFile);
-		DATAREAD_RELEASE(buffer, 1, filesize);
+		//DATAREAD_RELEASE(buffer, 1, filesize);
+		DATAREAD(buffer, 1, filesize);
 		m_Status = Err_None;
 		
 		return m_Status;
@@ -322,7 +323,8 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		char *tempBuffer = new char[m_SectionLength + 1];
 		fseek(m_pFile, pe->offs, SEEK_SET);
-		DATAREAD_RELEASE((void *)tempBuffer, 1, m_SectionLength);
+		//DATAREAD_RELEASE((void *)tempBuffer, 1, m_SectionLength);
+		DATAREAD((void *)tempBuffer, 1, m_SectionLength);
 		uLongf destLen = GetBufferSize();
 		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
 		delete [] tempBuffer;
