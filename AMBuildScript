@@ -195,7 +195,7 @@ class AMXXConfig(object):
 
   def configure_gcc(self, cxx):
     cxx.cflags += [
-      '-pipe',
+      #'-pipe',
       '-fno-strict-aliasing',
       '-Wall',
       #'-Werror',
