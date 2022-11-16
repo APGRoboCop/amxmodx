@@ -71,7 +71,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	}
 
 	mint32_t magic;
-	DATAREAD(&magic, sizeof(magic), 1);
+	DATAREAD(&magic, sizeof(magic), 1)
 
 	m_OldFile = false;
 	
@@ -86,8 +86,8 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	}
 	else if (magic == MAGIC_HEADER2)
 	{
-		DATAREAD(&m_Bh.version, sizeof(int16_t), 1);
-		
+		DATAREAD(&m_Bh.version, sizeof(int16_t), 1)
+
 		if (m_Bh.version > MAGIC_VERSION)
 		{
 			m_Status = Err_OldFile;
@@ -98,7 +98,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		}
 		
 		m_AmxxFile = true;
-		DATAREAD(&m_Bh.numPlugins, sizeof(mint8_t), 1);
+		DATAREAD(&m_Bh.numPlugins, sizeof(mint8_t), 1)
 		m_Bh.plugins = new PluginEntry[m_Bh.numPlugins];
 		PluginEntry *pe;
 		m_SectionHdrOffset = 0;
@@ -107,11 +107,11 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		for (mint8_t i = 0; i < m_Bh.numPlugins; i++)
 		{
 			pe = &(m_Bh.plugins[(unsigned)i]);
-			DATAREAD(&pe->cellsize, sizeof(mint8_t), 1);
-			DATAREAD(&pe->disksize, sizeof(int32_t), 1);
-			DATAREAD(&pe->imagesize, sizeof(int32_t), 1);
-			DATAREAD(&pe->memsize, sizeof(int32_t), 1);
-			DATAREAD(&pe->offs, sizeof(int32_t), 1);
+			DATAREAD(&pe->cellsize, sizeof(mint8_t), 1)
+			DATAREAD(&pe->disksize, sizeof(int32_t), 1)
+			DATAREAD(&pe->imagesize, sizeof(int32_t), 1)
+			DATAREAD(&pe->memsize, sizeof(int32_t), 1)
+			DATAREAD(&pe->offs, sizeof(int32_t), 1)
 		}
 		
 		for (mint8_t i = 0; i < m_Bh.numPlugins; i++)
@@ -141,8 +141,8 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 	{
 		// try to find the section
 		mint8_t numOfPlugins;
-		DATAREAD(&numOfPlugins, sizeof(numOfPlugins), 1);
-	
+		DATAREAD(&numOfPlugins, sizeof(numOfPlugins), 1)
+
 		TableEntry entry;
 	
 		m_SectionHdrOffset = 0;
@@ -150,7 +150,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		
 		for (i = 0; i < static_cast<int>(numOfPlugins); ++i)
 		{
-			DATAREAD(&entry, sizeof(entry), 1);
+			DATAREAD(&entry, sizeof(entry), 1)
 			if (entry.cellSize == m_CellSize)
 			{
 				m_SectionHdrOffset = ftell(m_pFile) - sizeof(entry);
@@ -171,7 +171,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		{
 			// there is a next section
 			TableEntry nextEntry;
-			DATAREAD(&nextEntry, sizeof(nextEntry), 1);
+			DATAREAD(&nextEntry, sizeof(nextEntry), 1)
 			m_SectionLength = nextEntry.offset - entry.offset;
 		} else {
 			fseek(m_pFile, 0, SEEK_END);
@@ -253,7 +253,7 @@ size_t CAmxxReader::GetBufferSize()
 	{
 		rewind(m_pFile);
 		AMX_HEADER hdr;
-		DATAREAD(&hdr, sizeof(hdr), 1);
+		DATAREAD(&hdr, sizeof(hdr), 1)
 		fseek(m_pFile, save, SEEK_SET);
 		
 		return hdr.stp;
@@ -271,7 +271,7 @@ size_t CAmxxReader::GetBufferSize()
 	fseek(m_pFile, m_SectionHdrOffset, SEEK_SET);
 
 	TableEntry entry;
-	DATAREAD(&entry, sizeof(entry), 1);
+	DATAREAD(&entry, sizeof(entry), 1)
 	fseek(m_pFile, save, SEEK_SET);
 	
 	return entry.origSize + 1;			// +1 : safe
@@ -312,7 +312,7 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		fseek(m_pFile, 0, SEEK_END);
 		long filesize = ftell(m_pFile);
 		rewind(m_pFile);
-		DATAREAD(buffer, 1, filesize);
+		DATAREAD(buffer, 1, filesize)
 		m_Status = Err_None;
 		
 		return m_Status;
@@ -322,7 +322,7 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		char *tempBuffer = new char[m_SectionLength + 1];
 		fseek(m_pFile, pe->offs, SEEK_SET);
-		DATAREAD_RELEASE((void *)tempBuffer, 1, m_SectionLength);
+		DATAREAD_RELEASE((void *)tempBuffer, 1, m_SectionLength)
 		uLongf destLen = GetBufferSize();
 		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
 		delete [] tempBuffer;
@@ -340,13 +340,13 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		fseek(m_pFile, m_SectionHdrOffset, SEEK_SET);
 		// go to the offset
 		TableEntry entry;
-		DATAREAD(&entry, sizeof(entry), 1);
+		DATAREAD(&entry, sizeof(entry), 1)
 		fseek(m_pFile, entry.offset, SEEK_SET);
 		uLongf destLen = GetBufferSize();
 		// read the data to a temporary buffer
 		char *tempBuffer = new char[m_SectionLength + 1];
 		//fread(tempBuffer, sizeof(char), m_SectionLength, m_pFile);
-		DATAREAD_RELEASE((void*)tempBuffer, 1, m_SectionLength);
+		DATAREAD_RELEASE((void*)tempBuffer, 1, m_SectionLength)
 		// decompress
 		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
 		delete [] tempBuffer;

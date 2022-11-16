@@ -304,8 +304,6 @@ void OnPluginsLoaded()
 	g_pFunctionTable->pfnSpawn = NULL;
 
 	g_lasttime = 0.0f;
-
-	return;
 }
 
 void StartFrame()
@@ -419,7 +417,7 @@ bool AtomicResult::FieldNameToNum(const char *name, unsigned int *columnId)
 {
 	for (unsigned int i=0; i<m_FieldCount; i++)
 	{
-		assert(m_Table[i] != NULL);
+		assert(m_Table[i] != nullptr);
 		if (strcmp(m_Table[i]->chars(), name) == 0)
 		{
 			if (columnId)
@@ -438,7 +436,7 @@ const char *AtomicResult::FieldNumToName(unsigned int num)
 	if (num >= m_FieldCount)
 		return nullptr;
 
-	assert(m_Table[num] != NULL);
+	assert(m_Table[num] != nullptr);
 
 	return m_Table[num]->chars();
 }
@@ -479,7 +477,7 @@ const char *AtomicResult::GetString(unsigned int columnId)
 
 	size_t idx = (m_CurRow * m_FieldCount) + columnId;
 
-	assert(m_Table[idx] != NULL);
+	assert(m_Table[idx] != nullptr);
 
 	return m_Table[idx]->chars();
 }

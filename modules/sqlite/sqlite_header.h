@@ -64,6 +64,6 @@ extern AMX_NATIVE_INFO g_ThreadSqlNatives[];
 extern AMX_NATIVE_INFO g_OldCompatNatives[];
 extern MainThreader g_Threader;
 extern ThreadWorker *g_pWorker;
-extern SourceMod::SqliteDriver g_Sqlite;
+extern SqliteDriver g_Sqlite;
 
 #endif //_INCLUDE_AMXMODX_MYSQL2_HEADER_H

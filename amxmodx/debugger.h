@@ -45,9 +45,9 @@ public:
 		void StepI(cell frm, cell cip);
 		void Reset();
 		void Clear();
-		
-		Debugger::Tracer::trace_info *GetStart() const;
-		Debugger::Tracer::trace_info *GetEnd() const;
+
+		trace_info*GetStart() const;
+		trace_info*GetEnd() const;
 	public:
 		int m_Error;
 	private:
@@ -75,13 +75,13 @@ public:
 	void SetTracedError(int error);
 
 	//Get the first trace info of the call stack
-	Debugger::Tracer::trace_info *GetTraceStart() const;
+	Tracer::trace_info *GetTraceStart() const;
 
 	//Get extra info about the call stack
-	bool GetTraceInfo(Debugger::Tracer::trace_info *pTraceInfo, long &line, const char *&function, const char *&file);
+	bool GetTraceInfo(Tracer::trace_info *pTraceInfo, long &line, const char *&function, const char *&file);
 
 	//Get the next trace in the call stack, NULL if none
-	Debugger::Tracer::trace_info *GetNextTrace(Debugger::Tracer::trace_info *pTraceInfo);
+	Tracer::trace_info *GetNextTrace(Tracer::trace_info *pTraceInfo);
 
 	//Returns true if an error exists
 	bool ErrorExists();

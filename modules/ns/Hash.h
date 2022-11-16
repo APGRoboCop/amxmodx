@@ -120,9 +120,6 @@ public:
 		m_HashBuckets[bucketnum].append(hash);
 		m_KeyBuckets[bucketnum].append(key);
 		m_DataBuckets[bucketnum].append(value);
-
-		return;
-
 	}
 	inline D& lookup_or_add(const K& key)
 	{

@@ -284,7 +284,7 @@ void CFlagManager::WriteCommands()
 	if (TempStat.st_mtime != m_Stat.st_mtime)
 	{
 		NeedToRead=1;
-	};
+	}
 
 
 	File = fopen(GetFile(), "a");

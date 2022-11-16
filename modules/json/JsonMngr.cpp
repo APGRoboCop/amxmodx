@@ -84,7 +84,7 @@ void JSONMngr::_FreeHandle(ke::AutoPtr<JSONHandle> &ptr)
 
 void JSONMngr::Free(JS_Handle id)
 {
-	auto handle = ke::Move(m_Handles[id]);
+	auto handle = Move(m_Handles[id]);
 
 	if (!handle)
 	{

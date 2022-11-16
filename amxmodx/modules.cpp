@@ -1607,7 +1607,7 @@ const char *g_LastRequestedFunc = nullptr;
 
 void MNF_RegisterFunction(void *pfn, const char *description)
 {
-	REGISTER_FUNC(description, pfn);
+	REGISTER_FUNC(description, pfn)
 }
 
 void *MNF_RegisterFunctionEx(void *pfn, const char *description)
@@ -1761,9 +1761,9 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("LogError", LogError)
 	REGISTER_FUNC("MergeDefinitionFile", MNF_MergeDefinitionFile)
 	REGISTER_FUNC("Format", MNF_Format)
-	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction);
-	REGISTER_FUNC("RegisterFunctionEx", MNF_RegisterFunctionEx);
-	REGISTER_FUNC("GetConfigManager", MNF_GetConfigManager);
+	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction)
+	REGISTER_FUNC("RegisterFunctionEx", MNF_RegisterFunctionEx)
+	REGISTER_FUNC("GetConfigManager", MNF_GetConfigManager)
 
 	// Amx scripts loading / unloading / managing
 	REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
@@ -1785,7 +1785,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
 	REGISTER_FUNC("GetAmxAddr", get_amxaddr)
 	REGISTER_FUNC("GetAmxVectorNull", get_amxvector_null)
-	REGISTER_FUNC("AmxReregister", amx_Reregister);
+	REGISTER_FUNC("AmxReregister", amx_Reregister)
 
 	// other amx stuff
 	REGISTER_FUNC("amx_Exec", amx_Exec)
@@ -1837,16 +1837,16 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("SetPlayerTeamInfo", MNF_SetPlayerTeamInfo)
 	REGISTER_FUNC("PlayerPropAddr", MNF_PlayerPropAddr)
 
-	REGISTER_FUNC("RegAuthFunc", MNF_RegAuthorizeFunc);
-	REGISTER_FUNC("UnregAuthFunc", MNF_UnregAuthorizeFunc);
+	REGISTER_FUNC("RegAuthFunc", MNF_RegAuthorizeFunc)
+	REGISTER_FUNC("UnregAuthFunc", MNF_UnregAuthorizeFunc)
 
-	REGISTER_FUNC("FindLibrary", MNF_FindLibrary);
-	REGISTER_FUNC("AddLibraries", MFN_AddLibraries);
-	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries);
-	REGISTER_FUNC("OverrideNatives", MNF_OverrideNatives);
-	REGISTER_FUNC("GetLocalInfo", MNF_GetLocalInfo);
+	REGISTER_FUNC("FindLibrary", MNF_FindLibrary)
+	REGISTER_FUNC("AddLibraries", MFN_AddLibraries)
+	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries)
+	REGISTER_FUNC("OverrideNatives", MNF_OverrideNatives)
+	REGISTER_FUNC("GetLocalInfo", MNF_GetLocalInfo)
 
-	REGISTER_FUNC("MessageBlock", MNF_MessageBlock);
+	REGISTER_FUNC("MessageBlock", MNF_MessageBlock)
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

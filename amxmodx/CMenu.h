@@ -85,10 +85,10 @@ public:
 	inline iterator begin() const { return iterator(headcmd); }
 	inline iterator end() const { return iterator(nullptr); }
 
-	MenuMngr::iterator SetWatchIter(MenuMngr::iterator iter);
-	inline MenuMngr::iterator GetWatchIter() { return m_watch_iter; }
+	iterator SetWatchIter(iterator iter);
+	inline iterator GetWatchIter() { return m_watch_iter; }
 private:
-	MenuMngr::iterator m_watch_iter;
+	iterator m_watch_iter;
 };
 
 extern MenuMngr g_menucmds;

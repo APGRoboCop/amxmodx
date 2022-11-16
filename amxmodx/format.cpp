@@ -136,7 +136,7 @@ const char *translate(AMX *amx, const char *lang, const char *key)
 		{
 			ke::AString langName(pLangName);
 
-			auto &err = BadLang_Table.AltFindOrInsert(ke::Move(langName));
+			auto &err = BadLang_Table.AltFindOrInsert(Move(langName));
 
 			if (err.last + 120.0f < gpGlobals->time)
 			{
@@ -620,46 +620,46 @@ reswitch:
 			width = n;
 			goto reswitch;
 		case 'c':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			*buf_p++ = static_cast<D>(*get_amxaddr(amx, params[arg]));
 			llen--;
 			arg++;
 			break;
 		case 'b':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			AddBinary(&buf_p, llen, *get_amxaddr(amx, params[arg]), width, flags);
 			arg++;
 			break;
 		case 'd':
 		case 'i':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			AddInt(&buf_p, llen, *get_amxaddr(amx, params[arg]), width, flags);
 			arg++;
 			break;
 		case 'u':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			AddUInt(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
 		case 'f':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			AddFloat(&buf_p, llen, amx_ctof(*get_amxaddr(amx, params[arg])), width, prec, flags);
 			arg++;
 			break;
 		case 'X':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			flags |= UPPERDIGITS;
 			AddHex(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
 		case 'x':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			AddHex(&buf_p, llen, static_cast<unsigned int>(*get_amxaddr(amx, params[arg])), width, flags);
 			arg++;
 			break;
 		case 'a':
 			{
-				CHECK_ARGS(0);
+				CHECK_ARGS(0)
 				// %a is passed a pointer directly to a cell string.
 				cell* ptr=reinterpret_cast<cell*>(*get_amxaddr(amx, params[arg]));
 				if (!ptr)
@@ -673,7 +673,7 @@ reswitch:
 				break;
 			}
 		case 's':
-			CHECK_ARGS(0);
+			CHECK_ARGS(0)
 			AddString(&buf_p, llen, get_amxaddr(amx, params[arg]), width, prec);
 			arg++;
 			break;
@@ -684,7 +684,7 @@ reswitch:
 				int len;
 				if (ch == 'L')
 				{
-					CHECK_ARGS(1);
+					CHECK_ARGS(1)
 					auto currParam = params[arg++];
 					lang = playerlang(*get_amxaddr(amx, currParam));
 					if (!lang)
@@ -692,7 +692,7 @@ reswitch:
 				}
 				else
 				{
-					CHECK_ARGS(0);
+					CHECK_ARGS(0)
 					lang = playerlang(g_langMngr.GetDefLang());
 				}
 				const char *key = get_amxstring(amx, params[arg++], 3, len);
@@ -710,7 +710,7 @@ reswitch:
 			}
 		case 'N':
 			{
-				CHECK_ARGS(0);
+				CHECK_ARGS(0)
 				cell *addr = get_amxaddr(amx, params[arg]);
 				char buffer[255];
 				if (*addr)
@@ -748,7 +748,7 @@ reswitch:
 			}
 		case 'n':
 			{
-				CHECK_ARGS(0);
+				CHECK_ARGS(0)
 				cell *addr = get_amxaddr(amx, params[arg]);
 				const char *name = "Console";
 

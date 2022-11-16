@@ -618,7 +618,7 @@ void C_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 
 	for (int i = 0; g_user_msg[i].name;	++i)
 	{
-		if ((*g_user_msg[i].id == 0) && (id = GET_USER_MSG_ID(PLID, g_user_msg[i].name, NULL)) != 0)
+		if ((*g_user_msg[i].id == 0) && (id = GET_USER_MSG_ID(PLID, g_user_msg[i].name, nullptr)) != 0)
 		{
 			*g_user_msg[i].id =	id;
 
@@ -1676,7 +1676,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	// This will also call modules Meta_Query and Meta_Attach functions
 	loadModules(get_localinfo("amxx_modules", "addons/amxmodx/configs/modules.ini"), now);
 
-	GET_HOOK_TABLES(PLID, &g_pEngTable, NULL, NULL);
+	GET_HOOK_TABLES(PLID, &g_pEngTable, nullptr, nullptr);
 
 	FlagMan.SetFile("cmdaccess.ini");
 
@@ -1694,7 +1694,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 		{
-			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address)
 			g_isDropClientHookAvailable = true;
 			g_isDropClientHookEnabled = true;
 		}

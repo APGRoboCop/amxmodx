@@ -218,7 +218,7 @@ static cell AMX_NATIVE_CALL ns_fire_partsys(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL ns_get_partsys_id(AMX *amx, cell *params)
 {
-	return ParticleMan.Find(MF_GetAmxString(amx,params[1],0, nullptr));;
+	return ParticleMan.Find(MF_GetAmxString(amx,params[1],0, nullptr));
 };
 
 AMX_NATIVE_INFO particle_natives[] = {

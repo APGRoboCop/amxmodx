@@ -47,7 +47,7 @@ void CModule::clear(bool clearFilename)
 {
 	// old & new
 	m_Metamod = false;
-	m_Handle = NULL;
+	m_Handle = nullptr;
 	m_Status = MODULE_NONE;
 
 	if (clearFilename)

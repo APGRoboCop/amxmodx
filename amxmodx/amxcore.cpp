@@ -73,7 +73,7 @@ static proplist *list_additem(proplist *root)
 {
   proplist *item;
 
-  assert(root!=NULL);
+  assert(root!= nullptr);
   if ((item=(proplist *)malloc(sizeof(proplist)))== nullptr)
     return nullptr;
   item->name= nullptr;
@@ -85,10 +85,10 @@ static proplist *list_additem(proplist *root)
 }
 static void list_delete(proplist *pred,proplist *item)
 {
-  assert(pred!=NULL);
-  assert(item!=NULL);
+  assert(pred!= nullptr);
+  assert(item!= nullptr);
   pred->next=item->next;
-  assert(item->name!=NULL);
+  assert(item->name!= nullptr);
   free(item->name);
   free(item);
 }
@@ -96,7 +96,7 @@ static void list_setitem(proplist *item,cell id,char *name,cell value)
 {
   char *ptr;
 
-  assert(item!=NULL);
+  assert(item!= nullptr);
   if ((ptr=(char *)malloc(strlen(name)+1))== nullptr)
     return;
   if (item->name!= nullptr)
@@ -113,7 +113,7 @@ static proplist *list_finditem(proplist *root,cell id,char *name,cell value,
   proplist *prev=root;
 
   /* check whether to find by name or by value */
-  assert(name!=NULL);
+  assert(name!= nullptr);
   if (strlen(name)>0) {
     /* find by name */
     while (item!= nullptr && (item->id!=id || stricmp(item->name,name)!=0)) {

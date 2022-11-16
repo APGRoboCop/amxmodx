@@ -193,7 +193,7 @@ public:
 		{
 			i++;
 			len++;
-		};
+		}
 		char *temp=new char[len+1];
 		i=data;
 		char *j=temp;
@@ -336,7 +336,7 @@ public:
 			  (*data++=*i++)!='\0')
 		{
 			/* nothing */
-		};
+		}
 		return 0;
 	};
 	int GetEntity(cell *data)

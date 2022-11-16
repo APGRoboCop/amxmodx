@@ -316,7 +316,7 @@ AMX_NATIVE_INFO sockets_natives[] =
 	{"socket_is_readable", socket_is_readable},
 	{"socket_is_writable", socket_is_writable},
 
-	{NULL, NULL}
+	{nullptr, nullptr}
 };
 
 void OnAmxxAttach()

@@ -293,7 +293,7 @@ public:
 	{
 		return m_iSpeedChange;
 	};
-	inline int GetMaxSpeed(void)
+	inline int GetMaxSpeed()
 	{
 		return (int)m_fMaxSpeed;
 	};

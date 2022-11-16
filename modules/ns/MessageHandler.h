@@ -39,7 +39,6 @@ public:
 
 	virtual void End()
 	{
-		return;
 	};
 
 	virtual void WriteByte(int Data)
@@ -135,7 +134,7 @@ public:
 		if (m_Count==0)
 		{
 			FirstByte=iValue;
-		};
+		}
 		++m_Count;
 	};
 };

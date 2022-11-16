@@ -190,7 +190,7 @@ AMX_NATIVE_INFO global_Natives[] = {
 	{"get_global_edict",	get_global_edict},
 	{"get_global_edict2",	get_global_edict2},
 	{"get_global_vector",	get_global_vector},
-	{NULL,					NULL},
+	{nullptr, nullptr},
 	  ///////////////////
 };
 

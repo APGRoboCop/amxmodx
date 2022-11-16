@@ -132,7 +132,7 @@ void Client_CurWeapon(void* mValue)
 			mPlayer->weapons[iId].clip = iClip;
 			mCurWpnEnd = 1;
 			break;
-	};
+	}
 }
 
 void Client_CurWeapon_End(void*)

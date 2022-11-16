@@ -337,8 +337,6 @@ void CPlayer::setBody(int bn)
 		return;
 
 	sModel.body_num = bn;
-
-	return;
 }
 
 /*
@@ -413,8 +411,7 @@ void CPlayer::Scoping(int value)
 	// This means the scope has been initialized
 	case 90:
 		is_scoped = false;
-		return;
-	};
+	}
 }
 
 void CPlayer::ScopingCheck()

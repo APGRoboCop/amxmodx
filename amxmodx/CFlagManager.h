@@ -142,7 +142,7 @@ private:
 				fprintf(fp,"; NOTE: The plugin name at the end is just for reference to what plugin\n");
 				fprintf(fp,";       uses what commands.  It is ignored.\n\n");
 				fclose(fp);
-			};
+			}
 		}
 		else
 		{
@@ -167,7 +167,7 @@ private:
 			// Save down the modified timestamp
 			m_Stat.st_mtime=TempStat.st_mtime;
 			return 1;
-		};
+		}
 
 		return 0;
 

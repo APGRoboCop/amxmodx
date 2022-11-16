@@ -44,7 +44,7 @@ void Initialize_MessageHandler()
 	while (i<255)
 	{
 		MessageLists[i++]= nullptr;
-	};
+	}
 
 	// Hook our messages
 	int index;

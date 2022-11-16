@@ -5,7 +5,7 @@ HLSDK = ../../../hlsdk-bu
 METAMOD = ../../../metamod-bu/metamod
 
 OPT_FLAGS = -O2 -s -pipe -fomit-frame-pointer -fno-strict-aliasing -std=c++11
-DEBUG_FLAGS = -g -ggdb3
+#DEBUG_FLAGS = -g -ggdb3
 CPP = g++
 NAME = tse
 

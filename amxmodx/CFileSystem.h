@@ -140,7 +140,7 @@ class ValveFile : public FileObject
 			if (handle_)
 			{
 				g_FileSystem->Close(handle_);
-				handle_ = nullptr;;
+				handle_ = nullptr;
 			}
 		}
 

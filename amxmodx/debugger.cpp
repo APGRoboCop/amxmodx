@@ -645,7 +645,7 @@ void Debugger::GenericMessage(AMX *amx, int err)
 	static char buffer[512];
 
 	buffer[0] = '\0';
-	Debugger::FmtGenericMsg(amx, err, buffer, sizeof(buffer)-1);
+	FmtGenericMsg(amx, err, buffer, sizeof(buffer)-1);
 
 	if (buffer[0] != '\0')
 		AMXXLOG_Error("[AMXX] %s", buffer);

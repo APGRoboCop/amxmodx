@@ -60,7 +60,6 @@ void OnAmxxAttach()
 	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && *error)
 	{
 		MF_Log("Could not read module.games gamedata: %s", error);
-		return;
 	}
 }
 

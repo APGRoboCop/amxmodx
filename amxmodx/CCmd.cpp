@@ -67,7 +67,7 @@ CmdMngr::Command* CmdMngr::getCmd(long int id, int type, int access)
 	//if (id >= 1024 || id < 0) return (Command*)id;
 	if (id < 0)
 	{
-		for (CmdMngr::iterator a = begin(type); a ; ++a)
+		for (iterator a = begin(type); a ; ++a)
 		{
 			if ((*a).id == id)
 				return &(*a);
@@ -108,7 +108,7 @@ int CmdMngr::getCmdNum(int type, int access)
 	buf_type = type;
 	buf_num = 0;
 
-	CmdMngr::iterator a = begin(type);
+	iterator a = begin(type);
 
 	while (a)
 	{

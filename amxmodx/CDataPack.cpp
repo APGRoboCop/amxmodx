@@ -97,7 +97,7 @@ void CDataPack::PackCell(cell cells)
 {
 	CheckSize(sizeof(char) + sizeof(size_t) + sizeof(cell));
 
-	*(char *)m_curptr = DataPackType::Cell;
+	*(char *)m_curptr = Cell;
 	m_curptr += sizeof(char);
 
 	*(size_t *)m_curptr = sizeof(cell);
@@ -113,7 +113,7 @@ void CDataPack::PackFloat(float val)
 {
 	CheckSize(sizeof(char) + sizeof(size_t) + sizeof(float));
 
-	*(char *)m_curptr = DataPackType::Float;
+	*(char *)m_curptr = Float;
 	m_curptr += sizeof(char);
 
 	*(size_t *)m_curptr = sizeof(float);
@@ -131,7 +131,7 @@ void CDataPack::PackString(const char *string)
 	size_t maxsize = sizeof(char) + sizeof(size_t) + len + 1;
 	CheckSize(maxsize);
 
-	*(char *)m_curptr = DataPackType::String;
+	*(char *)m_curptr = String;
 	m_curptr += sizeof(char);
 
 	// Pack the string length first for buffer overrun checking.
@@ -173,7 +173,7 @@ bool CDataPack::CanReadCell() const
 	{
 		return false;
 	}
-	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::Cell)
+	if (*reinterpret_cast<char *>(m_curptr) != Cell)
 	{
 		return false;
 	}
@@ -206,7 +206,7 @@ bool CDataPack::CanReadFloat() const
 	{
 		return false;
 	}
-	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::Float)
+	if (*reinterpret_cast<char *>(m_curptr) != Float)
 	{
 		return false;
 	}
@@ -244,7 +244,7 @@ bool CDataPack::CanReadString(size_t *len) const
 	{
 		return false;
 	}
-	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::String)
+	if (*reinterpret_cast<char *>(m_curptr) != String)
 	{
 		return false;
 	}
@@ -298,7 +298,7 @@ bool CDataPack::CanReadMemory(size_t *size) const
 	{
 		return false;
 	}
-	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::Raw)
+	if (*reinterpret_cast<char *>(m_curptr) != Raw)
 	{
 		return false;
 	}

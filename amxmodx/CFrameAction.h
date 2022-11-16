@@ -47,7 +47,7 @@ public:
 		int callbacksToRun = m_requestedFrames.length();
 		while (callbacksToRun--)
 		{
-			ke::AutoPtr<CFrameAction> action = ke::Move(m_requestedFrames.front());
+			ke::AutoPtr<CFrameAction> action = Move(m_requestedFrames.front());
 			m_requestedFrames.popFront();
 			action->Execute();
 		}

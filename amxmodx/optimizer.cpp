@@ -73,8 +73,6 @@ void OnBrowseRelocate(AMX *amx, cell *oplist, cell *cip)
 	}
 
 	*cip += sizeof(cell);
-	
-	return;
 }
 
 #define FIND_NATIVE(name, bind) \
@@ -96,15 +94,15 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 
 	if (g_opt_level & 1)
 	{
-		FIND_NATIVE("floatmul", N_Float_Mul);
-		FIND_NATIVE("floatdiv", N_Float_Div);
-		FIND_NATIVE("floatadd", N_Float_Add);
-		FIND_NATIVE("floatsub", N_Float_Sub);
+		FIND_NATIVE("floatmul", N_Float_Mul)
+		FIND_NATIVE("floatdiv", N_Float_Div)
+		FIND_NATIVE("floatadd", N_Float_Add)
+		FIND_NATIVE("floatsub", N_Float_Sub)
 	}
 	if (g_opt_level & 4)
 	{
-		FIND_NATIVE("float", N_Float_To);
-		FIND_NATIVE("floatround", N_Float_Round);
+		FIND_NATIVE("float", N_Float_To)
+		FIND_NATIVE("floatround", N_Float_Round)
 	}
 	if (g_opt_level & 2)
 	{
@@ -112,7 +110,7 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 		if (amxx_CpuSupport())
 		{
 #endif
-			FIND_NATIVE("floatcmp", N_Float_Cmp);
+			FIND_NATIVE("floatcmp", N_Float_Cmp)
 #if !defined AMD64
 		} else {
 			g_opt_level &= ~(2);

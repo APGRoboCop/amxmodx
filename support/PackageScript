@@ -284,7 +284,7 @@ scripting_files = [
   'include/amxconst.inc',
   'include/amxmisc.inc',
   'include/amxmodx.inc',
-  'include/amxmodx_version.inc',
+  #'include/amxmodx_version.inc',
   'include/core.inc',
   'include/csstats.inc',
   'include/csstats_const.inc',

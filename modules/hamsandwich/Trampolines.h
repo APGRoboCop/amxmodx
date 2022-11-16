@@ -220,8 +220,7 @@ namespace Trampolines
 				*dat++=*src++;
 
 				orig++;
-			};
-
+			}
 		};
 	public:
 		TrampolineMaker()
@@ -240,7 +239,7 @@ namespace Trampolines
 		 */
 		void Breakpoint()
 		{
-			Append(&::Trampolines::Bytecode::codeBreakpoint[0],sizeof(::Trampolines::Bytecode::codeBreakpoint));
+			Append(&Bytecode::codeBreakpoint[0],sizeof(Bytecode::codeBreakpoint));
 		};
 
 		/**
@@ -248,7 +247,7 @@ namespace Trampolines
 		 */
 		void Prologue()
 		{
-			Append(&::Trampolines::Bytecode::codePrologue[0],sizeof(::Trampolines::Bytecode::codePrologue));
+			Append(&Bytecode::codePrologue[0],sizeof(Bytecode::codePrologue));
 			m_paramstart=0;
 			m_thiscall=0;
 		};
@@ -267,7 +266,7 @@ namespace Trampolines
 		 */
 		void Epilogue()
 		{
-			Append(&::Trampolines::Bytecode::codeEpilogue[0],sizeof(::Trampolines::Bytecode::codeEpilogue));
+			Append(&Bytecode::codeEpilogue[0],sizeof(Bytecode::codeEpilogue));
 		};
 
 		/**
@@ -285,9 +284,9 @@ namespace Trampolines
 		 */
 		void Epilogue(int howmuch)
 		{
-			unsigned char code[sizeof(::Trampolines::Bytecode::codeEpilogueN)];
+			unsigned char code[sizeof(Bytecode::codeEpilogueN)];
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codeEpilogueN[0],sizeof(::Trampolines::Bytecode::codeEpilogueN));
+			memcpy(&code[0],&Bytecode::codeEpilogueN[0],sizeof(Bytecode::codeEpilogueN));
 
 
 			unsigned char *c=&code[0];
@@ -300,11 +299,11 @@ namespace Trampolines
 
 			bi.i=howmuch;
 
-			c+=::Trampolines::Bytecode::codeEpilogueNReplace;
+			c+= Bytecode::codeEpilogueNReplace;
 			*c++=bi.b[0];
 			*c++=bi.b[1];
 
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codeEpilogueN));
+			Append(&code[0],sizeof(Bytecode::codeEpilogueN));
 		};
 
 		/**
@@ -321,18 +320,18 @@ namespace Trampolines
 			// Stack space should fit in a byte
 			assert(stackExtra <= 0xFF);
 
-			const size_t codeAlignStackSize = sizeof(::Trampolines::Bytecode::codeAlignStack16);
-			const size_t codeAllocStackSize = sizeof(::Trampolines::Bytecode::codeAllocStack);
+			const size_t codeAlignStackSize = sizeof(Bytecode::codeAlignStack16);
+			const size_t codeAllocStackSize = sizeof(Bytecode::codeAllocStack);
 			unsigned char code[codeAlignStackSize + codeAllocStackSize];
 
-			memcpy(&code[0], &::Trampolines::Bytecode::codeAlignStack16[0], codeAlignStackSize);
+			memcpy(&code[0], &Bytecode::codeAlignStack16[0], codeAlignStackSize);
 
 			if (stackExtra > 0)
 			{
 				unsigned char *c = &code[codeAlignStackSize];
-				memcpy(c, &::Trampolines::Bytecode::codeAllocStack[0], codeAllocStackSize);
+				memcpy(c, &Bytecode::codeAllocStack[0], codeAllocStackSize);
 
-				c += ::Trampolines::Bytecode::codeAllocStackReplace;
+				c += Bytecode::codeAllocStackReplace;
 				*c = (unsigned char)stackExtra;
 
 				Append(&code[0], codeAlignStackSize + codeAllocStackSize);
@@ -354,9 +353,9 @@ namespace Trampolines
 				return;
 			}
 
-			unsigned char code[sizeof(::Trampolines::Bytecode::codePushThis)];
+			unsigned char code[sizeof(Bytecode::codePushThis)];
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codePushThis[0],sizeof(::Trampolines::Bytecode::codePushThis));
+			memcpy(&code[0],&Bytecode::codePushThis[0],sizeof(Bytecode::codePushThis));
 
 
 #if defined(__linux__) || defined(__APPLE__)
@@ -374,7 +373,7 @@ namespace Trampolines
 			*c++=bi.b[0];
 #endif
 
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushThis));
+			Append(&code[0],sizeof(Bytecode::codePushThis));
 
 #if defined(__linux__) || defined(__APPLE__)
 			m_mystack+=4;
@@ -415,9 +414,9 @@ namespace Trampolines
 		 */
 		void FreeStack(int howmuch)
 		{
-			unsigned char code[sizeof(::Trampolines::Bytecode::codeFreeStack)];
+			unsigned char code[sizeof(Bytecode::codeFreeStack)];
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codeFreeStack[0],sizeof(::Trampolines::Bytecode::codeFreeStack));
+			memcpy(&code[0],&Bytecode::codeFreeStack[0],sizeof(Bytecode::codeFreeStack));
 
 			unsigned char *c=&code[0];
 
@@ -429,13 +428,13 @@ namespace Trampolines
 
 			bi.i=howmuch;
 
-			c+=::Trampolines::Bytecode::codeFreeStackReplace;
+			c+= Bytecode::codeFreeStackReplace;
 			*c++=bi.b[0];
 			*c++=bi.b[1];
 			*c++=bi.b[2];
 			*c++=bi.b[3];
 
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codeFreeStack));
+			Append(&code[0],sizeof(Bytecode::codeFreeStack));
 
 		};
 
@@ -446,9 +445,9 @@ namespace Trampolines
 		 */
 		void PushNum(int Number)
 		{
-			unsigned char code[sizeof(::Trampolines::Bytecode::codePushID)];
+			unsigned char code[sizeof(Bytecode::codePushID)];
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codePushID[0],sizeof(::Trampolines::Bytecode::codePushID));
+			memcpy(&code[0],&Bytecode::codePushID[0],sizeof(Bytecode::codePushID));
 
 			unsigned char *c=&code[0];
 
@@ -460,13 +459,13 @@ namespace Trampolines
 
 			bi.i=Number;
 
-			c+=::Trampolines::Bytecode::codePushIDReplace;
+			c+= Bytecode::codePushIDReplace;
 			*c++=bi.b[0];
 			*c++=bi.b[1];
 			*c++=bi.b[2];
 			*c++=bi.b[3];
 
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushID));
+			Append(&code[0],sizeof(Bytecode::codePushID));
 
 			m_calledstack+=4; // increase auto detected stack size
 
@@ -491,18 +490,18 @@ namespace Trampolines
 
 			unsigned char value=which;
 
-			unsigned char code[sizeof(::Trampolines::Bytecode::codePushParam)];
+			unsigned char code[sizeof(Bytecode::codePushParam)];
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codePushParam[0],sizeof(::Trampolines::Bytecode::codePushParam));
+			memcpy(&code[0],&Bytecode::codePushParam[0],sizeof(Bytecode::codePushParam));
 
 			unsigned char *c=&code[0];
 
 
-			c+=::Trampolines::Bytecode::codePushParamReplace;
+			c+= Bytecode::codePushParamReplace;
 
 			*c=value;
 
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codePushParam));
+			Append(&code[0],sizeof(Bytecode::codePushParam));
 
 			m_calledstack+=4; // increase auto detected stack size
 			m_mystack+=4;
@@ -516,9 +515,9 @@ namespace Trampolines
 		 */
 		void Call(void *ptr)
 		{
-			unsigned char code[sizeof(::Trampolines::Bytecode::codeCall)];
+			unsigned char code[sizeof(Bytecode::codeCall)];
 
-			memcpy(&code[0],&::Trampolines::Bytecode::codeCall[0],sizeof(::Trampolines::Bytecode::codeCall));
+			memcpy(&code[0],&Bytecode::codeCall[0],sizeof(Bytecode::codeCall));
 
 			unsigned char *c=&code[0];
 
@@ -530,13 +529,13 @@ namespace Trampolines
 
 			bp.p=ptr;
 
-			c+=::Trampolines::Bytecode::codeCallReplace;
+			c+= Bytecode::codeCallReplace;
 
 			*c++=bp.b[0];
 			*c++=bp.b[1];
 			*c++=bp.b[2];
 			*c++=bp.b[3];
-			Append(&code[0],sizeof(::Trampolines::Bytecode::codeCall));
+			Append(&code[0],sizeof(Bytecode::codeCall));
 
 
 		};

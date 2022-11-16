@@ -715,8 +715,6 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 		delete delstack.front();
 		delstack.pop();
 	}
-
-	return;
 }
 
 void CPluginMngr::CALMFromFile(const char *file)

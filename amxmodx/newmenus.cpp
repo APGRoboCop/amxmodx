@@ -729,7 +729,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	if (params[2] && (!pMenu->items_per_page && pMenu->GetItemCount() >= 10))
 	{
@@ -761,7 +761,7 @@ static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL menu_addtext(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	if (params[2] && (!pMenu->items_per_page && pMenu->GetItemCount() >= 10))
 	{
@@ -795,8 +795,8 @@ static cell AMX_NATIVE_CALL menu_addtext(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_addblank2(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
-	
+	GETMENU(params[1])
+
 	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
@@ -813,8 +813,8 @@ static cell AMX_NATIVE_CALL menu_addtext2(AMX *amx, cell *params)
 	int len;
 	char *name;
 	
-	GETMENU(params[1]);
-	
+	GETMENU(params[1])
+
 	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
@@ -838,7 +838,7 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 	char *name, *cmd;
 	int access;
 
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
 	{
@@ -862,7 +862,7 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 //native csdm_menu_pages(menu);
 static cell AMX_NATIVE_CALL menu_pages(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 	return pMenu->GetPageCount();
 }
 
@@ -870,7 +870,7 @@ static cell AMX_NATIVE_CALL menu_pages(AMX *amx, cell *params)
 //native csdm_menu_items(menu);
 static cell AMX_NATIVE_CALL menu_items(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	return pMenu->GetItemCount();
 }
@@ -880,7 +880,7 @@ static cell AMX_NATIVE_CALL menu_items(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 {
 	auto handle = params[2];
-	GETMENU(handle);
+	GETMENU(handle)
 
 	int player = params[1];
 	int page = params[3];
@@ -916,8 +916,8 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		enum JoinState { Joined = 0 };
 		enum MenuState { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
 
-		GET_OFFSET("CBasePlayer", m_iJoiningState);
-		GET_OFFSET("CBasePlayer", m_iMenu);
+		GET_OFFSET("CBasePlayer", m_iJoiningState)
+		GET_OFFSET("CBasePlayer", m_iMenu)
 
 		if (get_pdata<int>(pPlayer->pEdict, m_iJoiningState) == Joined || (get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseTeam && get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseAppearance))
 		{
@@ -930,7 +930,7 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		time = params[4];
 
 	if (time < 0)
-		pPlayer->menuexpire = INFINITE;
+		pPlayer->menuexpire = static_cast<float>(INFINITE);
 	else
 		pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
@@ -943,7 +943,7 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 //native menu_keyid(menu, page, key);
 static cell AMX_NATIVE_CALL menu_find_id(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	page_t page = static_cast<page_t>(params[2]);
 	item_t key = static_cast<item_t>(params[3]);
@@ -955,7 +955,7 @@ static cell AMX_NATIVE_CALL menu_find_id(AMX *amx, cell *params)
 //native menu_item_getinfo(menu, item, &access, command[], cmdlen, name[]="", namelen=0, &callback);
 static cell AMX_NATIVE_CALL menu_item_getinfo(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
@@ -996,7 +996,7 @@ static cell AMX_NATIVE_CALL menu_makecallback(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_item_setname(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
@@ -1015,7 +1015,7 @@ static cell AMX_NATIVE_CALL menu_item_setname(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_item_setcmd(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
@@ -1034,7 +1034,7 @@ static cell AMX_NATIVE_CALL menu_item_setcmd(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
@@ -1048,7 +1048,7 @@ static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_item_setaccess(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
@@ -1062,7 +1062,7 @@ static cell AMX_NATIVE_CALL menu_item_setaccess(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 {
-	GETMENU(params[1]);
+	GETMENU(params[1])
 
 	int len = params[0] / sizeof(cell);
 	if (len < 3)
@@ -1218,7 +1218,7 @@ static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_destroy(AMX *amx, cell *params)
 {
-	GETMENU_R(params[1]);
+	GETMENU_R(params[1])
 
 	if (pMenu->isDestroying)
 	{

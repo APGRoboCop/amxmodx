@@ -49,8 +49,6 @@ ThreadWorker::~ThreadWorker()
 
 void ThreadWorker::OnTerminate(IThreadHandle *pHandle, bool cancel)
 {
-	//we don't particularly care
-	return;
 }
 
 void ThreadWorker::RunThread(IThreadHandle *pHandle)

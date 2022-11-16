@@ -35,7 +35,7 @@ void TitleManager::LoadTitles()
 	{
 		MF_Log("Unable to load \"%s\": TitleManager will not work!",FileName);
 		return;
-	};
+	}
 
 	//MF_Log("TitleManager Loading titles from \"%s\"",FileName);
 	char KeyName[512];			// last known good keyname
@@ -96,7 +96,7 @@ scan_for_key:
 		strncpy(KeyName,TempBuffer,sizeof(KeyName)-1);
 		
 		// keep looping (until we hit a '{')
-	};
+	}
 
 	// if we're out here then !feof() failed
 	goto end_of_file;
@@ -144,7 +144,7 @@ scan_for_data:
 
 		// have valid data here
 		strncpy(Data,TempBuffer,sizeof(Data)-1);
-	};
+	}
 end_of_file:
 
 	fclose(fp);

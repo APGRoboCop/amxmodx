@@ -445,7 +445,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
 #if defined AMX_NATIVETABLE
   } /* if */
 #endif
-  assert(f!=NULL);
+  assert(f!= nullptr);
 
   /* As of AMX Mod X 1.56, we don't patch sysreq.c to sysreq.d anymore.
    * Otherwise, we'd have no way of knowing the last native to be used.
@@ -518,9 +518,9 @@ static int amx_BrowseRelocate(AMX *amx)
     int reloc_count = 0;
   #endif
 
-  assert(amx!=NULL);
+  assert(amx!= nullptr);
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   code=amx->base+(int)hdr->cod;
   codesize=hdr->dat - hdr->cod;
@@ -1088,7 +1088,7 @@ int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data)
   amxClone->flags=amxSource->flags;
 
   /* copy the data segment; the stack and the heap can be left uninitialized */
-  assert(data!=NULL);
+  assert(data!= nullptr);
   amxClone->data=(unsigned char _FAR *)data;
   dataSource=(amxSource->data!= nullptr) ? amxSource->data : amxSource->base+(int)hdr->dat;
   memcpy(amxClone->data,dataSource,(size_t)(hdr->hea-hdr->dat));
@@ -1130,7 +1130,7 @@ int AMXAPI amx_MemInfo(AMX *amx, long *codesize, long *datasize, long *stackheap
 int AMXAPI amx_NameLength(AMX *amx, int *length)
 {
   AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   if (USENAMETABLE(hdr)) {
     uint16_t *namelength=(uint16_t*)(amx->base + (unsigned)hdr->nametable);
@@ -1147,7 +1147,7 @@ int AMXAPI amx_NameLength(AMX *amx, int *length)
 int AMXAPI amx_NumNatives(AMX *amx, int *number)
 {
   AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
   *number=NUMENTRIES(hdr,natives,libraries);
@@ -1160,7 +1160,7 @@ int AMXAPI amx_GetNative(AMX *amx, int index, char *funcname)
   AMX_FUNCSTUB *func;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
   if (index>=(cell)NUMENTRIES(hdr,natives,libraries))
@@ -1198,7 +1198,7 @@ int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index)
 int AMXAPI amx_NumPublics(AMX *amx, int *number)
 {
   AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->publics<=hdr->natives);
   *number=NUMENTRIES(hdr,publics,natives);
@@ -1211,7 +1211,7 @@ int AMXAPI amx_GetPublic(AMX *amx, int index, char *funcname)
   AMX_FUNCSTUB *func;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->publics<=hdr->natives);
   if (index>=(cell)NUMENTRIES(hdr,publics,natives))
@@ -1254,7 +1254,7 @@ int AMXAPI amx_FindPublic(AMX *amx, const char *name, int *index)
 int AMXAPI amx_NumPubVars(AMX *amx, int *number)
 {
   AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->pubvars<=hdr->tags);
   *number=NUMENTRIES(hdr,pubvars,tags);
@@ -1267,7 +1267,7 @@ int AMXAPI amx_GetPubVar(AMX *amx, int index, char *varname, cell *amx_addr)
   AMX_FUNCSTUB *var;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->pubvars<=hdr->tags);
   if (index>=(cell)NUMENTRIES(hdr,pubvars,tags))
@@ -1312,7 +1312,7 @@ int AMXAPI amx_FindPubVar(AMX *amx, const char *varname, cell *amx_addr)
 int AMXAPI amx_NumTags(AMX *amx, int *number)
 {
   AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   if (hdr->file_version<5) {    /* the tagname table appeared in file format 5 */
     *number=0;
@@ -1334,7 +1334,7 @@ int AMXAPI amx_GetTag(AMX *amx, int index, char *tagname, cell *tag_id)
   AMX_FUNCSTUB *tag;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   if (hdr->file_version<5) {    /* the tagname table appeared in file format 5 */
     *tagname='\0';
@@ -1415,7 +1415,7 @@ static AMX_NATIVE findfunction(const char *name, const AMX_NATIVE_INFO *list, in
 {
   int i;
 
-  assert(list!=NULL);
+  assert(list!= nullptr);
   for (i=0; list[i].name!= nullptr && (i<number || number==-1); i++)
     if (strcmp(name,list[i].name)==0)
       return list[i].func;
@@ -1431,7 +1431,7 @@ int AMXAPI amx_CheckNatives(AMX *amx, AMX_NATIVE_FILTER nf)
   int i,numnatives,res=0;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
   numnatives=NUMENTRIES(hdr,natives,libraries);
@@ -1459,7 +1459,7 @@ int AMXAPI amx_RegisterToAny(AMX *amx, AMX_NATIVE f)
   int i,numnatives,err;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
   numnatives=NUMENTRIES(hdr,natives,libraries);
@@ -1486,7 +1486,7 @@ int AMXAPI amx_Reregister(AMX *amx, const AMX_NATIVE_INFO *list, int number)
   AMX_NATIVE funcptr;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
   numnatives=NUMENTRIES(hdr,natives,libraries);
@@ -1516,7 +1516,7 @@ int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *list, int number)
   AMX_NATIVE funcptr;
 
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
   numnatives=NUMENTRIES(hdr,natives,libraries);
@@ -1577,9 +1577,9 @@ int AMXAPI amx_PushArray(AMX *amx, cell *amx_addr, cell **phys_addr, const cell 
   cell *paddr;
   int err;
 
-  assert(amx!=NULL);
-  assert(amx_addr!=NULL);
-  assert(array!=NULL);
+  assert(amx!= nullptr);
+  assert(amx_addr!= nullptr);
+  assert(array!= nullptr);
 
   err=amx_Allot(amx,numcells,amx_addr,&paddr);
   if (err==AMX_ERR_NONE) {
@@ -1596,9 +1596,9 @@ int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char
   cell *paddr;
   int numcells,err;
 
-  assert(amx!=NULL);
-  assert(amx_addr!=NULL);
-  assert(string!=NULL);
+  assert(amx!= nullptr);
+  assert(amx_addr!= nullptr);
+  assert(string!= nullptr);
 
   #if defined AMX_ANSIONLY
     numcells=strlen(string) + 1;
@@ -2673,14 +2673,14 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
 	REAL fnum, fnum2;
     int num;
   #endif
-  assert(amx!=NULL);
+  assert(amx!= nullptr);
   #if defined ASM32 || defined JIT
     /* HACK: return label table (for amx_BrowseRelocate) if amx structure
      * is not passed.
      */
     if ((amx->flags & AMX_FLAG_BROWSE)==AMX_FLAG_BROWSE) {
       assert(sizeof(cell)==sizeof(void *));
-      assert(retval!=NULL);
+      assert(retval!= nullptr);
       #if defined ASM32 && defined JIT
         if ((amx->flags & AMX_FLAG_JITC)!=0)
           *retval=(cell)amx_opcodelist_jit;
@@ -3655,8 +3655,8 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
 #if defined AMX_SETCALLBACK
 int AMXAPI amx_SetCallback(AMX *amx,AMX_CALLBACK callback)
 {
-  assert(amx!=NULL);
-  assert(callback!=NULL);
+  assert(amx!= nullptr);
+  assert(callback!= nullptr);
   amx->callback=callback;
   return AMX_ERR_NONE;
 }
@@ -3665,7 +3665,7 @@ int AMXAPI amx_SetCallback(AMX *amx,AMX_CALLBACK callback)
 #if defined AMX_SETDEBUGHOOK
 int AMXAPI amx_SetDebugHook(AMX *amx,AMX_DEBUG debug)
 {
-  assert(amx!=NULL);
+  assert(amx!= nullptr);
   amx->debug=debug;
   return AMX_ERR_NONE;
 }
@@ -3686,13 +3686,13 @@ int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr)
   AMX_HEADER *hdr;
   unsigned char *data;
 
-  assert(amx!=NULL);
+  assert(amx!= nullptr);
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   data=(amx->data!= nullptr) ? amx->data : amx->base+(int)hdr->dat;
 
-  assert(phys_addr!=NULL);
+  assert(phys_addr!= nullptr);
   if ((amx_addr>=amx->hea && amx_addr<amx->stk) || amx_addr<0 || amx_addr>=amx->stp) {
     *phys_addr= nullptr;
     return AMX_ERR_MEMACCESS;
@@ -3709,16 +3709,16 @@ int AMXAPI amx_Allot(AMX *amx,int cells,cell *amx_addr,cell **phys_addr)
   AMX_HEADER *hdr;
   unsigned char *data;
 
-  assert(amx!=NULL);
+  assert(amx!= nullptr);
   hdr=(AMX_HEADER *)amx->base;
-  assert(hdr!=NULL);
+  assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   data=(amx->data!= nullptr) ? amx->data : amx->base+(int)hdr->dat;
 
   if (amx->stk - amx->hea - cells*sizeof(cell) < STKMARGIN)
     return AMX_ERR_MEMORY;
-  assert(amx_addr!=NULL);
-  assert(phys_addr!=NULL);
+  assert(amx_addr!= nullptr);
+  assert(phys_addr!= nullptr);
   *amx_addr=amx->hea;
   *phys_addr=(cell *)(data + (int)amx->hea);
   amx->hea += cells*sizeof(cell);
@@ -3753,7 +3753,7 @@ int AMXAPI amx_StrLen(const cell *cstr, int *length)
     cell c;
   #endif
 
-  assert(length!=NULL);
+  assert(length!= nullptr);
   if (cstr== nullptr) {
     *length=0;
     return AMX_ERR_PARAMS;

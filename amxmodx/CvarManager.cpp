@@ -137,7 +137,7 @@ void CvarManager::CreateCvarHook()
 		if (CommonConfig && CommonConfig->GetMemSig("Cvar_DirectSet", &functionAddress) && functionAddress)
 		{
 			// Disabled by default.
-			m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
+			m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress)
 		}
 		else
 		{

@@ -952,7 +952,7 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 	int iEnt = params[1];
 	int idx = params[2];
 	int iszString = 0;
-	const char *szRet = NULL;
+	const char *szRet = nullptr;
 
 	CHECK_ENTITY_SIMPLE(iEnt);
 
@@ -1477,7 +1477,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	edict_t *entOwner = TypeConversion.id_to_edict(oEnt);
 
 	//optional fourth parameter is for jghg2 compatibility
-	const char* sCategory = NULL; 
+	const char* sCategory = nullptr; 
 	switch(params[4]){ 
 		case 1: sCategory = "target"; break; 
 		case 2: sCategory = "targetname"; break; 
@@ -1579,7 +1579,7 @@ AMX_NATIVE_INFO ent_NewNatives[] =
 	{"DispatchKeyValue",	DispatchKeyValue},
 	{"set_ent_rendering",	set_ent_rendering},
 	{"entity_intersects",	entity_intersects},
-	{NULL,					NULL}
+	{nullptr, nullptr}
 };
 
 AMX_NATIVE_INFO ent_Natives[] = {
@@ -1627,7 +1627,7 @@ AMX_NATIVE_INFO ent_Natives[] = {
 
 	{"copy_keyvalue",		copy_keyvalue},
 
-	{NULL,					NULL}
+	{nullptr, nullptr}
 	 ///////////////////
 };
 

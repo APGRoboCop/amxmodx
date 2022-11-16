@@ -213,7 +213,7 @@ int EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags,
 		return 0;
 	}
 
-	m_Events[msgid].append(ke::Move(event));
+	m_Events[msgid].append(Move(event));
 
 	return handle;
 }
@@ -598,7 +598,7 @@ int EventsMngr::getEventId(const char* msg)
 			return table[pos].id;
 
 	// find the id of the message
-	return pos = GET_USER_MSG_ID(PLID, msg, 0);
+	return pos = GET_USER_MSG_ID(PLID, msg, nullptr);
 }
 
 int EventsMngr::getCurrentMsgType()

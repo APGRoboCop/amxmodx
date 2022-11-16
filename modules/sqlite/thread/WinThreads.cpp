@@ -78,8 +78,8 @@ IThreadHandle *WinThreader::MakeThread(IThread *pThread, const ThreadParams *par
 	if (params == nullptr)
 		params = &g_defparams;
 
-	WinThreader::ThreadHandle *pHandle = 
-		new WinThreader::ThreadHandle(this, nullptr, pThread, params);
+	ThreadHandle*pHandle = 
+		new ThreadHandle(this, nullptr, pThread, params);
 
 	DWORD tid;
 	pHandle->m_thread = 

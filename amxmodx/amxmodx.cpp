@@ -1087,7 +1087,7 @@ static cell AMX_NATIVE_CALL get_user_origin(AMX *amx, cell *params) /* 3 param *
 			v_vec[1] = v_angle.y;
 			v_vec[2] = v_angle.z;
 
-			ANGLEVECTORS(v_vec, vec, NULL, NULL);
+			ANGLEVECTORS(v_vec, vec, nullptr, nullptr);
 			TraceResult trEnd;
 			Vector v_dest = pos + vec * 9999;
 
@@ -1364,8 +1364,8 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			enum JoinState { Joined = 0 };
 			enum MenuState { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
 
-			GET_OFFSET("CBasePlayer", m_iJoiningState);
-			GET_OFFSET("CBasePlayer", m_iMenu);
+			GET_OFFSET("CBasePlayer", m_iJoiningState)
+			GET_OFFSET("CBasePlayer", m_iMenu)
 
 			if (get_pdata<int>(pPlayer->pEdict, m_iJoiningState) == Joined || (get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseTeam && get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseAppearance))
 			{
@@ -1435,7 +1435,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->vgui = false;
 
 				if (time == -1)
-					pPlayer->menuexpire = INFINITE;
+					pPlayer->menuexpire = static_cast<float>(INFINITE);
 				else
 					pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
@@ -1453,7 +1453,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->vgui = false;
 
 			if (time == -1)
-				pPlayer->menuexpire = INFINITE;
+				pPlayer->menuexpire = static_cast<float>(INFINITE);
 			else
 				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
@@ -2037,7 +2037,7 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
 				fang[0] = vang.x;
 				fang[1] = vang.y;
 				fang[2] = vang.z;
-				ANGLEVECTORS(fang, v_forward, v_right, NULL);
+				ANGLEVECTORS(fang, v_forward, v_right, nullptr);
 				pEdict->v.velocity = pEdict->v.velocity + v_forward * 220 + Vector(0, 0, 200);
 			}
 
@@ -2667,12 +2667,12 @@ static cell AMX_NATIVE_CALL get_user_msgid(AMX *amx, cell *params) /* 1 param */
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 
-	return GET_USER_MSG_ID(PLID, sptemp, NULL);
+	return GET_USER_MSG_ID(PLID, sptemp, nullptr);
 }
 
 static cell AMX_NATIVE_CALL get_user_msgname(AMX *amx, cell *params) /* get_user_msgname(msg, str[], len) = 3 params */
 {
-	const char* STRING = GET_USER_MSG_NAME(PLID, params[1], NULL);
+	const char* STRING = GET_USER_MSG_NAME(PLID, params[1], nullptr);
 	if (STRING)
 		return set_amxstring(amx, params[2], STRING, params[3]);
 
@@ -2732,7 +2732,7 @@ static cell AMX_NATIVE_CALL engine_changelevel(AMX *amx, cell *params)
 
 	// Same as calling "changelevel" command but will trigger "server_changelevel" AMXX forward as well.
 	// Filling second param will call "changelevel2" command, but this is not usable in multiplayer game.
-	g_pEngTable->pfnChangeLevel(new_map.chars(), NULL);
+	g_pEngTable->pfnChangeLevel(new_map.chars(), nullptr);
 
 	return 1;
 }
@@ -3169,7 +3169,7 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
 		Vector v_forward;
 		Vector v_src = edict->v.origin + edict->v.view_ofs;
 
-		ANGLEVECTORS(edict->v.v_angle, v_forward, NULL, NULL);
+		ANGLEVECTORS(edict->v.v_angle, v_forward, nullptr, nullptr);
 		TraceResult trEnd;
 		Vector v_dest = v_src + v_forward * static_cast<float>(params[4]);
 		TRACE_LINE(v_src, v_dest, 0, edict, &trEnd);
@@ -4556,7 +4556,7 @@ static cell AMX_NATIVE_CALL admins_lookup(AMX *amx, cell *params)
 	{
 		LogError(amx,AMX_ERR_NATIVE,"Invalid admins num");
 		return 1;
-	};
+	}
 
 	int BufferSize;
 	cell *Buffer;
@@ -4602,7 +4602,7 @@ static cell AMX_NATIVE_CALL admins_lookup(AMX *amx, cell *params)
 	case Admin_Flags:
 		return DynamicAdmins[params[1]]->GetFlags();
 		break;
-	};
+	}
 
 	// unknown property
 	return 0;
@@ -4637,7 +4637,7 @@ static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
 	int len;
 	char *name = get_amxstring(amx, params[1], 0, len);
 
-	return len && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
+	return len && !FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", name));
 };
 
 static cell AMX_NATIVE_CALL AutoExecConfig(AMX *amx, cell *params)

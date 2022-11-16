@@ -34,7 +34,7 @@ edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float
 	pStart = FIND_ENTITY_IN_SPHERE(pStart, vecCenter, flRadius);
 
 	if (!FNullEnt(pStart)) return pStart;
-	return NULL;
+	return nullptr;
 }
 
 static cell AMX_NATIVE_CALL register_think(AMX *amx, cell *params)
@@ -187,7 +187,7 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
 
 	Vector vOrigin = Vector(fCurrentX, fCurrentY, fCurrentZ);
 
-	edict_t *pSearchEnt = NULL;
+	edict_t *pSearchEnt = nullptr;
 	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 5 * iRadiusMultiplier)) != NULL)
 	{
 		if (FStrEq(STRING(pSearchEnt->v.classname), "player")) 
@@ -287,7 +287,7 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, iEnt > 0 ? TypeConversion.id_to_edict(iEnt) : NULL, &g_tr);
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, iEnt > 0 ? TypeConversion.id_to_edict(iEnt) : nullptr, &g_tr);
 
 	vRet[0] = amx_ftoc(g_tr.vecPlaneNormal.x);
 	vRet[1] = amx_ftoc(g_tr.vecPlaneNormal.y);
@@ -376,7 +376,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 		CHECK_ENTITY(iEnt);
 	}
 
-	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : TypeConversion.id_to_edict(iEnt));
+	char *info = GETINFOKEYBUFFER((iEnt == -1) ? nullptr : TypeConversion.id_to_edict(iEnt));
 	
 	return MF_SetAmxStringUTF8Char(amx, params[2], info, strlen(info), params[3]);
 }
@@ -623,7 +623,7 @@ static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 		vEnd = vStart;
 
 
-	TRACE_HULL(vStart, vEnd, params[4], params[2], iEnt > 0 ? TypeConversion.id_to_edict(iEnt) : NULL, &g_tr);
+	TRACE_HULL(vStart, vEnd, params[4], params[2], iEnt > 0 ? TypeConversion.id_to_edict(iEnt) : nullptr, &g_tr);
 
 	if (g_tr.fStartSolid) {
 		iResult += 1;
@@ -1057,7 +1057,7 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
 AMX_NATIVE_INFO engine_NewNatives[] = 
 {
 	{"trace_line",			trace_line},
-	{NULL,					NULL}
+	{nullptr, nullptr}
 };
 
 AMX_NATIVE_INFO engine_Natives[] = {
@@ -1099,6 +1099,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"is_visible",			is_visible},
 	{"trace_forward",		trace_forward},
 
-	{NULL,					NULL}
+	{nullptr, nullptr}
 	 ///////////////////
 };

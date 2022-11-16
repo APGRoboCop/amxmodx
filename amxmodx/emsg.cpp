@@ -119,7 +119,7 @@ void Client_TeamInfo(void* mValue)
 					&&  pPlayer->pEdict->pvPrivateData 
 					&& !pPlayer->IsAlive())
 				{
-					GET_OFFSET_NO_ERROR("CBasePlayer", m_iTeam);
+					GET_OFFSET_NO_ERROR("CBasePlayer", m_iTeam)
 
 					const auto teamId = get_pdata<int>(pPlayer->pEdict, m_iTeam);
 					

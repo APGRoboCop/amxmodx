@@ -93,7 +93,7 @@ static cell AMX_NATIVE_CALL ns_build_structure(AMX *amx, cell *params)
 	if (Entity->free)
 	{
 		return 0;
-	};
+	}
 
 	if (Entity->v.iuser3 <= AVH_USER3_NONE || Entity->v.iuser3 >= AVH_USER3_MAX)
 	{

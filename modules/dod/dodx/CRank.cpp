@@ -301,7 +301,7 @@ void RankSystem::loadRank(const char* filename)
 			TRYREAD(d.bodyHits, 1, sizeof(d.bodyHits), bfp);
 			TRYREAD(&i, 1, sizeof(short int), bfp);
 
-			RankSystem::RankStats* a = findEntryInRank( unique , name );
+			RankStats* a = findEntryInRank( unique , name );
 			if ( a ) a->updatePosition( &d );
 		}
 	}
@@ -318,8 +318,8 @@ void RankSystem::saveRank( const char* filename )
 	short int i = RANK_VERSION;
 	
 	fwrite(&i, 1, sizeof(short int) , bfp);
-	
-	RankSystem::iterator a = front();
+
+	iterator a = front();
 	
 	while ( a )
 	{

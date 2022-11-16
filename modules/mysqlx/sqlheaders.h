@@ -22,7 +22,7 @@ typedef int (*SQLAFFINITY)(AMX *amx);
 
 struct SqlFunctions
 {
-	SourceMod::ISQLDriver *driver;
+	ISQLDriver*driver;
 	SQLAFFINITY set_affinity;
 	SqlFunctions *prev;
 };

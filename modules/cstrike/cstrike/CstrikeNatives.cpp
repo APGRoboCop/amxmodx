@@ -1205,7 +1205,7 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int weapontype = get_pdata<int>(pArmoury, m_iItem);;
+	int weapontype = get_pdata<int>(pArmoury, m_iItem);
 	int weapontype_out = 0;
 
 	switch (weapontype)

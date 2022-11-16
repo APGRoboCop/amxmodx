@@ -341,7 +341,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 		case PSTATE_GAMEDEFS_KEYS:
 		{
 			ke::AString vstr(value);
-			m_Keys.replace(key, ke::Move(vstr));
+			m_Keys.replace(key, Move(vstr));
 			break;
 		}
 		case PSTATE_GAMEDEFS_SUPPORTED:
@@ -989,7 +989,6 @@ void CGameConfigManager::OnAmxxStartup()
 	if (!LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)))
 	{
 		AMXXLOG_Log("Could not read common.games gamedata: %s", error);
-		return;
 	}
 }
 

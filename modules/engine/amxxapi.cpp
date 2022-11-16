@@ -17,7 +17,7 @@ BOOL CheckForPublic(const char *publicname);
 void CreateDetours();
 void DestroyDetours();
 
-CDetour *LightStyleDetour = NULL;
+CDetour *LightStyleDetour = nullptr;
 HLTypeConversion TypeConversion;
 
 int AmxStringToEngine(AMX *amx, cell param, int &len)
@@ -258,7 +258,7 @@ BOOL CheckForPublic(const char *publicname)
 	int iFunctionIndex;
 	int i=0;
 	// Loop through all running scripts
-	while((amx=MF_GetScriptAmx(i++))!=NULL)
+	while((amx=MF_GetScriptAmx(i++))!= nullptr)
 	{ 
 		// Scan for public
 		if (MF_AmxFindPublic(amx, blah, &iFunctionIndex) == AMX_ERR_NONE)

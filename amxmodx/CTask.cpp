@@ -219,7 +219,7 @@ void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlag
 		return;
 		
 	task->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-	m_Tasks.append(ke::Move(task));
+	m_Tasks.append(Move(task));
 }
 
 int CTaskMngr::removeTasks(int iId, AMX *pAmx)

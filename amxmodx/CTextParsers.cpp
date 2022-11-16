@@ -501,7 +501,7 @@ SMCError TextParsers::ParseStream_SMC(void *stream,
 							ml_comment = false;
 							ignoring = false;
 							/* We should not be staging anything right now. */
-							assert(strings[0].ptr == NULL);
+							assert(strings[0].ptr == nullptr);
 							/* Advance the input stream so we don't choke on this token */
 							i++;
 							states.col++;

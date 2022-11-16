@@ -397,8 +397,6 @@ void DeleteRecord(HWND hDlg) {
 
 BadEnd:
 	MessageBox(hDlg, "Delete failed", "Oh fiddlesticks!", MB_OK);
-
-	return;
 }
 
 // Message handler for WinCSXBox.

@@ -27,7 +27,7 @@ MenuMngr::MenuCommand::MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f
 MenuMngr::~MenuMngr() 
 {
 	clear();
-	MenuMngr::MenuIdEle::uniqueid = 0;
+	MenuIdEle::uniqueid = 0;
 }
 
 int MenuMngr::findMenuId(const char* name, AMX* amx)
@@ -101,9 +101,9 @@ void MenuMngr::clear()
 	}
 }
 
-MenuMngr::iterator MenuMngr::SetWatchIter(MenuMngr::iterator iter)
+MenuMngr::iterator MenuMngr::SetWatchIter(iterator iter)
 {
-	MenuMngr::iterator old = m_watch_iter;
+	iterator old = m_watch_iter;
 
 	m_watch_iter = iter;
 
