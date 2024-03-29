@@ -66,6 +66,9 @@
   #include <Windows.h>
 #endif
 
+#include <chrono>
+#include <amxmodx.h>
+#include <CPlugin.h>
 
 /* When one or more of the AMX_funcname macris are defined, we want
  * to compile only those functions. However, when none of these macros
@@ -4172,4 +4175,39 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
   } /* if */
   dest[len]='\0';     /* store terminator */
   return AMX_ERR_NONE;
+}
+
+int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
+{
+    CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
+    if (amxmodx_perflog->value > 0.0f && perf_Plug && (perf_Plug->isDebug() || static_cast<int>(amxmodx_debug->value) == 2))
+    {
+        char perf_funcname[sNAMEMAX + 1];
+        perf_funcname[0] = '\0';
+        amx_GetPublic(perf_Plug->getAMX(), index, perf_funcname);
+        if (perf_funcname[0] == '\0')
+            snprintf(perf_funcname, sizeof(perf_funcname), "Unknown_ID%d", index);
+
+        const char* perf_plugname = perf_Plug->getName();
+        if (!perf_plugname || perf_plugname[0] == '\0')
+            perf_plugname = "Unknown_plugin";
+
+        using std::chrono::steady_clock;
+        using std::chrono::duration_cast;
+        using std::chrono::duration;
+        using std::chrono::microseconds;
+
+        const std::chrono::time_point<steady_clock> t1 = steady_clock::now();
+        const int err = amx_Exec(amx, retval, index);
+
+        const duration<long long, std::ratio<1, 1000000>> ms_int = duration_cast<
+	        microseconds>(steady_clock::now() - t1);
+        float ms_float = ms_int.count() / 1000.0f;
+        if (ms_float >= amxmodx_perflog->value)
+        {
+            AMXXLOG_Log("[%s] performance issue. Function %s executed more than %.*fms.", perf_plugname, perf_funcname, 1, ms_float);
+        }
+        return err;
+    }
+    return amx_Exec(amx, retval, index);
 }

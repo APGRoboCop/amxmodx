@@ -40,14 +40,14 @@ int g_CurError = AMX_ERR_NONE;
 
 int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 {
-	if (idx < 0 || idx >= (int)g_RegNatives.length())
+	if (idx < 0 || idx >= static_cast<int>(g_RegNatives.length()))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid dynamic native called");
 		return 0;
 	}
 
 	regnative *pNative = g_RegNatives[idx];
-	int numParams = params[0] / sizeof(cell);
+	const int numParams = params[0] / sizeof(cell);
 
 	if (numParams > CALLFUNC_MAXPARAMS)
 	{
@@ -56,7 +56,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 	}
 
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
-	CPluginMngr::CPlugin *pNativePlugin = g_plugins.findPluginFast(pNative->amx);
+	const CPluginMngr::CPlugin *pNativePlugin = g_plugins.findPluginFast(pNative->amx);
 
 	if (!pNativePlugin->isExecutable(pNative->func))
 	{
@@ -69,7 +69,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 	AMX *pSaveCaller = g_pCaller;
 	cell saveParams[CALLFUNC_MAXPARAMS];
 	regnative *pSaveNative = g_pCurNative;
-	int saveError = g_CurError;
+	const int saveError = g_CurError;
 
 	if (pSaveNative)
 	{
@@ -111,7 +111,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		pDebugger->BeginExec();
 	}
 
-	int err = amx_Exec(pNative->amx, &ret, pNative->func);
+	const int err = amx_ExecPerf(pNative->amx, &ret, pNative->func);
 
 	if (err != AMX_ERR_NONE)
 	{
@@ -198,10 +198,10 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
 	int len;
-	char *str = get_amxstring(g_pCaller, g_Params[p], 0, len);
+	const char *str = get_amxstring(g_pCaller, g_Params[p], 0, len);
 	return set_amxstring(amx, params[2], str, params[3]);
 }
 
@@ -218,10 +218,10 @@ static cell AMX_NATIVE_CALL set_string(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
 	int len;
-	char *str = get_amxstring(amx, params[2], 0, len);
+	const char *str = get_amxstring(amx, params[2], 0, len);
 
 	return set_amxstring(g_pCaller, g_Params[p], str, params[3]);
 }
@@ -240,7 +240,7 @@ static cell AMX_NATIVE_CALL get_param(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
 	return g_Params[p];
 }
@@ -258,9 +258,9 @@ static cell AMX_NATIVE_CALL get_param_byref(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
-	cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
+	const cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
 
 	return addr[0];
 }
@@ -278,7 +278,7 @@ static cell AMX_NATIVE_CALL set_param_byref(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
 	cell *addr = get_amxaddr(g_pCaller, g_Params[p]);
 
@@ -300,12 +300,12 @@ static cell AMX_NATIVE_CALL get_array(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
-	cell *source = get_amxaddr(g_pCaller, g_Params[p]);
+	const cell *source = get_amxaddr(g_pCaller, g_Params[p]);
 	cell *dest = get_amxaddr(amx, params[2]);
 
-	int size = params[3];
+	const int size = params[3];
 
 	memcpy(dest, source, size * sizeof(cell));
 
@@ -325,12 +325,12 @@ static cell AMX_NATIVE_CALL set_array(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	int p = params[1];
+	const int p = params[1];
 
 	cell *dest = get_amxaddr(g_pCaller, g_Params[p]);
-	cell *source = get_amxaddr(amx, params[2]);
+	const cell *source = get_amxaddr(amx, params[2]);
 
-	int size = params[3];
+	const int size = params[3];
 
 	memcpy(dest, source, size * sizeof(cell));
 
@@ -351,16 +351,16 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int vargPos = static_cast<int>(params[4]);
-	int fargPos = static_cast<int>(params[3]);
+	int vargPos = params[4];
+	const int fargPos = params[3];
 
-	cell max = g_Params[0] / sizeof(cell);
-	if (vargPos > (int)max + 1)
+	const cell max = g_Params[0] / sizeof(cell);
+	if (vargPos > static_cast<int>(max) + 1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid vararg parameter passed: %d", vargPos);
 		return 0;
 	}
-	if (fargPos > (int)max + 1)
+	if (fargPos > static_cast<int>(max) + 1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid fmtarg parameter passed: %d", fargPos);
 		return 0;
@@ -380,14 +380,14 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 		fmt = get_amxaddr(g_pCaller, g_Params[fargPos]);
 	}
 	cell *realdest = get_amxaddr(amx, params[1]);
-	size_t maxlen = static_cast<size_t>(params[2]);
+	const size_t maxlen = static_cast<size_t>(params[2]);
 
 	/* if this is necessary... */
 	static cell cpbuf[4096];
 	cell* dest = cpbuf;
 
 	/* perform format */
-	size_t total = atcprintf(dest, maxlen, fmt, g_pCaller, g_Params, &vargPos);
+	const size_t total = atcprintf(dest, maxlen, fmt, g_pCaller, g_Params, &vargPos);
 
 	/* copy back */
 	memcpy(realdest, dest, (total+1) * sizeof(cell));
@@ -411,14 +411,14 @@ static cell AMX_NATIVE_CALL param_convert(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Wrong style of dynamic native");
 		return 0;
 	}
-	cell p = params[1];
+	const cell p = params[1];
 
-	AMX *caller = g_pCaller;
+	const AMX *caller = g_pCaller;
 
-	unsigned char *data =amx->base+(int)((AMX_HEADER *)amx->base)->dat;
-	unsigned char *realdata = caller->base+(int)((AMX_HEADER *)caller->base)->dat;
+	unsigned char *data =amx->base+((AMX_HEADER *)amx->base)->dat;
+	unsigned char *realdata = caller->base+((AMX_HEADER *)caller->base)->dat;
 
-	* (cell *)(data+(int)amx->frm+(p+2)*sizeof(cell)) -= (cell)data-(cell)realdata;
+	* (cell *)(data+amx->frm+(p+2)*sizeof(cell)) -= (cell)data-(cell)realdata;
 
 	return 1;
 }
@@ -426,7 +426,7 @@ static cell AMX_NATIVE_CALL param_convert(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL register_library(AMX *amx, cell *params)
 {
 	int len;
-	char *lib = get_amxstring(amx, params[1], 0, len);
+	const char *lib = get_amxstring(amx, params[1], 0, len);
 
 	AddLibrary(lib, LibType_Library, LibSource_Plugin, g_plugins.findPluginFast(amx));
 
@@ -442,7 +442,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	g_Initialized = true;
 
 	int len;
-	char *name = get_amxstring(amx, params[1], 0, len);
+	const char *name = get_amxstring(amx, params[1], 0, len);
 	char *func = get_amxstring(amx, params[2], 1, len);
 
 	int idx, err;
@@ -472,7 +472,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 # endif
 #endif
 
-	int id = (int)g_RegNatives.length();
+	const int id = static_cast<int>(g_RegNatives.length());
 	
 	amxx_DynaMake(pNative->pfn, id);
 	pNative->func = idx;

@@ -3673,7 +3673,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 
 	AMX *pAmx = plugin->getAMX();
 
-	Debugger *pDebugger = (Debugger *)pAmx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = static_cast<Debugger*>(pAmx->userdata[UD_DEBUGGER]);
 
 	if (pDebugger)
 	{
@@ -3710,7 +3710,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		amx_Push(pAmx, gparams[i]);
 	}
 
-	err = amx_Exec(pAmx, &retVal, func);
+	err = amx_ExecPerf(pAmx, &retVal, func);
 
 	if (err != AMX_ERR_NONE)
 	{

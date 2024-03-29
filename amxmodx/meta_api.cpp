@@ -135,9 +135,13 @@ cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t init_amxmodx_mldebug = {"amx_mldebug", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_language = {"amx_language", "en", FCVAR_SERVER};
 cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "1", FCVAR_SERVER};
+cvar_t init_amxmodx_perflog = { "amx_perflog_ms", "1.0", FCVAR_SPONLY };
+
 cvar_t* amxmodx_version = nullptr;
 cvar_t* amxmodx_modules = nullptr;
 cvar_t* amxmodx_language = nullptr;
+cvar_t* amxmodx_debug = nullptr;
+cvar_t* amxmodx_perflog = nullptr;
 cvar_t* hostname = nullptr;
 cvar_t* mp_timelimit = nullptr;
 
@@ -199,7 +203,7 @@ void BuildPluginFileList(const char *initialdir, CStack<ke::AString *> & files)
 #if defined WIN32
 	build_pathname_r(path, sizeof(path), "%s/*.ini", initialdir);
 	_finddata_t fd;
-	intptr_t handle = _findfirst(path, &fd);
+	const intptr_t handle = _findfirst(path, &fd);
 
 	if (handle < 0)
 	{
@@ -239,7 +243,7 @@ void LoadExtraPluginsToPCALM(const char *initialdir)
 	char path[255];
 	while (!files.empty())
 	{
-		ke::AString *pString = files.front();
+		const ke::AString *pString = files.front();
 		ke::SafeSprintf(path, sizeof(path), "%s/%s",
 			initialdir,
 			pString->chars());
@@ -256,7 +260,7 @@ void LoadExtraPluginsFromDir(const char *initialdir)
 	BuildPluginFileList(initialdir, files);
 	while (!files.empty())
 	{
-		ke::AString *pString = files.front();
+		const ke::AString *pString = files.front();
 		ke::SafeSprintf(path, sizeof(path), "%s/%s",
 			initialdir,
 			pString->chars());
@@ -273,7 +277,7 @@ int	C_PrecacheModel(const char *s)
 	if (!g_forcedmodules)
 	{
 		g_forcedmodules	= true;
-		for (auto &model : g_forcemodels)
+		for (const ke::AutoPtr<ForceObject>& model : g_forcemodels)
 		{
 			PRECACHE_MODEL(model->getFilename());
 			ENGINE_FORCE_UNMODIFIED(model->getForceType(), model->getMin(), model->getMax(), model->getFilename());
@@ -288,7 +292,7 @@ int	C_PrecacheSound(const char *s)
 	if (!g_forcedsounds)
 	{
 		g_forcedsounds = true;
-		for (auto &sound : g_forcesounds)
+		for (const ke::AutoPtr<ForceObject>& sound : g_forcesounds)
 		{
 			PRECACHE_SOUND(sound->getFilename());
 			ENGINE_FORCE_UNMODIFIED(sound->getForceType(), sound->getMin(), sound->getMax(), sound->getFilename());
@@ -313,9 +317,9 @@ int	C_InconsistentFile(const edict_t *player, const char *filename, char *discon
 
 	if (MDLL_InconsistentFile(player, filename, disconnect_message))
 	{
-		CPlayer	*pPlayer = GET_PLAYER_POINTER((edict_t *)player);
+		const CPlayer *pPlayer = GET_PLAYER_POINTER((edict_t *)player);
 
-		if (executeForwards(FF_InconsistentFile, static_cast<cell>(pPlayer->index),
+		if (executeForwards(FF_InconsistentFile, pPlayer->index,
 			filename, disconnect_message) == 1)
 			RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
 
@@ -463,7 +467,7 @@ int	C_Spawn(edict_t *pent)
 		STRING(gpGlobals->mapname));
 	g_plugins.CALMFromFile(map_pluginsfile_path);
 
-	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
+	const int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
 
 	// Set some info about amx version and modules
 	CVAR_SET_STRING(init_amxmodx_version.name, AMXX_VERSION);
@@ -542,7 +546,7 @@ int	C_Spawn(edict_t *pent)
 	executeForwards(FF_PluginPrecache);
 	g_dontprecache = true;
 
-	for (auto &generic : g_forcegeneric)
+	for (const ke::AutoPtr<ForceObject>& generic : g_forcegeneric)
 	{
 		PRECACHE_GENERIC(generic->getFilename());
 		ENGINE_FORCE_UNMODIFIED(generic->getForceType(), generic->getMin(), generic->getMax(), generic->getFilename());
@@ -702,11 +706,11 @@ void C_ServerDeactivate()
 		if (pPlayer->initialized)
 		{
 			// deprecated
-			executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
+			executeForwards(FF_ClientDisconnect, pPlayer->index);
 
 			if (g_isDropClientHookAvailable && !pPlayer->disconnecting)
 			{
-				executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+				executeForwards(FF_ClientDisconnected, pPlayer->index, FALSE, prepareCharArray("", 0), 0);
 			}
 		}
 
@@ -719,7 +723,7 @@ void C_ServerDeactivate()
 
 			if (!wasDisconnecting && g_isDropClientHookAvailable)
 			{
-				executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
+				executeForwards(FF_ClientRemove, pPlayer->index, FALSE, const_cast<char*>(""));
 			}
 		}
 	}
@@ -874,8 +878,8 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
 	if (!pPlayer->IsBot())
 	{
-		bool a = pPlayer->Connect(pszName, pszAddress);
-		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
+		const bool a = pPlayer->Connect(pszName, pszAddress);
+		executeForwards(FF_ClientConnect, pPlayer->index);
 
 		if (a)
 		{
@@ -895,7 +899,7 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 					fn(pPlayer->index, authid);
 				}
 			}
-			executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index), authid);
+			executeForwards(FF_ClientAuthorized, pPlayer->index, authid);
 		}
 	}
 
@@ -906,7 +910,7 @@ BOOL C_ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddre
 {
 	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
 
-	if(executeForwards(FF_ClientConnectEx, static_cast<cell>(pPlayer->index), pszName, pszAddress, prepareCharArray(szRejectReason, 128, true)))
+	if(executeForwards(FF_ClientConnectEx, pPlayer->index, pszName, pszAddress, prepareCharArray(szRejectReason, 128, true)))
 		RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
 
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
@@ -919,11 +923,11 @@ void C_ClientDisconnect(edict_t *pEntity)
 	if (pPlayer->initialized)
 	{
 		// deprecated
-		executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
+		executeForwards(FF_ClientDisconnect, pPlayer->index);
 
 		if (g_isDropClientHookAvailable && !pPlayer->disconnecting)
 		{
-			executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+			executeForwards(FF_ClientDisconnected, pPlayer->index, FALSE, prepareCharArray("", 0), 0);
 		}
 	}
 
@@ -938,7 +942,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 	if (!wasDisconnecting && g_isDropClientHookAvailable)
 	{
-		executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
+		executeForwards(FF_ClientRemove, pPlayer->index, FALSE, const_cast<char*>(""));
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -946,7 +950,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 CPlayer* SV_DropClient_PreHook(edict_s *client, qboolean crash, const char *buffer, size_t buffer_size)
 {
-	auto pPlayer = client ? GET_PLAYER_POINTER(client) : nullptr;
+	const auto pPlayer = client ? GET_PLAYER_POINTER(client) : nullptr;
 
 	if (pPlayer)
 	{
@@ -979,7 +983,7 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	auto pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
+	const auto pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
@@ -1005,7 +1009,7 @@ void C_ClientPutInServer_Post(edict_t *pEntity)
 	{
 		pPlayer->PutInServer();
 		++g_players_num;
-		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
+		executeForwards(FF_ClientPutInServer, pPlayer->index);
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -1014,7 +1018,7 @@ void C_ClientPutInServer_Post(edict_t *pEntity)
 void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	executeForwards(FF_ClientInfoChanged, static_cast<cell>(pPlayer->index));
+	executeForwards(FF_ClientInfoChanged, pPlayer->index);
 	const char* name = INFOKEY_VALUE(infobuffer, "name");
 
 	// Emulate bot connection and putinserver
@@ -1024,7 +1028,7 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	} else if (pPlayer->IsBot()) {
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
-		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
+		executeForwards(FF_ClientConnect, pPlayer->index);
 
 		pPlayer->Authorize();
 		const char* authid = GETPLAYERAUTHID(pEntity);
@@ -1038,12 +1042,12 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 				fn(pPlayer->index, authid);
 			}
 		}
-		executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index), authid);
+		executeForwards(FF_ClientAuthorized, pPlayer->index, authid);
 
 		pPlayer->PutInServer();
 		++g_players_num;
 
-		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
+		executeForwards(FF_ClientPutInServer, pPlayer->index);
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -1091,7 +1095,7 @@ void C_ClientCommand(edict_t *pEntity)
 		}
 	}
 
-	if (executeForwards(FF_ClientCommand, static_cast<cell>(pPlayer->index)) > 0)
+	if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
 		RETURN_META(MRES_SUPERCEDE);
 
 	/* check for command and if needed also for first argument and call proper function */
@@ -1105,8 +1109,8 @@ void C_ClientCommand(edict_t *pEntity)
 	{
 		if ((*aa).matchCommandLine(cmd, arg) && (*aa).getPlugin()->isExecutable((*aa).getFunction()))
 		{
-			ret = executeForwards((*aa).getFunction(), static_cast<cell>(pPlayer->index),
-				static_cast<cell>((*aa).getFlags()), static_cast<cell>((*aa).getId()));
+			ret = executeForwards((*aa).getFunction(), pPlayer->index,
+				(*aa).getFlags(), static_cast<cell>((*aa).getId()));
 			if (ret & 2) result = MRES_SUPERCEDE;
 			if (ret & 1) RETURN_META(MRES_SUPERCEDE);
 		}
@@ -1139,31 +1143,31 @@ void C_ClientCommand(edict_t *pEntity)
 				}
 			}
 
-			int menuid = pPlayer->menu;
+			const int menuid = pPlayer->menu;
 			pPlayer->menu = 0;
 
 			/* First, do new menus */
 			int func_was_executed = -1;
 			if (pPlayer->newmenu != -1)
 			{
-				int menu = pPlayer->newmenu;
+				const int menu = pPlayer->newmenu;
 				pPlayer->newmenu = -1;
 				if (Menu *pMenu = get_menu_by_id(menu))
 				{
-					int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key+1);
+					const int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key+1);
 					if (item == MENU_BACK)
 					{
 						if (pMenu->pageCallback >= 0)
-							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_BACK), static_cast<cell>(menu));
+							executeForwards(pMenu->pageCallback, pPlayer->index, MENU_BACK, menu);
 
 						pMenu->Display(pPlayer->index, pPlayer->page - 1);
 					} else if (item == MENU_MORE) {
 						if (pMenu->pageCallback >= 0)
-							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_MORE), static_cast<cell>(menu));
+							executeForwards(pMenu->pageCallback, pPlayer->index, MENU_MORE, menu);
 
 						pMenu->Display(pPlayer->index, pPlayer->page + 1);
 					} else {
-						ret = executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(item));
+						ret = executeForwards(pMenu->func, pPlayer->index, menu, item);
 						if (ret & 2)
 						{
 							result = MRES_SUPERCEDE;
@@ -1191,8 +1195,8 @@ void C_ClientCommand(edict_t *pEntity)
 						|| !g_forwards.isSameSPForward(func_was_executed, (*a).getFunction()))
 					)
 				{
-					ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
-						static_cast<cell>(pressed_key), 0);
+					ret = executeForwards((*a).getFunction(), pPlayer->index,
+						pressed_key, 0);
 
 					if (ret & 2) result = MRES_SUPERCEDE;
 					if (ret & 1) RETURN_META(MRES_SUPERCEDE);
@@ -1242,7 +1246,7 @@ void C_StartFrame_Post()
 						fn((*player)->index, auth);
 					}
 				}
-				executeForwards(FF_ClientAuthorized, static_cast<cell>((*player)->index), auth);
+				executeForwards(FF_ClientAuthorized, (*player)->index, auth);
 				g_auth.remove(i);
 
 				continue;
@@ -1523,7 +1527,7 @@ void C_AlertMessage(ALERT_TYPE atype, const char *szFmt, ...)
 
 void C_ChangeLevel(const char *map, const char *what)
 {
-	int ret = executeForwards(FF_ChangeLevel,  map);
+	const int ret = executeForwards(FF_ChangeLevel,  map);
 	if (ret)
 		RETURN_META(MRES_SUPERCEDE);
 	RETURN_META(MRES_IGNORED);
@@ -1544,11 +1548,11 @@ void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const 
 		{
 			if (info->paramLen)
 			{
-				cell arr = prepareCellArray(info->params, info->paramLen);
-				executeForwards(info->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
+				const cell arr = prepareCellArray(info->params, info->paramLen);
+				executeForwards(info->resultFwd, ENTINDEX(pEdict),
 					cvar, value, arr);
 			} else {
-				executeForwards(info->resultFwd, static_cast<cell>(ENTINDEX(pEdict)),
+				executeForwards(info->resultFwd, ENTINDEX(pEdict),
 					cvar, value);
 			}
 			unregisterSPForward(info->resultFwd);
@@ -1627,15 +1631,18 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	CVAR_REGISTER(&init_amxmodx_mldebug);
 	CVAR_REGISTER(&init_amxmodx_language);
 	CVAR_REGISTER(&init_amxmodx_cl_langs);
+	CVAR_REGISTER(&init_amxmodx_perflog);
 
 	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
+	amxmodx_debug = CVAR_GET_POINTER(init_amxmodx_debug.name);
 	amxmodx_language = CVAR_GET_POINTER(init_amxmodx_language.name);
+	amxmodx_perflog = CVAR_GET_POINTER(init_amxmodx_perflog.name);
 
 	REG_SVR_COMMAND("amxx", amx_command);
 
 	char gameDir[512];
 	GET_GAME_DIR(gameDir);
-	char *a = gameDir;
+	const char *a = gameDir;
 	int i = 0;
 
 	while (gameDir[i])
@@ -1700,7 +1707,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		}
 		else
 		{
-			auto reason = RehldsApi ? "update ReHLDS" : "check your gamedata files";
+			const char* reason = RehldsApi ? "update ReHLDS" : "check your gamedata files";
 			AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - %s.", reason);
 		}
 	}

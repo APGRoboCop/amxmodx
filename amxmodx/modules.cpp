@@ -187,7 +187,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	bool will_be_debugged = false;
 	tagAMX_DBG *pDbg = nullptr;
 
-	if (static_cast<int>(CVAR_GET_FLOAT("amx_debug")) >= 2 || debug)
+	if (static_cast<int>(amxmodx_debug->value) == 2 || debug)
 	{
 		if ((hdr->file_version < CUR_FILE_VERSION))
 		{
@@ -300,7 +300,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 			delete [] np;
 			delete [] rt;
 
-			char *prg = static_cast<char*>(*program);
+			const char *prg = static_cast<char*>(*program);
 
 			delete [] prg;
 			(*program) = amx->base;
@@ -321,7 +321,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	}
 #endif
 
-	auto script = new CScript(amx, *program, filename);
+	const auto script = new CScript(amx, *program, filename);
 
 	if (!script)
 	{
@@ -367,7 +367,7 @@ const char *StrCaseStr(const char *as, const char *bs)
 {
 	static char a[256];
 	static char b[256];
-	unsigned int i = 0;
+	unsigned int i;
 	unsigned int len = strlen(as);
 
 	if (len > 254)
@@ -539,12 +539,11 @@ int set_amxnatives(AMX* amx, char error[128])
 	int idx, err;
 	cell retval;
 
-	Debugger *pd;
-	pd = DisableDebugHandler(amx);
+	Debugger* pd = DisableDebugHandler(amx);
 
 	if (amx_FindPublic(amx, "plugin_natives", &idx) == AMX_ERR_NONE)
 	{
-		if ((err = amx_Exec(amx, &retval, idx)) != AMX_ERR_NONE)
+		if ((err = amx_ExecPerf(amx, &retval, idx)) != AMX_ERR_NONE)
 		{
 			Debugger::GenericMessage(amx, err);
 			AMXXLOG_Log("An error occurred in plugin_natives. This is dangerous!");

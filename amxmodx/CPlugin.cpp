@@ -143,7 +143,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 		if (plugin->getStatusCode() == ps_bad_load)
 		{
 			char errorMsg[255];
-			sprintf(errorMsg, "%s (plugin \"%s\")", error, pluginName);
+			snprintf(errorMsg, sizeof(errorMsg), "%s (plugin \"%s\")", error, pluginName);
 			plugin->setError(errorMsg);
 			AMXXLOG_Error("[AMXX] %s", plugin->getError());
 		}
@@ -415,7 +415,7 @@ void CPluginMngr::CPlugin::Finalize()
 			if (!res)
 			{
 				status = ps_bad_load;
-				sprintf(buffer, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
+				snprintf(buffer, sizeof(buffer), "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
 				errorMsg = buffer;
 				amx.error = AMX_ERR_NOTFOUND;
 			} else {

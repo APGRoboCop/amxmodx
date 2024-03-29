@@ -76,27 +76,27 @@ public:
 		cell* m_pNullVectorOfs;
 		ke::Vector<ke::AutoPtr<AutoConfig>> m_configs;
 	public:
-		inline const char* getName() { return name.chars();}
-		inline const char* getVersion() { return version.chars();}
-		inline const char* getTitle() { return title.chars();}
-		inline const char* getAuthor() { return author.chars();}
-		inline const char* getUrl() { return url.chars(); }
-		inline const char* getDescription() { return description.chars(); }
-		inline const char* getError() { return errorMsg.chars();}
-		inline int getStatusCode() { return status; }
-		inline int getId() const { return id; }
-		inline AMX* getAMX() { return &amx; }
-		inline const AMX* getAMX() const { return &amx; }
-		inline void setTitle(const char* n) { title = n; }
-		inline void setAuthor(const char* n) { author =n; }
-		inline void setVersion(const char* n) { version = n; }
-		inline void setUrl(const char* n) { url = n; }
-		inline void setDescription(const char* n) { description = n; }
-		inline void setError(const char* n) { errorMsg = n; }
-		inline bool isValid() const { return (status >= ps_paused); }
-		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
-		inline bool isStopped() const { return (status == ps_stopped); }
-		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
+		const char* getName() { return name.chars();}
+		const char* getVersion() { return version.chars();}
+		const char* getTitle() { return title.chars();}
+		const char* getAuthor() { return author.chars();}
+		const char* getUrl() { return url.chars(); }
+		const char* getDescription() { return description.chars(); }
+		const char* getError() { return errorMsg.chars();}
+		int getStatusCode() { return status; }
+		int getId() const { return id; }
+		AMX* getAMX() { return &amx; }
+		const AMX* getAMX() const { return &amx; }
+		void setTitle(const char* n) { title = n; }
+		void setAuthor(const char* n) { author =n; }
+		void setVersion(const char* n) { version = n; }
+		void setUrl(const char* n) { url = n; }
+		void setDescription(const char* n) { description = n; }
+		void setError(const char* n) { errorMsg = n; }
+		bool isValid() const { return (status >= ps_paused); }
+		bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
+		bool isStopped() const { return (status == ps_stopped); }
+		bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		
 		void Finalize();
 		void AddToFailCounter(unsigned int i);
@@ -107,9 +107,9 @@ public:
 		void setStatus(int a);
 		
 		const char* getStatus() const;
-		inline bool isDebug() const { return m_Debug; }
-		inline cell* getNullStringOfs() const { return m_pNullStringOfs; }
-		inline cell* getNullVectorOfs() const { return m_pNullVectorOfs; }
+		bool isDebug() const { return m_Debug; }
+		cell* getNullStringOfs() const { return m_pNullStringOfs; }
+		cell* getNullVectorOfs() const { return m_pNullVectorOfs; }
 	public:
 		void AddConfig(bool create, const char *name, const char *folder);
 		size_t GetConfigCount();
@@ -131,13 +131,13 @@ public:
 	CPlugin* loadPlugin(const char* path, const char* name, char* error, size_t maxLength, int debug);
 	void unloadPlugin(CPlugin** a);
 	int loadPluginsFromFile(const char* filename, bool warn=true);
-	
-	inline CPlugin* findPluginFast(AMX *amx) { return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); }
+
+	CPlugin* findPluginFast(AMX *amx) { return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); }
 	CPlugin* findPlugin(AMX *amx);
 	CPlugin* findPlugin(int index);
 	CPlugin* findPlugin(const char* name);
-	
-	inline int getPluginsNum() const { return pCounter; }
+
+	int getPluginsNum() const { return pCounter; }
 	void Finalize();
 	void clear();
 
@@ -152,9 +152,9 @@ public:
 		operator bool () const { return a ? true : false; }
 		CPlugin& operator*() { return *a; }
 	};
-	
-	inline iterator begin() const { return iterator(head); }
-	inline iterator end() const { return iterator(nullptr); }
+
+	iterator begin() const { return iterator(head); }
+	iterator end() const { return iterator(nullptr); }
 public:
 	struct plcache_entry
 	{

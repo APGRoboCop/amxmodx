@@ -197,6 +197,8 @@ extern bool g_dontprecache;
 extern int g_srvindex;
 extern cvar_t* amxmodx_version;
 extern cvar_t* amxmodx_language;
+extern cvar_t* amxmodx_debug;
+extern cvar_t* amxmodx_perflog;
 extern cvar_t* hostname;
 extern cvar_t* mp_timelimit;
 extern fakecmd_t g_fakecmd;

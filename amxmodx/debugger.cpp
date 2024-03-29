@@ -383,7 +383,7 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 			num = (int)*p_cip;
 		}*/
 		//New code only requires this...
-		num = (int)(_INT_PTR)m_pAmx->usertags[UT_NATIVE];
+		num = (_INT_PTR)m_pAmx->usertags[UT_NATIVE];
 		/*amx_err = */amx_GetNative(m_pAmx, num, native_name);
 		/*if (num)
 			amx_err = amx_GetNative(m_pAmx, (int)*p_cip, native_name);
@@ -399,11 +399,11 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 cell Debugger::_CipAsVa(cell cip)
 {
 	AMX_HEADER *hdr = (AMX_HEADER*)(m_pAmx->base);
-	unsigned char *code = m_pAmx->base + (int)hdr->cod;
+	unsigned char *code = m_pAmx->base + hdr->cod;
 
-	if (cip >= (cell)code && cip < (cell)(m_pAmx->base + (int)hdr->dat))
+	if (cip >= (cell)code && cip < (cell)(m_pAmx->base + hdr->dat))
 	{
-		return (cell)(cip-(cell)code);
+		return cip-(cell)code;
 	} else {
 		return (cell)(code + cip);
 	}
@@ -412,11 +412,11 @@ cell Debugger::_CipAsVa(cell cip)
 int Debugger::_GetOpcodeFromCip(cell cip, cell *&addr)
 {
 	AMX_HEADER *hdr = (AMX_HEADER*)(m_pAmx->base);
-	unsigned char *code = m_pAmx->base + (int)hdr->cod;
+	unsigned char *code = m_pAmx->base + hdr->cod;
 
 	cell *p_cip = nullptr;
 	//test if cip is between these 
-	if (cip >= (cell)code && cip < (cell)(m_pAmx->base + (int)hdr->dat))
+	if (cip >= (cell)code && cip < (cell)(m_pAmx->base + hdr->dat))
 	{
 		p_cip = (cell *)(cip);
 	} else {
@@ -437,7 +437,7 @@ int Debugger::_GetOpcodeFromCip(cell cip, cell *&addr)
 		//we have an invalid opcode, so try searching for it
 		for (cell i=1; i<OP_NUM_OPCODES; i++)
 		{
-			if ((cell)m_pOpcodeList[i] == instr)
+			if (m_pOpcodeList[i] == instr)
 			{
 				instr = i;
 				break;
@@ -448,7 +448,7 @@ int Debugger::_GetOpcodeFromCip(cell cip, cell *&addr)
 			instr = 0;		//nothing found
 	}
 
-	return (int)instr;
+	return instr;
 }
 
 void Debugger::_CacheAmxOpcodeList()
@@ -611,7 +611,7 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
 {
     const char *filename = "";
     char native[sNAMEMAX+1];
-    for (auto script : g_loadedscripts)
+    for (const auto script : g_loadedscripts)
     {
         if (script->getAMX() == amx)
         {
@@ -660,9 +660,7 @@ Debugger::~Debugger()
 
 int Handler::SetErrorHandler(const char *function)
 {
-	int error;
-	
-	error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
+	int error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
 
 	if (error != AMX_ERR_NONE && m_iErrFunc < 0)
 		m_iErrFunc = -1;
@@ -672,9 +670,7 @@ int Handler::SetErrorHandler(const char *function)
 
 int Handler::SetModuleFilter(const char *function)
 {
-	int error;
-	
-	error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
+	int error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
 
 	if (error != AMX_ERR_NONE && m_iModFunc < 0)
 		m_iModFunc = -1;
@@ -684,9 +680,7 @@ int Handler::SetModuleFilter(const char *function)
 
 int Handler::SetNativeFilter(const char *function)
 {
-	int error;
-	
-	error = amx_FindPublic(m_pAmx, function, &m_iNatFunc);
+	int error = amx_FindPublic(m_pAmx, function, &m_iNatFunc);
 
 	if (error != AMX_ERR_NONE && !IsNativeFiltering())
 		m_iNatFunc = -1;
@@ -728,7 +722,7 @@ int Handler::HandleModule(const char *module, bool isClass)
 	m_pAmx->flags |= AMX_FLAG_PRENIT;
 	amx_Push(m_pAmx, isClass ? 1 : 0);
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, module, 0, 0);
-	int err = amx_Exec(m_pAmx, &retval, m_iModFunc);
+	const int err = amx_ExecPerf(m_pAmx, &retval, m_iModFunc);
 	amx_Release(m_pAmx, hea_addr);
 	m_pAmx->flags &= ~AMX_FLAG_PRENIT;
 
@@ -737,7 +731,7 @@ int Handler::HandleModule(const char *module, bool isClass)
 	if (err != AMX_ERR_NONE)
 		return 0;
 
-	return (int)retval;
+	return retval;
 }
 
 int Handler::HandleNative(const char *native, int index, int trap)
@@ -768,7 +762,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 	amx_Push(m_pAmx, trap);
 	amx_Push(m_pAmx, index);
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, native, 0, 0);
-	int err = amx_Exec(m_pAmx, &retval, m_iNatFunc);
+	const int err = amx_ExecPerf(m_pAmx, &retval, m_iNatFunc);
 	if (err != AMX_ERR_NONE)
 	{
 		//LogError() took care of something for us.
@@ -805,7 +799,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 
 	m_InNativeFilter = false;
 
-	return (int)retval;
+	return retval;
 }
 
 int Handler::HandleError(const char *msg)
@@ -819,7 +813,7 @@ int Handler::HandleError(const char *msg)
 
 	Debugger *pDebugger = (Debugger *)m_pAmx->userdata[UD_DEBUGGER];
 
-	int error = m_pAmx->error;
+	const int error = m_pAmx->error;
 
 	static char _buffer[512];
 	if (pDebugger)
@@ -841,7 +835,7 @@ int Handler::HandleError(const char *msg)
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, msg, 0, 0);
 	amx_Push(m_pAmx, pDebugger ? 1 : 0);
 	amx_Push(m_pAmx, error);
-	int err = amx_Exec(m_pAmx, &result, m_iErrFunc);
+	const int err = amx_ExecPerf(m_pAmx, &result, m_iErrFunc);
 	if (err != AMX_ERR_NONE)
 	{
 		//handle this manually.

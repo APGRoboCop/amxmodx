@@ -502,12 +502,12 @@ const char* EventsMngr::getArgString(int a) const
 	switch (m_ReadVault[a].type)
 	{
 		case MSG_INTEGER: 
-			sprintf(var, "%d", m_ReadVault[a].iValue);
+			snprintf(var, sizeof(var), "%d", m_ReadVault[a].iValue);
 			return var;
 		case MSG_STRING: 
 			return m_ReadVault[a].sValue;
 		default:
-			sprintf(var, "%g", m_ReadVault[a].fValue);
+			snprintf(var, sizeof(var), "%g", m_ReadVault[a].fValue);
 			return var;
 	}
 }
