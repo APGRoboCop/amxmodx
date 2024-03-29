@@ -115,7 +115,7 @@ void Client_TSHealth_End(void* mValue){
 			//That line below triggers crash [APG]RoboCop[CL]
 			edict_t* pOwner = reinterpret_cast<edict_t*>(*(static_cast<int*>(enemy->pvPrivateData) + gKnifeOffset));
 
-			if (FNullEnt((edict_t*)pOwner))
+			if (FNullEnt(pOwner))
 				return;
 
 			pAttacker = GET_PLAYER_POINTER( pOwner );

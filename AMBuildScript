@@ -195,8 +195,19 @@ class AMXXConfig(object):
 
   def configure_gcc(self, cxx):
     cxx.cflags += [
-      #'-pipe',
+	  '-mtune=generic',
+      '-pipe',
       '-fno-strict-aliasing',
+	  '-mmmx',
+	  '-msse',
+	  '-msse2',
+	  '-msse3',
+	  '-mssse3',
+	  '-msse4',
+	  '-msse4a',
+	  '-msse4.1',
+	  '-msse4.2',
+	  '-mfpmath=sse',
       '-Wall',
       #'-Werror',
       '-Wno-uninitialized',
@@ -208,7 +219,8 @@ class AMXXConfig(object):
     ]
     cxx.cxxflags += [
       '-Wno-invalid-offsetof',
-      '-std=c++11',
+      '-Wno-write-strings',
+      '-std=c++17',
     ]
 
     cxx.linkflags += ['-m32']
@@ -276,6 +288,10 @@ class AMXXConfig(object):
       '/W3',
     ]
     cxx.cxxflags += [
+      '/std:c++17',
+      '/arch:AVX2',
+      '/fp:precise',
+      '/Qspectre',
       '/EHsc',
       '/GR-',
       '/TP',
