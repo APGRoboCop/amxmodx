@@ -26,7 +26,7 @@ static cell AMX_NATIVE_CALL TrieClear(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 	t->map.clear();
@@ -40,7 +40,7 @@ static cell AMX_NATIVE_CALL TrieSetCell(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -76,7 +76,7 @@ static cell AMX_NATIVE_CALL TrieSetString(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -113,7 +113,7 @@ static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL TrieGetCell(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -189,7 +189,7 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -236,7 +236,7 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -297,7 +297,7 @@ static cell AMX_NATIVE_CALL TrieKeyExists(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -314,7 +314,7 @@ static cell AMX_NATIVE_CALL TrieDeleteKey(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -373,7 +373,7 @@ static cell AMX_NATIVE_CALL TrieGetSize(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -386,7 +386,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 
 	if (!t)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid trie handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -510,7 +510,7 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto index = TrieIterHandles.create(handle);
+	const size_t index = TrieIterHandles.create(handle);
 	auto iter  = TrieIterHandles.lookup(index);
 
 	return static_cast<cell>(index);
