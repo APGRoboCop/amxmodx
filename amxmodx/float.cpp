@@ -63,7 +63,7 @@ static cell AMX_NATIVE_CALL n_float(AMX *amx,cell *params)
     REAL fValue;
 
     /* Convert to a float. Calls the compilers long to float conversion. */
-    fValue = (REAL) params[1];
+    fValue = static_cast<float>(params[1]);
 
     /* Return the cell. */
     return amx_ftoc(fValue);
@@ -213,7 +213,7 @@ static cell AMX_NATIVE_CALL n_floatround(AMX *amx,cell *params)
             break;
     }
 
-    return fA;
+    return static_cast<cell>(fA);
 }
 
 #if defined __BORLANDC__ || defined __WATCOMC__

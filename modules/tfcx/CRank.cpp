@@ -57,7 +57,7 @@ RankSystem::RankStats::~RankStats() {
 }
 void RankSystem::RankStats::setName( const char* nn  )	{
 	delete[] name;
-	namelen = strlen(nn) + 1;
+	namelen = static_cast<short>(strlen(nn) + 1);
 	name = new char[namelen];
 	if ( name )
 		strcpy( name , nn );
@@ -66,7 +66,7 @@ void RankSystem::RankStats::setName( const char* nn  )	{
 }
 void RankSystem::RankStats::setUnique( const char* nn  )	{
 	delete[] unique;
-	uniquelen = strlen(nn) + 1;
+	uniquelen = static_cast<short>(strlen(nn) + 1);
 	unique = new char[uniquelen];
 	if ( unique )
 		strcpy( unique , nn );	
