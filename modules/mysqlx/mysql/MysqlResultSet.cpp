@@ -66,7 +66,7 @@ double MysqlResultRow::GetDouble(unsigned int columnId)
 
 float MysqlResultRow::GetFloat(unsigned int columnId)
 {
-	return (float)atof(GetStringSafe(columnId));
+	return static_cast<float>(atof(GetStringSafe(columnId)));
 }
 
 int MysqlResultRow::GetInt(unsigned int columnId)
@@ -83,7 +83,7 @@ MysqlResultSet::MysqlResultSet(MYSQL_RES *res, MYSQL *mysql) :
 
 	if (m_Rows > 0)
 	{
-		NextRow();
+		MysqlResultSet::NextRow();
 	}
 
 	m_kRow.m_Columns = m_Columns;

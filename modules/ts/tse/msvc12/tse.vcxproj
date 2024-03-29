@@ -25,7 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\..\public\memtools;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;$(HLSDK)\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\..\public\memtools;..\sdk;..\..\..\..\metamod-bu\metamod;..\..\..\..\hlsdk-bu\common;..\..\..\..\hlsdk-bu\engine;..\..\..\..\hlsdk-bu\dlls;..\..\..\..\hlsdk-bu\pm_shared;..\..\..\..\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;TSE_EXPORTS;HAVE_STDINT_H;DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -65,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(HLSDK)\public;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(METAMOD)\metamod;..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\..\public\memtools;..\sdk;..\..\..\..\metamod-bu\metamod;..\..\..\..\hlsdk-bu\common;..\..\..\..\hlsdk-bu\engine;..\..\..\..\hlsdk-bu\dlls;..\..\..\..\hlsdk-bu\pm_shared;..\..\..\..\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;TSE_EXPORTS;HAVE_STDINT_H;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

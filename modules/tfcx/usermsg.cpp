@@ -108,7 +108,7 @@ int get_pdata_ehandle(edict_t* pEntity, int offset)
 void Client_Damage(void* mValue){
   switch (mState++) {
   case 1: 
-    damage = *(int*)mValue;
+    damage = *static_cast<int*>(mValue);
     break;
 
   case 2:
@@ -300,15 +300,15 @@ void Client_CurWeapon(void* mValue){
   static int iId;
   switch (mState++){
   case 0: 
-    iState = *(int*)mValue;
+    iState = *static_cast<int*>(mValue);
     break;
   case 1:
     if (!iState) break; 
-    iId = *(int*)mValue;
+    iId = *static_cast<int*>(mValue);
     break;
   case 2:
 	if (!mPlayer || !iState ) break;
-    int iClip = *(int*)mValue;
+    const int iClip = *static_cast<int*>(mValue);
     
 	if ((iClip > -1) && (iClip < mPlayer->weapons[iId].clip)){
 		mPlayer->saveShot(iId);
@@ -324,25 +324,27 @@ void Client_AmmoX(void* mValue){
   static int iAmmo;
   switch (mState++){
   case 0:
-    iAmmo = *(int*)mValue;
+    iAmmo = *static_cast<int*>(mValue);
     break;
   case 1:
 	if (!mPlayer ) break;
 
 	// SniperRifle, AC and AutoRifle ...
 	if ( mPlayer->classId == TFC_PC_HWGUY ){
-		if ( mPlayer->current == TFC_WPN_AC && mPlayer->weapons[mPlayer->current].ammo > *(int*)mValue  && iAmmo == weaponData[mPlayer->current].ammoSlot )
+		if (mPlayer->current == TFC_WPN_AC && mPlayer->weapons[mPlayer->current].ammo > *static_cast<int*>(mValue) &&
+			iAmmo == weaponData[mPlayer->current].ammoSlot)
 			mPlayer->saveShot(mPlayer->current);
 	}
 	else if ( mPlayer->classId == TFC_PC_SNIPER ){
-		if ( (mPlayer->current == TFC_WPN_SNIPERRIFLE || mPlayer->current == TFC_WPN_AUTORIFLE) && mPlayer->weapons[mPlayer->current].ammo > *(int*)mValue && iAmmo == weaponData[mPlayer->current].ammoSlot )
+		if ((mPlayer->current == TFC_WPN_SNIPERRIFLE || mPlayer->current == TFC_WPN_AUTORIFLE) && mPlayer->weapons[
+			mPlayer->current].ammo > *static_cast<int*>(mValue) && iAmmo == weaponData[mPlayer->current].ammoSlot)
 			mPlayer->saveShot(mPlayer->current);
 	}
 	//
 
     for(int i = 1; i < TFCMAX_WEAPONS ; ++i) 
       if (iAmmo == weaponData[i].ammoSlot)
-        mPlayer->weapons[i].ammo = *(int*)mValue;
+        mPlayer->weapons[i].ammo = *static_cast<int*>(mValue);
   }
 }
 
@@ -351,13 +353,13 @@ void Client_AmmoPickup(void* mValue){
   static int iSlot;
   switch (mState++){
   case 0:
-    iSlot = *(int*)mValue;
+    iSlot = *static_cast<int*>(mValue);
     break;
   case 1:
 	if (!mPlayer ) break;
     for(int i = 1; i < TFCMAX_WEAPONS ; ++i)
       if (weaponData[i].ammoSlot == iSlot)
-        mPlayer->weapons[i].ammo += *(int*)mValue;
+        mPlayer->weapons[i].ammo += *static_cast<int*>(mValue);
   }
 }
 
@@ -366,14 +368,14 @@ void Client_ScoreInfo(void* mValue){
   static int iClass;
   switch (mState++){
   case 0:
-    iIndex = *(int*)mValue;
+    iIndex = *static_cast<int*>(mValue);
     break;
   case 3:
-	  iClass = *(int*)mValue;
+	  iClass = *static_cast<int*>(mValue);
 	  break;
   case 4:
 	  if ( iIndex > 0 && iIndex <= gpGlobals->maxClients ){
-		  GET_PLAYER_POINTER_I( iIndex )->teamId = *(int*)mValue;
+		  GET_PLAYER_POINTER_I( iIndex )->teamId = *static_cast<int*>(mValue);
 		  GET_PLAYER_POINTER_I( iIndex )->classId = iClass;
 	  }
 

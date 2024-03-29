@@ -16,7 +16,7 @@ NativeHandle<TrieSnapshot> TrieSnapshotHandles;
 // native Trie:TrieCreate();
 static cell AMX_NATIVE_CALL TrieCreate(AMX *amx, cell *params)
 {
-	return static_cast<cell>(TrieHandles.create());
+	return TrieHandles.create();
 }
 
 // native Trie::TrieClear(Trie:handle);
@@ -304,7 +304,7 @@ static cell AMX_NATIVE_CALL TrieKeyExists(AMX *amx, cell *params)
 	int len;
 	const char *key = get_amxstring(amx, params[2], 0, len);
 
-	return static_cast<cell>(t->map.contains(key));
+	return t->map.contains(key);
 }
 
 // native bool:TrieDeleteKey(Trie:handle, const key[]);
@@ -402,7 +402,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 	}
 	assert(i == snapshot->length);
 
-	return static_cast<cell>(index);
+	return index;
 }
 
 static cell AMX_NATIVE_CALL TrieSnapshotLength(AMX *amx, cell *params)

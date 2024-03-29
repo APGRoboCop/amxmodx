@@ -195,7 +195,7 @@ public:
 	 * Parse the file, and load all entries
 	 * Returns 1 on success, 0 on refusal (no need to), and -1 on error
 	 */
-	int LoadFile(const int force = 0);
+	int LoadFile(int force = 0);
 
 	/**
 	 * Checks if the command exists in the list

@@ -11,12 +11,12 @@
 
 void WinThreader::ThreadSleep(unsigned int ms)
 {
-	Sleep((DWORD)ms);
+	Sleep(ms);
 }
 
 IMutex *WinThreader::MakeMutex()
 {
-	HANDLE mutex = CreateMutexA(nullptr, FALSE, nullptr);
+	const HANDLE mutex = CreateMutexA(nullptr, FALSE, nullptr);
 
 	if (mutex == nullptr)
 		return nullptr;
@@ -106,7 +106,7 @@ IThreadHandle *WinThreader::MakeThread(IThread *pThread, const ThreadParams *par
 
 IEventSignal *WinThreader::MakeEventSignal()
 {
-	HANDLE event = CreateEventA(nullptr, FALSE, FALSE, nullptr);
+	const HANDLE event = CreateEventA(nullptr, FALSE, FALSE, nullptr);
 
 	if (!event)
 		return nullptr;
@@ -166,7 +166,7 @@ void WinThreader::WinMutex::DestroyThis()
  ******************/
 
 WinThreader::ThreadHandle::ThreadHandle(IThreader *parent, HANDLE hthread, IThread *run, const ThreadParams *params) : 
-	m_parent(parent), m_thread(hthread), m_run(run), m_params(*params),
+	m_parent(parent), m_thread(hthread), m_params(*params), m_run(run),
 	m_state(Thread_Paused)
 {
 	InitializeCriticalSection(&m_crit);

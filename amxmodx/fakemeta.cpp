@@ -24,7 +24,7 @@ int LoadMetamodPlugin(const char *path, void **handle, PLUG_LOADTIME now)
 
 int UnloadMetamodPlugin(void *handle)
 {
-	if (UNLOAD_PLUGIN_BY_HANDLE(PLID, (void *)handle, PT_ANYTIME, PNL_PLUGIN))
+	if (UNLOAD_PLUGIN_BY_HANDLE(PLID, handle, PT_ANYTIME, PNL_PLUGIN))
 	{
 		return 0;
 	}

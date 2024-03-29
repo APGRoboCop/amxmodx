@@ -112,7 +112,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 {
 	*error = 0;
 	size_t bufSize;
-	*program = (void *)g_plugins.ReadIntoOrFromCache(filename, bufSize);
+	*program = static_cast<void*>(g_plugins.ReadIntoOrFromCache(filename, bufSize));
 	if (!*program)
 	{
 		CAmxxReader reader(filename, PAWN_CELL_SIZE / 8);
@@ -123,7 +123,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 
 			if (bufSize != 0)
 			{
-				*program = (void*) (new char[bufSize]);
+				*program = static_cast<void*>(new char[bufSize]);
 
 				if (!*program)
 				{
@@ -172,7 +172,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	}
 
 	// check for magic
-	AMX_HEADER *hdr = (AMX_HEADER*)*program;
+	AMX_HEADER *hdr = static_cast<AMX_HEADER*>(*program);
 	uint16_t magic = hdr->magic;
 	amx_Align16(&magic);
 
@@ -187,14 +187,14 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	bool will_be_debugged = false;
 	tagAMX_DBG *pDbg = nullptr;
 
-	if ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
+	if (static_cast<int>(CVAR_GET_FLOAT("amx_debug")) >= 2 || debug)
 	{
 		if ((hdr->file_version < CUR_FILE_VERSION))
 		{
 			ke::SafeStrcpy(error, maxLength, "Plugin needs newer debug version info");
 			return (amx->error = AMX_ERR_VERSION);
 		}
-		else if ((hdr->flags & AMX_FLAG_DEBUG) != 0)
+		if ((hdr->flags & AMX_FLAG_DEBUG) != 0)
 		{
 			will_be_debugged = true;
 
@@ -243,7 +243,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	}
 
 	Handler *pHandler = new Handler(amx);
-	amx->userdata[UD_HANDLER] = (void *)pHandler;
+	amx->userdata[UD_HANDLER] = static_cast<void*>(pHandler);
 
 #if defined BINLOG_ENABLED
 	amx->usertags[UT_BINLOGS] = (void *)&logfuncs;
@@ -281,11 +281,11 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 			return (amx->error = AMX_ERR_INIT);
 		}
 
-		if ((err = amx_InitJIT(amx, (void *)rt, (void *)np)) == AMX_ERR_NONE)
+		if ((err = amx_InitJIT(amx, rt, np)) == AMX_ERR_NONE)
 		{
 			//amx->base = (unsigned char FAR *)realloc(np, amx->code_size);
 #if defined(_WIN32)
-			amx->base = (unsigned char *)VirtualAlloc(nullptr, amx->code_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+			amx->base = static_cast<unsigned char*>(VirtualAlloc(nullptr, amx->code_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE));
 #elif defined(__GNUC__)
 # if defined(__APPLE__)
 			amx->base = (unsigned char *)valloc(amx->code_size);
@@ -300,7 +300,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 			delete [] np;
 			delete [] rt;
 
-			char *prg = (char *)(*program);
+			char *prg = static_cast<char*>(*program);
 
 			delete [] prg;
 			(*program) = amx->base;
@@ -617,7 +617,7 @@ int unload_amxscript(AMX* amx, void** program)
 	{
 		delete [] prg;
 	}
-	else if (!VirtualFree((LPVOID)prg, 0, MEM_RELEASE))
+	else if (!VirtualFree(prg, 0, MEM_RELEASE))
 	{
 		AMXXLOG_Log("[AMXX] Could not free plugin memory, failure %d.", GetLastError());
 		return AMX_ERR_PARAMS;
@@ -742,9 +742,7 @@ bool ConvertModuleName(const char *pathString, char *path)
 	if (!len)
 		return false;
 
-	/* run to filename instead of dir */
-	char *ptr = tmpname;
-	ptr = tmpname + len - 1;
+	char* ptr = tmpname + len - 1;
 	while (ptr >= tmpname && *ptr != PLATFORM_SEP_CHAR)
 		ptr--;
 	if (ptr >= tmpname)

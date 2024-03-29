@@ -83,14 +83,14 @@ void Client_ClipInfo(void* mValue)
 
 void Client_TSHealth_End(void* mValue){
 	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
-	int damage = static_cast<int>(mPlayer->pEdict->v.dmg_take);
+	const int damage = static_cast<int>(mPlayer->pEdict->v.dmg_take);
 
 	if ( !damage || !enemy )
 		return;
 
 	int aim = 0;
 	int weapon = 0;
-	mPlayer->pEdict->v.dmg_take = 0.0; 
+	mPlayer->pEdict->v.dmg_take = 0.0f; 
 
 	CPlayer* pAttacker = nullptr;
 	if ( enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ){
@@ -115,7 +115,7 @@ void Client_TSHealth_End(void* mValue){
 			//That line below triggers crash [APG]RoboCop[CL]
 			edict_t* pOwner = reinterpret_cast<edict_t*>(*(static_cast<int*>(enemy->pvPrivateData) + gKnifeOffset));
 
-			if ( FNullEnt( static_cast<edict_t*>(pOwner)) )
+			if (FNullEnt((edict_t*)pOwner))
 				return;
 
 			pAttacker = GET_PLAYER_POINTER( pOwner );
@@ -157,7 +157,7 @@ void Client_TSHealth_End(void* mValue){
 	int killFlags = 0;
 
 	if ( !TA && mPlayer!=pAttacker ) {
-		int sflags = pAttacker->pEdict->v.iuser4;
+		const int sflags = pAttacker->pEdict->v.iuser4;
 	
 		int stuntKill = 0;
 		int slpos = 0;
@@ -171,7 +171,7 @@ void Client_TSHealth_End(void* mValue){
 
 		int doubleKill = 0;
 		
-		if ( gpGlobals->time - pAttacker->lastKill < 1.0 )
+		if ( gpGlobals->time - pAttacker->lastKill < 1.0f )
 			doubleKill = 1;
 		
 		if ( stuntKill )
@@ -202,7 +202,7 @@ void Client_TSHealth_End(void* mValue){
 		}
 
 		pAttacker->frags += pAttacker->lastFrag; 
-			if ( pAttacker->frags != pAttacker->pEdict->v.frags ){
+			if ( static_cast<float>(pAttacker->frags) != pAttacker->pEdict->v.frags ){
 				// maybe it's a sliding kill ?
 				if ( slpos )
 					killFlags |= TSKF_SLIDINGKILL;	

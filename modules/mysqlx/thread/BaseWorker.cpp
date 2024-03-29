@@ -19,10 +19,10 @@ BaseWorker::BaseWorker() :
 BaseWorker::~BaseWorker()
 {
 	if (m_state != Worker_Stopped || m_state != Worker_Invalid)
-		Stop(true);
+		BaseWorker::Stop(true);
 
 	if (m_ThreadQueue.length())
-		Flush(true);
+		BaseWorker::Flush(true);
 }
 
 void BaseWorker::MakeThread(IThread *pThread)
@@ -118,7 +118,7 @@ WorkerState BaseWorker::GetStatus(unsigned int *threads)
 unsigned int BaseWorker::RunFrame()
 {
 	unsigned int done = 0;
-	unsigned int max = GetMaxThreadsPerFrame();
+	const unsigned int max = GetMaxThreadsPerFrame();
 	SWThreadHandle *swt = nullptr;
 	IThread *pThread = nullptr;
 

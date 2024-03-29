@@ -84,7 +84,6 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 	g_pCaller = amx;
 	g_pCurNative = pNative;
 
-	int err = 0;
 	cell ret = 0;
 	if (pNative->style == 0)
 	{
@@ -112,7 +111,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		pDebugger->BeginExec();
 	}
 
-	err=amx_Exec(pNative->amx, &ret, pNative->func);
+	int err = amx_Exec(pNative->amx, &ret, pNative->func);
 
 	if (err != AMX_ERR_NONE)
 	{
@@ -382,11 +381,10 @@ static cell AMX_NATIVE_CALL vdformat(AMX *amx, cell *params)
 	}
 	cell *realdest = get_amxaddr(amx, params[1]);
 	size_t maxlen = static_cast<size_t>(params[2]);
-	cell *dest = realdest;
 
 	/* if this is necessary... */
 	static cell cpbuf[4096];
-	dest = cpbuf;
+	cell* dest = cpbuf;
 
 	/* perform format */
 	size_t total = atcprintf(dest, maxlen, fmt, g_pCaller, g_Params, &vargPos);

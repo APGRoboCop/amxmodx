@@ -45,24 +45,24 @@ void MysqlQuery::FreeHandle()
 
 bool MysqlQuery::Execute(QueryInfo *info, char *error, size_t maxlength)
 {
-	bool res = ExecuteR(info, error, maxlength);
+	const bool res = ExecuteR(info, error, maxlength);
 
 	if (m_LastRes)
 		m_LastRes->FreeHandle();
 	
-	m_LastRes = (MysqlResultSet *)info->rs;
+	m_LastRes = static_cast<MysqlResultSet*>(info->rs);
 
 	return res;
 }
 
 bool MysqlQuery::Execute2(QueryInfo *info, char *error, size_t maxlength)
 {
-	bool res = ExecuteR(info, error, maxlength);
+	const bool res = ExecuteR(info, error, maxlength);
 
 	if (m_LastRes)
 		m_LastRes->FreeHandle();
 
-	m_LastRes = (MysqlResultSet *)info->rs;
+	m_LastRes = static_cast<MysqlResultSet*>(info->rs);
 
 	if (info->success)
 	{
@@ -83,7 +83,7 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 {
 	int err;
 
-	if ( (err=mysql_real_query(m_pDatabase->m_pMysql, m_QueryString, (unsigned long)m_QueryLen)) )
+	if ( (err=mysql_real_query(m_pDatabase->m_pMysql, m_QueryString, static_cast<unsigned long>(m_QueryLen))) )
 	{
 		info->errorcode = mysql_errno(m_pDatabase->m_pMysql);
 		info->success = false;

@@ -280,7 +280,7 @@ int sort1d_amx_custom(const void *elem1, const void *elem2)
 {
 	cell c1 = *(cell *)elem1;
 	cell c2 = *(cell *)elem2;
-	sort_info *pInfo = g_AMXSortStack.front();
+	const sort_info *pInfo = g_AMXSortStack.front();
 
 	return executeForwards(pInfo->pfn, c1, c2, pInfo->array_addr, pInfo->data_addr, pInfo->data_size);
 }
@@ -427,13 +427,13 @@ int sort_adtarray_strings_desc(const void *str1, const void *str2)
 
 void sort_adt_random(CellArray *cArray)
 {
-	size_t arraysize = cArray->size();
+	const size_t arraysize = cArray->size();
 
-	srand((unsigned int)time(nullptr));
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	for (int i = arraysize-1; i > 0; i--)
 	{
-		int n = rand() % (i + 1);
+		const int n = rand() % (i + 1);
 
 		cArray->swap(i, n);
 	}

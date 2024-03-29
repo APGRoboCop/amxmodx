@@ -32,7 +32,7 @@ struct oldresult_s
 
 void FreeOldDb(void *ptr, unsigned int hndl)
 {
-	olddb_s *old = (olddb_s *)ptr;
+	olddb_s *old = static_cast<olddb_s*>(ptr);
 
 	if (old->pDatabase)
 	{
@@ -45,7 +45,7 @@ void FreeOldDb(void *ptr, unsigned int hndl)
 
 void FreeOldResult(void *ptr, unsigned int hndl)
 {
-	oldresult_s *oldres = (oldresult_s *)ptr;
+	oldresult_s *oldres = static_cast<oldresult_s*>(ptr);
 
 	if (oldres->pQuery)
 	{
@@ -109,7 +109,7 @@ static cell AMX_NATIVE_CALL dbi_query(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *queryString = MF_FormatAmxString(amx, params, 2, &len);
+	const char *queryString = MF_FormatAmxString(amx, params, 2, &len);
 
 	IQuery *pQuery = old->pDatabase->PrepareQuery(queryString);
 	QueryInfo info;
@@ -153,7 +153,7 @@ static cell AMX_NATIVE_CALL dbi_query2(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *queryString = MF_FormatAmxString(amx, params, 3, &len);
+	const char *queryString = MF_FormatAmxString(amx, params, 3, &len);
 
 	IQuery *pQuery = old->pDatabase->PrepareQuery(queryString);
 	QueryInfo info;

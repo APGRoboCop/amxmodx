@@ -103,12 +103,14 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 	return 1;
 }
 
-MysqlThread::MysqlThread()
+MysqlThread::MysqlThread(): m_qrInfo()
 {
 	m_fwd = 0;
 	m_data = nullptr;
 	m_datalen = 0;
 	m_maxdatalen = 0;
+	m_max_timeout = 0;
+	m_port = 0;
 }
 
 MysqlThread::~MysqlThread()
@@ -176,7 +178,7 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 	info.max_timeout = m_max_timeout;
 	info.charset = m_charset.chars();
 
-	float save_time = m_qrInfo.queue_time;
+	const float save_time = m_qrInfo.queue_time;
 
 	memset(static_cast<void *>(&m_qrInfo), 0, sizeof(m_qrInfo));
 
@@ -272,7 +274,7 @@ void MysqlThread::Execute()
 	{
 		state = -1;
 	}
-	float diff = gpGlobals->time - m_qrInfo.queue_time;
+	const float diff = gpGlobals->time - m_qrInfo.queue_time;
 	cell c_diff = amx_ftoc(diff);
 	unsigned int hndl = MakeHandle(&m_qrInfo.amxinfo, Handle_Query, NullFunc);
 	if (state != 0)
@@ -335,7 +337,7 @@ void StartFrame()
 	{
 		g_lasttime = gpGlobals->time + 0.025f;
 		g_QueueLock->Lock();
-		size_t remaining = g_ThreadQueue.size();
+		const size_t remaining = g_ThreadQueue.size();
 		if (remaining)
 		{
 			MysqlThread *kmThread;
@@ -371,7 +373,7 @@ void OnPluginsUnloading()
 	g_pWorker = nullptr;
 
 	g_QueueLock->Lock();
-	size_t remaining = g_ThreadQueue.size();
+	const size_t remaining = g_ThreadQueue.size();
 	if (remaining)
 	{
 		MysqlThread *kmThread;
@@ -401,6 +403,7 @@ AtomicResult::AtomicResult()
 	m_RowCount = 0;
 	m_Table = nullptr;
 	m_AllocSize = 0;
+	m_FieldCount = 0;
 }
 
 AtomicResult::~AtomicResult()
@@ -498,7 +501,7 @@ const char *AtomicResult::GetString(unsigned int columnId)
 	if (columnId >= m_FieldCount)
 		return nullptr;
 
-	size_t idx = (m_CurRow * m_FieldCount) + columnId;
+	const size_t idx = (m_CurRow * m_FieldCount) + columnId;
 
 	assert(m_Table[idx] != nullptr);
 
@@ -507,7 +510,7 @@ const char *AtomicResult::GetString(unsigned int columnId)
 
 IResultRow *AtomicResult::GetRow()
 {
-	return static_cast<IResultRow *>(this);
+	return this;
 }
 
 bool AtomicResult::IsDone()
@@ -549,7 +552,7 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 	m_RowCount = rs->RowCount();
 	m_CurRow = 1;
 
-	size_t newTotal = (m_RowCount * m_FieldCount) + m_FieldCount;
+	const size_t newTotal = (m_RowCount * m_FieldCount) + m_FieldCount;
 	if (newTotal > m_AllocSize)
 	{
 		ke::AString **table = new ke::AString *[newTotal];

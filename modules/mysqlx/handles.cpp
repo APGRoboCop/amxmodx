@@ -60,7 +60,7 @@ void *GetHandle(unsigned int num, HandleType type)
 	if (num >= g_Handles.length())
 		return nullptr;
 
-	QHandle *h = g_Handles[num];
+	const QHandle *h = g_Handles[num];
 	if (h->isfree || (h->type != type))
 		return nullptr;
 
@@ -72,7 +72,7 @@ bool FreeHandle(unsigned int num)
 	if (num == 0)
 		return false;
 
-	unsigned int _num = num;
+	const unsigned int _num = num;
 
 	num--;
 	if (num >= g_Handles.length())

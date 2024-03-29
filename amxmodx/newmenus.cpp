@@ -419,20 +419,16 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		flags &= ~Display_Back;
 	}
 
-	menuitem *pItem = nullptr;
-
 	int option = 0;
 	keys = 0;
-	bool enabled = true;
 	int ret = 0;
 	int slots = 0;
-	int option_display = 0;
 
 	for (item_t i = start; i < end; i++)
 	{
 		// reset enabled
-		enabled = true;
-		pItem = m_Items[i];
+		bool enabled = true;
+		menuitem* pItem = m_Items[i];
 
 		if (pItem->access && !(pItem->access & g_players[player].flags[0]))
 		{
@@ -471,7 +467,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			keys |= (1<<option);
 		}
 
-		option_display = ++option;
+		int option_display = ++option;
 		if (option_display == 10)
 		{
 			option_display = 0;

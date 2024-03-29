@@ -327,11 +327,11 @@ int	C_InconsistentFile(const edict_t *player, const char *filename, char *discon
 
 const char*	get_localinfo(const char* name, const char* def)
 {
-	const char* b = LOCALINFO((char*)name);
+	const char* b = LOCALINFO(name);
 
 	if (b == nullptr || *b == 0)
 	{
-		SET_LOCALINFO((char*)name, (char*)(b = def));
+		SET_LOCALINFO(name, b = def);
 	}
 
 	return b;
@@ -339,11 +339,11 @@ const char*	get_localinfo(const char* name, const char* def)
 
 const char*	get_localinfo_r(const char *name, const char *def, char buffer[], size_t maxlength)
 {
-	const char* b = LOCALINFO((char*)name);
+	const char* b = LOCALINFO(name);
 
 	if (b == nullptr || *b == 0)
 	{
-		SET_LOCALINFO((char*)name, (char*)(b = def));
+		SET_LOCALINFO(name, b = def);
 	}
 
 	ke::SafeSprintf(buffer, maxlength, "%s", b);
@@ -881,7 +881,7 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 		{
 			auto playerToAuth = ke::AutoPtr<CPlayer *>(new CPlayer*(pPlayer));
 			if (playerToAuth)
-				g_auth.append(ke::Move(playerToAuth));
+				g_auth.append(Move(playerToAuth));
 		} else {
 			pPlayer->Authorize();
 			const char* authid = GETPLAYERAUTHID(pEntity);
@@ -1662,7 +1662,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 		while (a != amx_config.end())
 		{
-			SET_LOCALINFO((char*)a.key().chars(), (char*)a.value().chars());
+			SET_LOCALINFO(a.key().chars(), a.value().chars());
 			++a;
 		}
 		amx_config.clear();

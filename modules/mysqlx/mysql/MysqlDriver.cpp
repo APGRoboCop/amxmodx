@@ -65,9 +65,9 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		timeout = info->max_timeout;
 	}
 
-	mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&timeout);
-	mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
-	mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (const char *)&timeout);
+	mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, reinterpret_cast<const char*>(&timeout));
+	mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, reinterpret_cast<const char*>(&timeout));
+	mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, reinterpret_cast<const char*>(&timeout));
 
 	/** Have MySQL automatically reconnect if it times out or loses connection.
 	 * This will prevent "MySQL server has gone away" errors after a while.
@@ -112,7 +112,7 @@ int MysqlDriver::QuoteString(const char *str, char buffer[], size_t maxlen, size
 
 	if (maxlen < needed)
 	{
-		return (int)needed;
+		return static_cast<int>(needed);
 	}
 
 	needed = mysql_escape_string(buffer, str, size);

@@ -97,7 +97,7 @@ void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cv
 
 			if (hook->forward->state == AutoForward::FSTATE_OK) // Our callback can be enable/disabled by natives.
 			{
-				executeForwards(hook->forward->id, reinterpret_cast<cvar_t*>(var), oldValue.chars(), var->string);
+				executeForwards(hook->forward->id, var, oldValue.chars(), var->string);
 			}
 		}
 	}
@@ -191,13 +191,12 @@ void CvarManager::DestroyHook()
 CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags,
 								  const char* helpText)
 {
-	cvar_t*    var = nullptr;
 	CvarInfo* info = nullptr;
 
 	if (!CacheLookup(name, &info))
 	{
 		// Not cached - Is cvar already exist?
-		var = CVAR_GET_POINTER(name);
+		cvar_t* var = CVAR_GET_POINTER(name);
 
 		// Whether it exists, we need to prepare a new entry.
 		info = new CvarInfo(name, helpText, plugin, pluginId);

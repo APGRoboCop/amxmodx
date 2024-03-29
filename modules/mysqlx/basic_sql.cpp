@@ -21,7 +21,7 @@ MysqlDriver g_Mysql;
 
 void FreeConnection(void *p, unsigned int num)
 {
-	SQL_Connection *cn = (SQL_Connection *)p;
+	SQL_Connection *cn = static_cast<SQL_Connection*>(p);
 
 	free(cn->host);
 	free(cn->user);
@@ -34,7 +34,7 @@ void FreeConnection(void *p, unsigned int num)
 
 void FreeQuery(void *p, unsigned int num)
 {
-	AmxQueryInfo *qry = (AmxQueryInfo *)p;
+	const AmxQueryInfo *qry = static_cast<AmxQueryInfo*>(p);
 
 	qry->pQuery->FreeHandle();
 	delete qry;
@@ -42,7 +42,7 @@ void FreeQuery(void *p, unsigned int num)
 
 void FreeDatabase(void *p, unsigned int num)
 {
-	IDatabase *db = (IDatabase *)p;
+	IDatabase *db = static_cast<IDatabase*>(p);
 
 	db->FreeHandle();
 }
@@ -135,7 +135,7 @@ static cell AMX_NATIVE_CALL SQL_PrepareQuery(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *fmt = MF_FormatAmxString(amx, params, 2, &len);
+	const char *fmt = MF_FormatAmxString(amx, params, 2, &len);
 
 	IQuery *pQuery = pDb->PrepareQuery(fmt);
 	if (!pQuery)
@@ -319,7 +319,7 @@ static cell AMX_NATIVE_CALL SQL_AffectedRows(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return static_cast<cell>(qInfo->info.affected_rows);
+	return qInfo->info.affected_rows;
 }
 
 static cell AMX_NATIVE_CALL SQL_NumResults(AMX *amx, cell *params)
@@ -378,7 +378,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 		return 0;
 	}
 
-	unsigned int col = static_cast<unsigned int>(params[2]);
+	const unsigned int col = static_cast<unsigned int>(params[2]);
 	const char *namewa = rs->FieldNumToName(col);
 
 	if (!namewa)
@@ -425,7 +425,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *namewa = MF_GetAmxString(amx, params[2], 0, &len);
+	const char *namewa = MF_GetAmxString(amx, params[2], 0, &len);
 	unsigned int columnId;
 	if (!rs->FieldNameToNum(namewa, &columnId))
 	{
@@ -467,7 +467,7 @@ static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
 		return 1;
 	}
 
-	SqlFunctions *pFuncs = (SqlFunctions *)MF_RequestFunction(SQL_DRIVER_FUNC);
+	const SqlFunctions *pFuncs = (SqlFunctions *)MF_RequestFunction(SQL_DRIVER_FUNC);
 	while (pFuncs)
 	{
 		if (pFuncs->driver->IsCompatDriver(str))
@@ -533,7 +533,7 @@ static cell AMX_NATIVE_CALL SQL_NextResultSet(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL SQL_QuoteString(AMX *amx, cell *params)
 {
 	int len;
-	char *str = MF_GetAmxString(amx, params[4], 0, &len);
+	const char *str = MF_GetAmxString(amx, params[4], 0, &len);
 	size_t newsize;
 	static char buffer[8192];
 
@@ -567,7 +567,7 @@ static cell AMX_NATIVE_CALL SQL_QuoteString(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL SQL_QuoteStringFmt(AMX *amx, cell *params)
 {
 	int len;
-	char *str = MF_FormatAmxString(amx, params, 4, &len);
+	const char *str = MF_FormatAmxString(amx, params, 4, &len);
 	size_t newsize;
 	static char buffer[8192];
 

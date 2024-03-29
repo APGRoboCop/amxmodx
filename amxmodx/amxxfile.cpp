@@ -116,7 +116,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		
 		for (mint8_t i = 0; i < m_Bh.numPlugins; i++)
 		{
-			pe = &(m_Bh.plugins[(unsigned)i]);
+			pe = &(m_Bh.plugins[static_cast<unsigned>(i)]);
 			
 			if (pe->cellsize == m_CellSize)
 			{
@@ -317,14 +317,14 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		
 		return m_Status;
 	}
-	else if (m_AmxxFile)
+	if (m_AmxxFile)
 	{
 		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		char *tempBuffer = new char[m_SectionLength + 1];
 		fseek(m_pFile, pe->offs, SEEK_SET);
 		DATAREAD_RELEASE((void *)tempBuffer, 1, m_SectionLength)
 		uLongf destLen = GetBufferSize();
-		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
+		int result = uncompress(static_cast<Bytef*>(buffer), &destLen, reinterpret_cast<Bytef*>(tempBuffer), m_SectionLength);
 		delete [] tempBuffer;
 		
 		if (result != Z_OK)
@@ -348,7 +348,7 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 		//fread(tempBuffer, sizeof(char), m_SectionLength, m_pFile);
 		DATAREAD_RELEASE((void*)tempBuffer, 1, m_SectionLength)
 		// decompress
-		int result = uncompress((Bytef *)buffer, &destLen, (Bytef *)tempBuffer, m_SectionLength);
+		const int result = uncompress(static_cast<Bytef*>(buffer), &destLen, reinterpret_cast<Bytef*>(tempBuffer), m_SectionLength);
 		delete [] tempBuffer;
 		
 		if (result != Z_OK)

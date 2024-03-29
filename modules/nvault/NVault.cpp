@@ -185,8 +185,8 @@ bool NVault::_SaveToFile()
 		stamp = (*iter).value.stamp;
 		
 		if (!bw.WriteInt32(static_cast<int32_t>(stamp))) goto fail;
-		if (!bw.WriteUInt8( key.length() )) goto fail;
-		if (!bw.WriteUInt16( val.length() )) goto fail;
+		if (!bw.WriteUInt8(static_cast<unsigned char>(key.length()) )) goto fail;
+		if (!bw.WriteUInt16(static_cast<unsigned char>(val.length()) )) goto fail;
 		if (!bw.WriteChars( key.chars(), key.length() )) goto fail;
 		if (!bw.WriteChars( val.chars(), val.length() )) goto fail;
 

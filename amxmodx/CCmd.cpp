@@ -83,7 +83,7 @@ CmdMngr::Command* CmdMngr::getCmd(long int id, int type, int access)
 		buf_cmdtype = type;
 		buf_cmdid = id;
 	} else {
-		int a = id;
+		const int a = id;
 		id -= buf_cmdid;
 		buf_cmdid = a;
 	}
@@ -130,7 +130,7 @@ void CmdMngr::setCmdLink(CmdLink** a, Command* c, bool sorted)
 	{
 		while (*a)
 		{
-			int i = strcmp(c->getCommand(), (*a)->cmd->getCommand());
+			const int i = strcmp(c->getCommand(), (*a)->cmd->getCommand());
 
 			if ((i < 0) || ((i == 0) && (strcmp(c->getArgument(), (*a)->cmd->getArgument()) < 0)))
 				break;

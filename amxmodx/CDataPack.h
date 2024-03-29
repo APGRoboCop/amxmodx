@@ -123,6 +123,7 @@ public:
 	/**
 	 * @brief Packs one cell into the data stream.
 	 *
+	 * @param cells
 	 * @param cell		Cell value to write.
 	 */
 	void PackCell(cell cells);

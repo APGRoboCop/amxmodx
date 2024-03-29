@@ -137,7 +137,9 @@ typedef Debugger::Tracer::trace_info trace_info_t;
 class Handler
 {
 public:
-	Handler(AMX *pAmx) : m_pAmx(pAmx), m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1), m_Handling(false), m_InNativeFilter(false) {};
+	Handler(AMX *pAmx) : m_pAmx(pAmx), m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1), m_Handling(false),
+	                     m_InNativeFilter(false), m_pTrace(nullptr)
+	{};
 	~Handler() {};
 public:
 	int SetErrorHandler(const char *function);

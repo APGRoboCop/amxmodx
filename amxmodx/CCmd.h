@@ -62,7 +62,7 @@ public:
 		inline bool isViewable() const { return listable; }
 		inline bool isInfoML() const { return info_ml; }
 		inline int getFlags() const { return flags; }
-		inline long int getId() const { return (long int)id; }
+		inline long int getId() const { return id; }
 		
 		const char* getCmdType() const;		
 		void setCmdType(int a);
@@ -129,7 +129,7 @@ public:
 
 	inline iterator clcmdprefixbegin(const char* nn)
 	{
-		CmdPrefix* a = *findPrefix(nn);
+		const CmdPrefix* a = *findPrefix(nn);
 		return iterator(a ? a->list : nullptr);
 	}
 

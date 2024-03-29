@@ -524,7 +524,7 @@ int EventsMngr::getArgInteger(int a) const
 		case MSG_STRING:
 			return atoi(m_ReadVault[a].sValue);
 		default:
-			return (int)m_ReadVault[a].fValue; 
+			return static_cast<int>(m_ReadVault[a].fValue); 
 	}
 }
 

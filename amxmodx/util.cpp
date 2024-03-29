@@ -36,18 +36,16 @@ void UTIL_GetFlags(char* f, int a)
 void UTIL_ShowMenu(edict_t* pEdict, int slots, int time, char *menu, int mlen)
 {
 	char *n = menu;
-	char c = 0;
-	int a;
 
 	if (!gmsgShowMenu)
 		return;			// some games don't support ShowMenu (Firearms)
 
 	do
 	{
-		a = mlen;
+		int a = mlen;
 		if (a > 175) a = 175;
 		mlen -= a;
-		c = *(n+=a);
+		const char c = *(n += a);
 		*n = 0;
 		
 		MESSAGE_BEGIN(MSG_ONE, gmsgShowMenu, nullptr, pEdict);
@@ -77,11 +75,10 @@ void UTIL_ShowMOTD(edict_t *client, char *motd, int mlen, const char *name)
 
 	char *n = motd;
 	char c = 0;
-	int a;
 
 	while (*n)
 	{
-		a = mlen;
+		int a = mlen;
 		if (a > 175) a = 175;
 		mlen -= a;
 		c = *(n += a);
@@ -116,7 +113,7 @@ void UTIL_IntToString(int value, char *output)
 	
 	*output = 0;
 	if (value < 0) value = -value;
-	int tho = value / 1000;
+	const int tho = value / 1000;
 	int aaa = 0;
 	
 	if (tho)
@@ -126,7 +123,7 @@ void UTIL_IntToString(int value, char *output)
 		value = value % 1000;
 	}
 
-	int hun = value / 100;
+	const int hun = value / 100;
 	
 	if (hun)
 	{
@@ -135,8 +132,8 @@ void UTIL_IntToString(int value, char *output)
 		value = value % 100;
 	}
 
-	int ten = value / 10;
-	int unit = value % 10;
+	const int ten = value / 10;
+	const int unit = value % 10;
 	
 	if (ten)
 		aaa += sprintf(&output[aaa], "%s", words[(ten > 1) ? (ten + 18) : (unit + 10)]);
@@ -184,26 +181,26 @@ char* UTIL_SplitHudMessage(const char *src)
 
 unsigned short FixedUnsigned16(float value, float scale)
 {
-	int output = (int)(value * scale);
+	int output = static_cast<int>(value * scale);
 
 	if (output < 0)
 		output = 0;
 	else if (output > 0xFFFF)
 		output = 0xFFFF;
 
-	return (unsigned short)output;
+	return static_cast<unsigned short>(output);
 }
 
 short FixedSigned16(float value, float scale)
 {
-	int output = (int)(value * scale);
+	int output = static_cast<int>(value * scale);
 
 	if (output > 32767)
 		output = 32767;
 	else if (output < -32768)
 		output = -32768;
 
-	return (short)output;
+	return static_cast<short>(output);
 }
 
 void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const char *pMessage)
@@ -271,7 +268,7 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 
 	const auto canUseFormatString = g_official_mod && !g_bmod_dod; // Temporary exclusion for DoD until officially supported
 	const auto index = canUseFormatString ? 187 : 190;
-	char c = msg[index];
+	const char c = msg[index];
 	msg[index] = 0;			// truncate without checking with strlen()
 	
 	if (pEntity)
@@ -298,7 +295,7 @@ void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 
 	const auto canUseFormatString = g_official_mod && !g_bmod_dod; // Temporary exclusion for DoD until officially supported
 	const auto index = canUseFormatString ? 187 : 190;
-	char c = msg[index];
+	const char c = msg[index];
 	msg[index] = 0;			// truncate without checking with strlen()
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, pEntity);
@@ -411,7 +408,7 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 
 unsigned int UTIL_GetUTF8CharBytes(const char *stream)
 {
-	unsigned char c = *(unsigned char *)stream;
+	const unsigned char c = *(unsigned char *)stream;
 	if (c & (1 << 7))
 	{
 		if (c & (1 << 5))
@@ -565,7 +562,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 {
 	char *ptr = subject;
 	size_t browsed = 0;
-	size_t textLen = strlen(subject);
+	const size_t textLen = strlen(subject);
 
 	/* It's not possible to search or replace */
 	if (searchLen > textLen)
@@ -640,7 +637,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 						* POSITION:         ^
 						*/
 						/* We're going to have some bytes left over... */
-						size_t origBytesToCopy = (textLen - (browsed + searchLen)) + 1;
+						const size_t origBytesToCopy = (textLen - (browsed + searchLen)) + 1;
 						size_t realBytesToCopy = (maxLen - (browsed + replaceLen)) + 1;
 						char *moveFrom = ptr + searchLen + (origBytesToCopy - realBytesToCopy);
 						char *moveTo = ptr + replaceLen;
@@ -753,7 +750,7 @@ void UTIL_TrimRight(char *buffer)
 	/* Make sure buffer isn't null */
 	if (buffer)
 	{
-		size_t len = strlen(buffer);
+		const size_t len = strlen(buffer);
 
 		/* Loop through buffer backwards while replacing whitespace chars with null chars */
 		for (size_t i = len - 1; i < len; i--)

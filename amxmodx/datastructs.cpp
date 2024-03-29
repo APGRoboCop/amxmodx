@@ -193,7 +193,7 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 			return 0;
 		}
 
-		return (cell)*((char *)blk + idx);
+		return *((char *)blk + idx);
 	}
 
 	return 0;
@@ -368,7 +368,7 @@ static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
 
 	memcpy(blk, addr, sizeof(cell) * indexes);
 
-	return static_cast<cell>((vec->size() - 1));
+	return vec->size() - 1;
 }
 
 // native ArrayPushCell(Array:which, any:input);
@@ -392,7 +392,7 @@ static cell AMX_NATIVE_CALL ArrayPushCell(AMX* amx, cell* params)
 
 	*blk = params[2];
 
-	return static_cast<cell>((vec->size() - 1));
+	return vec->size() - 1;
 }
 
 // native ArrayPushString(Array:which, const input[]);
@@ -415,7 +415,7 @@ static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
 
 	strncopy(blk, get_amxaddr(amx, params[2]), vec->blocksize());
 
-	return static_cast<cell>((vec->size() - 1));
+	return vec->size() - 1;
 }
 
 // native DoNotUse : ArrayGetStringHandle(Array : which, item);
@@ -872,7 +872,7 @@ static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 
 		if (fastcellcmp(a, b, len))
 		{
-			return static_cast<cell>(i);
+			return i;
 		}
 	}
 
@@ -894,7 +894,7 @@ static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
 	{
 		if (params[2] == *vec->at(i))
 		{
-			return static_cast<cell>(i);
+			return i;
 		}
 	}
 

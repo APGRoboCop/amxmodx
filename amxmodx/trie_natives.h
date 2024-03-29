@@ -40,7 +40,7 @@ public:
 		: control_(0)
 	{
 	}
-	Entry(Entry &&other)
+	Entry(Entry &&other) noexcept
 	{
 		control_ = other.control_;
 		data_ = other.data_;
@@ -62,10 +62,10 @@ public:
 		setTypeAndPointer(EntryType_CellArray, array);
 	}
 	void setString(const char *str) {
-		size_t length = strlen(str);
+		const size_t length = strlen(str);
 		ArrayInfo *array = ensureArray(length + 1);
 		array->length = length;
-		strcpy((char *)array->base(), str);
+		strcpy(static_cast<char*>(array->base()), str);
 		setTypeAndPointer(EntryType_String, array);
 	}
 
@@ -75,11 +75,11 @@ public:
 	}
 	cell *array() const {
 		assert(isArray());
-		return reinterpret_cast<cell *>(raw()->base());
+		return static_cast<cell *>(raw()->base());
 	}
 	char *chars() const {
 		assert(isString());
-		return reinterpret_cast<char *>(raw()->base());
+		return static_cast<char *>(raw()->base());
 	}
 	cell cell_() const {
 		assert(isCell());
@@ -266,8 +266,9 @@ struct CellTrieIter
 struct TrieSnapshot
 {
 	TrieSnapshot()
-	: strings(128)
-	{ }
+		: length(0), strings(128)
+	{
+	}
 
 	size_t mem_usage()
 	{

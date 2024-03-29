@@ -171,7 +171,7 @@ static cell AMX_NATIVE_CALL PopStackString(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = vec->size() - 1;
+	const size_t idx = vec->size() - 1;
 	cell *blk = vec->at(idx);
 
 	int numWritten = set_amxstring_utf8(amx, params[2], blk, amxstring_len(blk), params[3]);
@@ -198,7 +198,7 @@ static cell AMX_NATIVE_CALL PopStackArray(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = vec->size() - 1;
+	const size_t idx = vec->size() - 1;
 	cell *blk = vec->at(idx);
 	size_t indexes = vec->blocksize();
 

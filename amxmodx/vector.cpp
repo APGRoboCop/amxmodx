@@ -31,10 +31,10 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	cell *cpVec1 = get_amxaddr(amx, params[1]);
 	cell *cpVec2 = get_amxaddr(amx, params[2]);
 
-	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	Vector vec1 = Vector(amx_ctof(cpVec1[0]), amx_ctof(cpVec1[1]), amx_ctof(cpVec1[2]));
+	Vector vec2 = Vector(amx_ctof(cpVec2[0]), amx_ctof(cpVec2[1]), amx_ctof(cpVec2[2]));
 
-	REAL fDist = (REAL) (vec1 - vec2).Length();
+	REAL fDist = (vec1 - vec2).Length();
 
 	return amx_ftoc(fDist);
 }
@@ -144,7 +144,7 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 	REAL fY = amx_ctof(cAddr[1]);
 	REAL fZ = amx_ctof(cAddr[2]);
 
-	Vector vVector = Vector(fX, fY, fZ);
+	const Vector vVector = Vector(fX, fY, fZ);
 
 	REAL fLength = vVector.Length();
 

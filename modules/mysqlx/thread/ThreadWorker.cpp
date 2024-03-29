@@ -9,14 +9,16 @@
 
 #include "ThreadWorker.h"
 
-ThreadWorker::ThreadWorker() : 
+ThreadWorker::ThreadWorker() :
 	m_Threader(nullptr),
 	m_QueueLock(nullptr),
 	m_StateLock(nullptr),
 	m_PauseSignal(nullptr),
 	m_AddSignal(nullptr),
 	me(nullptr),
-	m_think_time(DEFAULT_THINK_TIME_MS)
+	m_think_time(DEFAULT_THINK_TIME_MS),
+	m_Waiting(false),
+	m_FlushType(false)
 {
 	m_state = Worker_Invalid;
 }
@@ -28,7 +30,9 @@ ThreadWorker::ThreadWorker(IThreader *pThreader, unsigned int thinktime) :
 	m_PauseSignal(nullptr),
 	m_AddSignal(nullptr),
 	me(nullptr),
-	m_think_time(thinktime)
+	m_think_time(thinktime),
+	m_Waiting(false),
+	m_FlushType(false)
 {
 	if (m_Threader)
 	{

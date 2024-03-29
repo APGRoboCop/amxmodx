@@ -164,7 +164,7 @@ done_with_flags:
 		// Done sucking the command and flags out of the line
 		// now insert this command into the linked list
 
-		AddFromFile(const_cast<const char*>(&Command[0]),&Flags[0]);
+		AddFromFile(&Command[0],&Flags[0]);
 
 		nonconst = Line;
 		*nonconst = '\0';
@@ -397,7 +397,7 @@ void CFlagManager::Clear()
 	m_FlagList.clear();
 }
 
-void CFlagManager::CheckIfDisabled(void)
+void CFlagManager::CheckIfDisabled()
 {
 	if (atoi(get_localinfo("disableflagman","0"))==0)
 	{

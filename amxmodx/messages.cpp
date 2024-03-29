@@ -640,7 +640,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	REAL f = (REAL)Msg.GetParamFloat(argn);
+	REAL f = Msg.GetParamFloat(argn);
 	return amx_ftoc(f);
 }
 
@@ -656,7 +656,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 	REAL fVal = amx_ctof(params[3]);
 
-	Msg.SetParam(argn, (float)fVal);
+	Msg.SetParam(argn, fVal);
 
 	return 1;
 }
@@ -706,7 +706,7 @@ static cell AMX_NATIVE_CALL get_msg_origin(AMX *amx, cell *params)
 
 	if (msgDest >= MSG_PVS && msgDest <= MSG_PAS_R)
 	{
-		vec3_t vRet = (Vector)msgOrigin;
+		vec3_t vRet = msgOrigin;
 		cAddr[0] = FloatToCell(vRet.x);
 		cAddr[1] = FloatToCell(vRet.y);
 		cAddr[2] = FloatToCell(vRet.z);

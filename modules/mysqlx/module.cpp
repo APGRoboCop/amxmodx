@@ -36,7 +36,7 @@ void OnAmxxAttach()
 {
 	MF_AddNatives(g_BaseSqlNatives);
 	MF_AddNatives(g_ThreadSqlNatives);
-	g_MysqlFuncs.prev = (SqlFunctions *)MF_RegisterFunctionEx(&g_MysqlFuncs, SQL_DRIVER_FUNC);
+	g_MysqlFuncs.prev = static_cast<SqlFunctions*>(MF_RegisterFunctionEx(&g_MysqlFuncs, SQL_DRIVER_FUNC));
 	if (!MF_RequestFunction("GetDbDriver") 
 		&& !MF_FindLibrary("SQLITE", LibType_Library))
 	{

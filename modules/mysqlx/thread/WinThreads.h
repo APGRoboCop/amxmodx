@@ -49,7 +49,8 @@ public:
 	public:
 		WinMutex(HANDLE mutex) : m_mutex(mutex)
 		{
-		};
+		}
+
 		virtual ~WinMutex();
 	public:
 		virtual bool TryLock();
@@ -64,7 +65,8 @@ public:
 	public:
 		WinEvent(HANDLE event) : m_event(event)
 		{
-		};
+		}
+
 		virtual ~WinEvent();
 	public:
 		virtual void Wait();

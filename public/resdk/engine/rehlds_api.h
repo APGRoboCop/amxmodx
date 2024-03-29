@@ -345,7 +345,7 @@ struct RehldsFuncs_t {
 	void(*MSG_WriteHiresAngle)(sizebuf_t *sb, float f);
 	void(*MSG_WriteUsercmd)(sizebuf_t *sb, usercmd_t *to, usercmd_t *from);
 	void(*MSG_WriteCoord)(sizebuf_t *sb, float f);
-	void(*MSG_WriteVec3Coord)(sizebuf_t *sb, const vec3_t fa);
+	void(*MSG_WriteVec3Coord)(sizebuf_t *sb, vec3_t fa);
 
 	// Write bit functions
 	bool(*MSG_IsBitWriting)();

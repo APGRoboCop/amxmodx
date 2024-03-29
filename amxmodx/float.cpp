@@ -213,7 +213,7 @@ static cell AMX_NATIVE_CALL n_floatround(AMX *amx,cell *params)
             break;
     }
 
-    return (long)fA;
+    return fA;
 }
 
 #if defined __BORLANDC__ || defined __WATCOMC__

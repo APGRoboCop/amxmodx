@@ -25,7 +25,7 @@ static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param *
 	if (pPlayer->attackers[attacker].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[4]);
-		CPlayer::PlayerWeapon* stats = &pPlayer->attackers[attacker];
+		const CPlayer::PlayerWeapon* stats = &pPlayer->attackers[attacker];
 		cpStats[0] = stats->kills;
 		cpStats[1] = stats->deaths;
 		cpStats[2] = stats->hs;
@@ -52,7 +52,7 @@ static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param *
 	if (pPlayer->victims[victim].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[4]);
-		CPlayer::PlayerWeapon* stats = &pPlayer->victims[victim];
+		const CPlayer::PlayerWeapon* stats = &pPlayer->victims[victim];
 		cpStats[0] = stats->kills;
 		cpStats[1] = stats->deaths;
 		cpStats[2] = stats->hs;
@@ -82,7 +82,7 @@ static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param 
 	if (pPlayer->weaponsRnd[weapon].shots){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[4]);
-		Stats* stats = &pPlayer->weaponsRnd[weapon];
+		const Stats* stats = &pPlayer->weaponsRnd[weapon];
 		cpStats[0] = stats->kills;
 		cpStats[1] = stats->deaths;
 		cpStats[2] = stats->hs;
@@ -110,7 +110,7 @@ static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param *
 	if (pPlayer->weapons[weapon].shots){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[4]);
-		CPlayer::PlayerWeapon* stats = &pPlayer->weapons[weapon];
+		const CPlayer::PlayerWeapon* stats = &pPlayer->weapons[weapon];
 		cpStats[0] = stats->kills;
 		cpStats[1] = stats->deaths;
 		cpStats[2] = stats->hs;
@@ -137,7 +137,7 @@ static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
 	CHECK_PLAYERRANGE(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->rank ){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[3]);
@@ -161,7 +161,7 @@ static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param *
 {
 	int index = params[1];
 	CHECK_PLAYERRANGE(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->rank){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[3]);
@@ -181,8 +181,7 @@ static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param *
 
 static cell AMX_NATIVE_CALL get_stats(AMX *amx, cell *params) /* 3 param */
 {
-	
-	int index = params[1] + 1;
+	const int index = params[1] + 1;
 
 	for(RankSystem::iterator a = g_rank.front(); a ;--a){
 		if ((*a).getPosition() == index)  {
@@ -246,14 +245,14 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 
 	int vic = params[3];
 	CHECK_PLAYERRANGE(vic);
-	
-	int dmg = params[4];
+
+	const int dmg = params[4];
 	if ( dmg<1 ){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid damage amount %d", dmg);
 		return 0;
 	}
-	
-	int aim = params[5];
+
+	const int aim = params[5];
 	if ( aim < 0 || aim > 7 ){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid aim %d", aim);
 		return 0;

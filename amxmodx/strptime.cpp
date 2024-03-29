@@ -123,11 +123,11 @@ Scan0:
    {
     int len;
     const char *word = *word_list;
-    skip_sp((const unsigned char**)&word);
+    skip_sp(reinterpret_cast<const unsigned char**>(&word));
     if (l_max < (len = strlen(word))) len = l_max;
     if (found_len < len && /* search for maximal lenth */
                   (!len || /* at least "" always founded */
-        !strnicmp((const char*)*strp, word, len))) /* found */
+        !strnicmp(reinterpret_cast<const char*>(*strp), word, len))) /* found */
       found_len = len, found = ix;
    }
  if (l_max >= 100) /* first pass: full names */
@@ -155,13 +155,13 @@ static int time_int(struct tm_int *ti,
 {
  int ii;
 
- for(; (ii = (unsigned char)*fmt); fmt++)
+ for(; (ii = static_cast<unsigned char>(*fmt)); fmt++)
    if (ii != '%')
      {
 Other:
       if (isspace(ii))
         {
-/*SkipSp:*/  fmt++;  skip_sp((const unsigned char **)&fmt);
+/*SkipSp:*/  fmt++;  skip_sp(reinterpret_cast<const unsigned char**>(&fmt));
          fmt--;  skip_sp(buf);
         }       /* toupper(ii) != toupper(**buf) */
       /*else if (_lc_igncase[ii] != _lc_igncase[**buf]) return -1;*/
@@ -170,7 +170,7 @@ Other:
    else
      {
       const char *fs;
-/*Fmt:*/  switch(ii = (unsigned char)*++fmt)
+/*Fmt:*/  switch(ii = static_cast<unsigned char>(*++fmt))
         {
       case  0 : goto FmtEnd;
       case 'a':
@@ -313,7 +313,7 @@ void justadd(int* one, int two){
 
 char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem)
 {
- specoper defoper = addthem ? justadd : justreplace;
+	const specoper defoper = addthem ? justadd : justreplace;
 
  struct tm_int ti;
                ti.qS =     /* Seconds (0...61) */
@@ -332,7 +332,7 @@ char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem)
                ti.qU =     /* week in year (0...53) */
                ti.qV = -1; /* week in year mode: 0=U, 1=W, 2=V */
 
- if (0 > time_int(&ti, (const unsigned char **)&buf, fmt, addthem)) buf = nullptr;
+ if (0 > time_int(&ti, reinterpret_cast<const unsigned char**>(&buf), fmt, addthem)) buf = nullptr;
  if (0 <= ti.qS) (*defoper) ( &tm->tm_sec ,  ti.qS );
  if (0 <= ti.qM) (*defoper) ( &tm->tm_min ,  ti.qM ); //tm->tm_min  = ti.qM;
  if (0 <= ti.qI)
@@ -410,6 +410,6 @@ char *strptime(const char *buf, const char *fmt, struct tm *tm, short addthem)
  if (0 <= ti.qw) (*defoper) ( &tm->tm_wday ,  ti.qw );  //tm->tm_wday = ti.qw;
  if (0 <= ti.qj) (*defoper) ( &tm->tm_yday ,  ti.qj );  //tm->tm_yday = ti.qj;
 
- return (char*)buf;
+ return const_cast<char*>(buf);
 }
 /* end of strftime.c */

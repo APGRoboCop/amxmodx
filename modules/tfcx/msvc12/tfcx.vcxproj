@@ -64,7 +64,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;E:\Dropbox\src\amxmodx\metamod-bu\metamod;E:\Dropbox\src\amxmodx\hlsdk-bu\common;E:\Dropbox\src\amxmodx\hlsdk-bu\engine;E:\Dropbox\src\amxmodx\hlsdk-bu\dlls;E:\Dropbox\src\amxmodx\hlsdk-bu\pm_shared;E:\Dropbox\src\amxmodx\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\metamod-bu\metamod;..\..\..\hlsdk-bu\common;..\..\..\hlsdk-bu\engine;..\..\..\hlsdk-bu\dlls;..\..\..\hlsdk-bu\pm_shared;..\..\..\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;tfcx_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -111,7 +111,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\metamod-bu\metamod;..\..\..\hlsdk-bu\common;..\..\..\hlsdk-bu\engine;..\..\..\hlsdk-bu\dlls;..\..\..\hlsdk-bu\pm_shared;..\..\..\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;tfcx_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>

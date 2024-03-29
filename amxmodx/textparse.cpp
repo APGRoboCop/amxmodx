@@ -199,7 +199,7 @@ static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 	*get_amxaddr(amx, params[3]) = states.line;
 	*get_amxaddr(amx, params[4]) = states.col;
 
-	return static_cast<cell>(p_err);
+	return p_err;
 }
 
 // native bool:SMC_GetErrorString(SMCError:error, buffer[], buf_max);

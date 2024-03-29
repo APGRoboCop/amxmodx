@@ -175,8 +175,8 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk)
 	
 	pVictim->weaponsRnd[pVictim->current].deaths++; // DEC-Weapon (round) stats
 	pVictim->weaponsRnd[0].deaths++;                   // DEC-Weapon (round) stats
-	
-	int vi = pVictim->index;
+
+	const int vi = pVictim->index;
 	victims[vi].name = weaponData[wweapon].name;
 	victims[vi].deaths++;
 	victims[vi].hs += hhs;
@@ -226,7 +226,7 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody)
 	pVictim->attackers[0].damage += ddamage;
 	pVictim->attackers[0].bodyHits[bbody]++;
 
-	int vi = pVictim->index;
+	const int vi = pVictim->index;
 	victims[vi].hits++;
 	victims[vi].damage += ddamage;
 	victims[vi].bodyHits[bbody]++;

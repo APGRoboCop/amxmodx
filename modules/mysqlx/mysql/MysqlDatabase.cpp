@@ -84,7 +84,7 @@ int MysqlDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, si
 
 	if (maxlen < needed)
 	{
-		return (int)needed;
+		return static_cast<int>(needed);
 	}
 
 	needed = mysql_real_escape_string(m_pMysql, buffer, str, size);

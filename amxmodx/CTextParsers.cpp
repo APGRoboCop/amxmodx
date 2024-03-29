@@ -88,7 +88,7 @@ bool FileStreamReader(void *stream, char *buffer, size_t maxlength, unsigned int
 {
 	size_t num = fread(buffer, 1, maxlength, (FILE *)stream);
 
-	*read = static_cast<unsigned int>(num);
+	*read = num;
 
 	if (num == 0 && feof((FILE *)stream))
 	{

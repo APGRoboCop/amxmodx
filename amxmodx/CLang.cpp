@@ -185,15 +185,12 @@ void CLangMngr::CLang::Clear()
 
 void CLangMngr::CLang::MergeDefinitions(ke::Vector<sKeyDef> &vec)
 {
-	ke::AutoString *pDef;
-	int key = -1;
-	
 	while (!vec.empty())
 	{
 		auto keydef = vec.popCopy();
 
-		key = keydef.key;
-		pDef = keydef.definition;
+		int key = keydef.key;
+		ke::AutoString* pDef = keydef.definition;
 
 		AddEntry(key, pDef->ptr());
 
@@ -229,7 +226,7 @@ CLangMngr::CLangMngr()
 
 const char * CLangMngr::GetKey(int key)
 {
-	if (key < 0 || key >= (int)KeyList.length())
+	if (key < 0 || key >= static_cast<int>(KeyList.length()))
 		return nullptr;
 
 	return KeyList[key]->chars();
@@ -493,7 +490,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	Data.currentFile = file;
 
 	unsigned int line, col;
-	bool result = textparsers->ParseFile_INI(file, static_cast<ITextListener_INI*>(this), &line, &col, false);
+	bool result = textparsers->ParseFile_INI(file, this, &line, &col, false);
 
 	if (!result)
 	{

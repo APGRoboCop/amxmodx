@@ -50,7 +50,7 @@ private:
 		void resetNextExecTime(float fCurrentTime);
 		inline bool inExecute() const { return m_bInExecute; }
 
-		bool shouldRepeat();
+		bool shouldRepeat();//TODO: Not implemented [APG]RoboCop[CL]
 		
 		inline bool match(int id, AMX *amx)
 		{

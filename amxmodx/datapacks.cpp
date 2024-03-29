@@ -33,7 +33,7 @@ NativeHandle<CDataPack> DataPackHandles;
 
 static cell AMX_NATIVE_CALL CreateDataPack(AMX* amx, cell* params)
 {
-	return static_cast<cell>(DataPackHandles.create());
+	return DataPackHandles.create();
 }
 
 static cell AMX_NATIVE_CALL WritePackCell(AMX* amx, cell* params)
@@ -176,7 +176,7 @@ static cell AMX_NATIVE_CALL GetPackPosition(AMX* amx, cell* params)
 		return 0;
 	}
 
-	return static_cast<cell>(d->GetPosition());
+	return d->GetPosition();
 }
 
 static cell AMX_NATIVE_CALL SetPackPosition(AMX* amx, cell* params)
