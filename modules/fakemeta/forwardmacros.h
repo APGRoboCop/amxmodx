@@ -919,7 +919,7 @@
 
 
 #define FM_ENG_HANDLE(pfnCall, pfnArgs) \
-	register unsigned int i = 0; \
+	unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
 	int lastFmRes = FMRES_IGNORED; \
@@ -937,7 +937,7 @@
 		} \
 	}
 #define FM_ENG_HANDLE_POST(pfnCall, pfnArgs) \
-	register unsigned int i = 0; \
+	unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
 	int lastFmRes = FMRES_IGNORED; \
