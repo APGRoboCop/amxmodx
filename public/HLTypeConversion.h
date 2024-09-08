@@ -13,40 +13,46 @@
 #include <extdll.h>   // edict_t, etc.
 #include <sdk_util.h> // FNullEnt, INDEXENT, etc.
 
-template <typename T> static inline T& ref_pdata(void *pPrivateData, int offset, int element = 0)
+template <typename T> static T& ref_pdata(void *pPrivateData, int offset, int element = 0)
 {
-	return *reinterpret_cast<T*>((reinterpret_cast<int8*>(pPrivateData) + offset + (element * sizeof(T))));
+	return *reinterpret_cast<T*>((static_cast<int8*>(pPrivateData) + offset + (element * sizeof(T))));
 }
 
 
-template <typename T> inline T get_pdata_direct(void *pPrivateData, int offset, int element = 0, int size = 0)
+template <typename T>
+T get_pdata_direct(void *pPrivateData, int offset, int element = 0, int size = 0)
 {
-	return reinterpret_cast<T>(reinterpret_cast<int8*>(pPrivateData) + offset + (element * size));
+	return reinterpret_cast<T>(static_cast<int8*>(pPrivateData) + offset + (element * size));
 }
 
-template <typename T> inline T get_pdata_direct(edict_t *pEntity, int offset, int element = 0, int size = 0)
+template <typename T>
+T get_pdata_direct(edict_t *pEntity, int offset, int element = 0, int size = 0)
 {
 	return get_pdata_direct<T>(pEntity->pvPrivateData, offset, element, size);
 }
 
 
-template <typename T> inline T& get_pdata(void *pPrivateData, int offset, int element = 0)
+template <typename T>
+T& get_pdata(void *pPrivateData, int offset, int element = 0)
 {
 	return ref_pdata<T>(pPrivateData, offset, element);
 }
 
-template <typename T> inline T& get_pdata(edict_t *pEntity, int offset, int element = 0)
+template <typename T>
+T& get_pdata(edict_t *pEntity, int offset, int element = 0)
 {
 	return get_pdata<T>(pEntity->pvPrivateData, offset, element);
 }
 
 
-template <typename T> inline void set_pdata(void *pPrivateData, int offset, T value, int element = 0)
+template <typename T>
+void set_pdata(void *pPrivateData, int offset, T value, int element = 0)
 {
 	ref_pdata<T>(pPrivateData, offset, element) = value;
 }
 
-template <typename T>inline void set_pdata(edict_t *pEntity, int offset, T value, int element = 0)
+template <typename T>
+void set_pdata(edict_t *pEntity, int offset, T value, int element = 0)
 {
 	set_pdata<T>(pEntity->pvPrivateData, offset, value, element);
 }
@@ -75,14 +81,14 @@ class HLTypeConversion
 
 	public: // Edict -> Index
 
-		int edict_to_id(edict_t *pEdict)
+		int edict_to_id(edict_t *pEdict) const
 		{
 			if (!pEdict)
 			{
 				return -1;
 			}
 
-			return static_cast<int>(pEdict - m_FirstEdict);
+			return pEdict - m_FirstEdict;
 		}
 
 	public: // Entvars -> Edict/Index
@@ -110,7 +116,7 @@ class HLTypeConversion
 			return pEdict ? pEdict->pvPrivateData : nullptr;
 		}
 
-		edict_t* id_to_edict(int index)
+		edict_t* id_to_edict(int index) const
 		{
 			if (index < 0 || index >= gpGlobals->maxEntities)
 			{
@@ -122,7 +128,7 @@ class HLTypeConversion
 				return m_FirstEdict;
 			}
 
-			auto pEdict = static_cast<edict_t*>(m_FirstEdict + index);
+			auto pEdict = m_FirstEdict + index;
 
 			if (pEdict && (pEdict->free || (index > gpGlobals->maxClients && !pEdict->pvPrivateData)))
 			{
@@ -132,7 +138,7 @@ class HLTypeConversion
 			return pEdict;
 		}
 
-		entvars_t* id_to_entvars(int index)
+		entvars_t* id_to_entvars(int index) const
 		{
 			auto pEdict = id_to_edict(index);
 			return pEdict ? VARS(pEdict) : nullptr;
@@ -140,7 +146,7 @@ class HLTypeConversion
 
 	public: // CBase* -> Entvars/Index
 
-		entvars_t* cbase_to_entvar(void *cbase)
+		entvars_t* cbase_to_entvar(void *cbase) const
 		{
 			if (!cbase)
 			{
@@ -162,7 +168,7 @@ class HLTypeConversion
 
 	public:
 
-		size_t get_pev()
+		size_t get_pev() const
 		{
 			return m_PevOffset;
 		}
@@ -171,8 +177,8 @@ class HLTypeConversion
 
 		void search_pev()
 		{
-			auto pev = VARS(m_FirstEdict);
-			auto privateData = reinterpret_cast<byte*>(m_FirstEdict->pvPrivateData);
+			entvars_t* pev = VARS(m_FirstEdict);
+			byte* privateData = static_cast<byte*>(m_FirstEdict->pvPrivateData);
 
 			for (size_t i = 0; i < 0xFFF; ++i)
 			{
@@ -201,7 +207,7 @@ class EHANDLE
 
 	public:
 
-		edict_t* Get(void)
+		edict_t* Get() const
 		{
 			if (m_pent)
 			{

@@ -109,9 +109,9 @@ g_user_msg[] =
 
 const char* get_localinfo( const char* name , const char* def = nullptr )
 {
-	const char* b = LOCALINFO( name );
+	const char* b = LOCALINFO((char*)name);
 	if (((b==nullptr)||(*b==0)) && def )
-		SET_LOCALINFO(name,b = def );
+		SET_LOCALINFO((char*)name, (char*)(b = def));
 	return b;
 }
 
@@ -172,8 +172,8 @@ void PlayerPreThink_Post(edict_t *pEntity)
 	if(pPlayer->clearRound && pPlayer->clearRound < gpGlobals->time)
 	{
 		pPlayer->clearRound = 0.0f;
-		memset(&pPlayer->round,0,sizeof(pPlayer->round));
-		memset(&pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
+		memset(static_cast<void*>(&pPlayer->round), 0, sizeof(pPlayer->round));
+		memset(&pPlayer->weaponsRnd, 0, sizeof(pPlayer->weaponsRnd));
 	}
 
 	if (pPlayer->sendScore && pPlayer->sendScore < gpGlobals->time)

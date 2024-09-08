@@ -217,7 +217,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	#define snprintf	_snprintf
 	#define vsnprintf	_vsnprintf
 	#define sleep(x)	Sleep(x*1000)
-	#define strcasecmp	stricmp
+	#define strcasecmp	_stricmp
 	#define strncasecmp	_strnicmp
     #include <io.h>
     #define open _open
@@ -464,12 +464,12 @@ void mm_set_new_handler( void );
 inline void normalize_pathname(char *path) {
 	char *cp;
 
-	META_DEBUG(8, ("normalize: %s", path));
+	META_DEBUG(8, ((char*)"normalize: %s", path));
 	for(cp=path; *cp; cp++) {
 		if(isupper(*cp)) *cp=tolower(*cp);
 		if(*cp=='\\') *cp='/';
 	}
-	META_DEBUG(8, ("normalized: %s", path));
+	META_DEBUG(8, ((char*)"normalized: %s", path));
 }
 #endif /* _WIN32 */
 

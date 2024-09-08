@@ -283,8 +283,8 @@ typedef struct event_state_s
 
 typedef struct USERID_s
 {
-	int          idtype;
 	uint64       m_SteamID;
+	int          idtype;
 	unsigned int clientip;
 
 } USERID_t;

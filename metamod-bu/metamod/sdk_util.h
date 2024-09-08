@@ -70,13 +70,13 @@ inline  int ENTINDEX(const edict_t *pEdict) {
 // Get a setinfo value from a player entity.
 inline char *ENTITY_KEYVALUE(edict_t *entity, const char *key) {
 	char *ifbuf=GET_INFOKEYBUFFER(entity);
-	return(INFOKEY_VALUE(ifbuf, key));
+	return(INFOKEY_VALUE(ifbuf, (char*)key));
 }
 
 // Set a setinfo value for a player entity.
 inline void ENTITY_SET_KEYVALUE(edict_t *entity, const char *key, const char *value) {
 	char *ifbuf=GET_INFOKEYBUFFER(entity);
-	SET_CLIENT_KEYVALUE(ENTINDEX(entity), ifbuf, key, value);
+	SET_CLIENT_KEYVALUE(ENTINDEX(entity), ifbuf, (char*)key, (char*)value);
 }
 
 // Get a "serverinfo" value.
@@ -89,7 +89,7 @@ inline char *SERVERINFO(const char *key) {
 inline void SET_SERVERINFO(const char *key, const char *value) {
 	edict_t *server=INDEXENT(0);
 	char *ifbuf=GET_INFOKEYBUFFER(server);
-	SET_SERVER_KEYVALUE(ifbuf, key, value);
+	SET_SERVER_KEYVALUE(ifbuf, (char*)key, (char*)value);
 }
 
 // Get a "localinfo" value.
@@ -102,7 +102,7 @@ inline char *LOCALINFO(const char *key) {
 inline void SET_LOCALINFO(const char *key, const char *value) {
 	edict_t *server=NULL;
 	char *ifbuf=GET_INFOKEYBUFFER(server);
-	SET_SERVER_KEYVALUE(ifbuf, key, value);
+	SET_SERVER_KEYVALUE(ifbuf, (char*)key, (char*)value);
 }
 
 short FixedSigned16(float value, float scale);

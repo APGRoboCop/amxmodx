@@ -97,7 +97,7 @@ class AMXXConfig(object):
         raise Exception('MySQL path does not exist: {0}'.format(mysql_path))
     else:
       try_paths = [
-        os.path.join(builder.sourcePath, '..', 'mysql-5.7'),
+		os.path.join(builder.sourcePath, '..', 'mysql-5.7'),
       ]
       for try_path in try_paths:
         if os.path.exists(try_path):
@@ -209,7 +209,7 @@ class AMXXConfig(object):
 	  '-msse4.2',
 	  '-mfpmath=sse',
       '-Wall',
-      #'-Werror',
+      '-Werror',
       '-Wno-uninitialized',
       '-Wno-unused',
       '-Wno-switch',
@@ -285,11 +285,11 @@ class AMXXConfig(object):
       '_ITERATOR_DEBUG_LEVEL=0',
     ]
     cxx.cflags += [
-      '/W3',
+      '/W4',
     ]
     cxx.cxxflags += [
       '/std:c++17',
-      '/arch:AVX2',
+      '/arch:SSE2',
       '/fp:precise',
       '/Qspectre',
       '/EHsc',
