@@ -7,14 +7,14 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-#include <stdio.h>
+#include <cstdio>
 #if defined(__linux__) | defined (__APPLE__)
 #include <unistd.h>
 #else
 #include <fcntl.h>
 #include <io.h>
 #endif
-#include <stdlib.h>
+#include <cstdlib>
 #include "zlib/zlib.h"
 #include "amx.h"
 #include "amxdbg.h"
@@ -37,7 +37,7 @@ void WriteBh(BinaryWriter *bw, BinPlugin *bh);
 extern "C" void Compile32(int argc, char **argv);
 extern "C" int pc_printf(const char *message,...);
 #else
-static PRINTF pc_printf = NULL;
+static PRINTF pc_printf = nullptr;
 #endif
 
 int main(int argc, char **argv)
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 
 	char *file = FindFileName(argc, argv);
 
-	if (file == NULL)
+	if (file == nullptr)
 	{
 		pc_printf("Could not locate the output file.\n");
 		exit(EXIT_FAILURE);
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 		exit(EXIT_SUCCESS);
 	} else {
 		FILE *fp = fopen(file, "rb");
-		if (fp == NULL)
+		if (fp == nullptr)
 		{
 			pc_printf("Could not locate output file %s (compile failed).\n", file);
 			exit(EXIT_FAILURE);
@@ -223,7 +223,7 @@ bool CompressPl(abl *pl)
 	int err = compress((Bytef *)(pl->cmp), (uLongf *)&(pl->cmpsize), (const Bytef *)(pl->data), pl->size);
 
 	delete [] pl->data;
-	pl->data = NULL;
+	pl->data = nullptr;
 
 	if (err != Z_OK)
 	{
@@ -320,7 +320,7 @@ char *FindFileName(int argc, char **argv)
 			if (argv[i][2] == ' ' || argv[i][2] == '\0')
 			{
 				if (i == argc-1)
-					return NULL;
+					return nullptr;
 				return swiext(&argv[i+1][2], "amx", 1);
 			} else {
 				return swiext(&(argv[i][2]), "amx", 1);
@@ -337,7 +337,7 @@ char *FindFileName(int argc, char **argv)
 		return swiext(argv[save], "amx", 0);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void show_help()

@@ -21,6 +21,7 @@ build/
 [Oo]bj/
 build/
 build_linux/
+build_linux/.ambuild2
 obj-*/
 
 # Visual Studio 2015 cache/options directory

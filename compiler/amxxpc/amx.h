@@ -319,8 +319,8 @@ enum {
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
-#define AMX_EXEC_MAIN   -1      /* start at program entry point */
-#define AMX_EXEC_CONT   -2      /* continue from last address */
+#define AMX_EXEC_MAIN   (-1)      /* start at program entry point */
+#define AMX_EXEC_CONT   (-2)      /* continue from last address */
 
 #define AMX_USERTAG(a,b,c,d)    ((a) | ((b)<<8) | ((long)(c)<<16) | ((long)(d)<<24))
 
@@ -333,8 +333,8 @@ enum {
  * changing the bit pattern
  */
 #if PAWN_CELL_SIZE==32
-  #define amx_ftoc(f)   ( * ((cell*)&f) )   /* float to cell */
-  #define amx_ctof(c)   ( * ((float*)&c) )  /* cell to float */
+  #define amx_ftoc(f)   ( * ((cell*)&(f)) )   /* float to cell */
+  #define amx_ctof(c)   ( * ((float*)&(c)) )  /* cell to float */
 #elif PAWN_CELL_SIZE==64
   #define amx_ftoc(f)   ( * ((cell*)&f) )   /* float to cell */
   #define amx_ctof(c)   ( * ((double*)&c) ) /* cell to float */

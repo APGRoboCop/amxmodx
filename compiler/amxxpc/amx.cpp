@@ -34,11 +34,11 @@
 # endif
 #endif
 
-#include <assert.h>
-#include <limits.h>
-#include <stdarg.h>
-#include <stddef.h>     /* for wchar_t */
-#include <string.h>
+#include <cassert>
+#include <climits>
+#include <cstdarg>
+#include <cstddef>     /* for wchar_t */
+#include <cstring>
 #include "osdefs.h"
 #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
   #include "sclinux.h"
@@ -265,14 +265,14 @@ typedef enum {
 #define NUMENTRIES(hdr,field,nextfield) \
                         (unsigned)(((hdr)->nextfield - (hdr)->field) / (hdr)->defsize)
 #define GETENTRY(hdr,table,index) \
-                        (AMX_FUNCSTUB *)((unsigned char*)(hdr) + (unsigned)(hdr)->table + (unsigned)index*(hdr)->defsize)
+                        (AMX_FUNCSTUB *)((unsigned char*)(hdr) + (unsigned)(hdr)->table + (unsigned)(index)*(hdr)->defsize)
 #define GETENTRYNAME(hdr,entry) \
                         ( USENAMETABLE(hdr) \
                            ? (char *)((unsigned char*)(hdr) + (unsigned)((AMX_FUNCSTUBNT*)(entry))->nameofs) \
                            : ((AMX_FUNCSTUB*)(entry))->name )
 
 #if !defined NDEBUG
-  static int check_endian(void)
+  static int check_endian()
   {
     uint16_t val=0x00ff;
     unsigned char *ptr=(unsigned char *)&val;
@@ -1649,10 +1649,10 @@ int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char
   return err;
 }
 
-#define GETPARAM(v)     ( v=*(cell *)cip++ )
+#define GETPARAM(v)     ( (v)=*(cell *)cip++ )
 #define SKIPPARAM(n)    ( cip=(cell *)cip+(n) )
-#define PUSH(v)         ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
-#define POP(v)          ( v=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
+#define PUSH(v)         ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=(v) )
+#define POP(v)          ( (v)=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
 #define ABORT(amx,v)    { (amx)->stk=reset_stk; (amx)->hea=reset_hea; return v; }
 
 #define CHKMARGIN()     if (hea+STKMARGIN>stk) return AMX_ERR_STACKERR
@@ -3275,11 +3275,11 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       break;
     case OP_SIGN_PRI:
       if ((pri & 0xff)>=0x80)
-        pri|= ~ (ucell)0xff;
+        pri|= ~ (cell)0xff;
       break;
     case OP_SIGN_ALT:
       if ((alt & 0xff)>=0x80)
-        alt|= ~ (ucell)0xff;
+        alt|= ~ (cell)0xff;
       break;
     case OP_EQ:
       pri= pri==alt ? 1 : 0;
