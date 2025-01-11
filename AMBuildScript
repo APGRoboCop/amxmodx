@@ -198,14 +198,6 @@ class AMXXConfig(object):
 	  '-mtune=generic',
       '-pipe',
       '-fno-strict-aliasing',
-	  '-mmmx',
-	  '-msse',
-	  '-msse2',
-	  '-msse3',
-	  '-mssse3',
-	  '-msse4',
-	  '-msse4a',
-	  '-msse4.1',
 	  '-msse4.2',
 	  '-mfpmath=sse',
       '-Wall',
@@ -316,8 +308,8 @@ class AMXXConfig(object):
     if cxx.version >= 1900:
       cxx.linkflags += ['legacy_stdio_definitions.lib', 'legacy_stdio_wide_specifiers.lib']
 
-    if builder.options.opt == '1':
-      cxx.cflags += ['/Ox']
+    if builder.options.opt == '1': # /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
+      cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GF']
       cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
     if builder.options.debug == '1':
