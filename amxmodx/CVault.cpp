@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -71,7 +73,7 @@ int Vault::get_number(const char* n)
 {
 	if (*n == 0) return 0;
 
-	Obj* b = *find(n);
+	const Obj* b = *find(n);
 
 	if (b == nullptr) return 0;
 
@@ -82,7 +84,7 @@ const char* Vault::get(const char* n)
 {
 	if (*n == 0) return "";
 
-	Obj* b = *find(n);
+	const Obj* b = *find(n);
 
 	if (b == nullptr) return "";
 
@@ -132,11 +134,11 @@ bool Vault::loadVault()
 	}
 
 	char lineRead[512];
-	char key[sizeof(lineRead) + 1];
-	char value[sizeof(lineRead) + 1];
 
 	while (fgets(lineRead, sizeof(lineRead), fp))
 	{
+		char key[sizeof(lineRead) + 1];
+		char value[sizeof(lineRead) + 1];
 		UTIL_TrimLeft(lineRead);
 
 		if (!*lineRead || *lineRead == ';')
@@ -174,7 +176,7 @@ bool Vault::saveVault()
 
 	fputs("; Don't modify!\n", fp);
 
-	for (Obj* b = head; b; b = b->next)
+	for (const Obj* b = head; b; b = b->next)
 	{
 		fprintf(fp, "%s\t%s\n", b->key.chars(), b->value.chars());
 	}

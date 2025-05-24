@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -23,7 +25,7 @@ extern int g_AlliesFlags[4];
 static cell AMX_NATIVE_CALL TFC_SetModel(AMX *amx, cell *params) { 
 	int iIndex = params[1];
 	// Make sure its a player.
-	CHECK_PLAYER(iIndex);
+	CHECK_PLAYER(iIndex)
 
 	int iLen;
 
@@ -152,7 +154,7 @@ static cell AMX_NATIVE_CALL TFC_ClearModel(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_SetBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	CHECK_PLAYER(iIndex);
+	CHECK_PLAYER(iIndex)
 	int iValue = params[3];
 		
 	if (iValue < 0 )  {
@@ -190,7 +192,7 @@ static cell AMX_NATIVE_CALL TFC_SetBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_GetBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	CHECK_PLAYER(iIndex);
+	CHECK_PLAYER(iIndex)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(iIndex);
 	
@@ -215,7 +217,7 @@ static cell AMX_NATIVE_CALL TFC_GetBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_GetWeaponBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	CHECK_PLAYER(iIndex);
+	CHECK_PLAYER(iIndex)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(iIndex);
 
@@ -258,8 +260,8 @@ static cell AMX_NATIVE_CALL TFC_GetWeaponBAmmo(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL TFC_SetWeaponBAmmo(AMX *amx, cell *params) { 
 	int iIndex = params[1];
   
-	CHECK_PLAYER(iIndex);
-	
+	CHECK_PLAYER(iIndex)
+
 	int iValue = params[3];
 		
 	if (iValue < 0 )  {
@@ -315,7 +317,7 @@ static cell AMX_NATIVE_CALL TFC_GetWeaponAmmo(AMX *amx, cell *params)
 {
 	int index = params[1];
 
-	CHECK_NONPLAYER(index);
+	CHECK_NONPLAYER(index)
 	edict_t *weapon = INDEXENT(index);
 
 	return *(static_cast<int*>(weapon->pvPrivateData) + PD_WEAPON_AMMO);
@@ -325,7 +327,7 @@ static cell AMX_NATIVE_CALL TFC_SetWeaponAmmo(AMX *amx, cell *params)
 {
 	int index = params[1];
 
-	CHECK_NONPLAYER(index);
+	CHECK_NONPLAYER(index)
 	edict_t *weapon = INDEXENT(index);
 
 	*(static_cast<int*>(weapon->pvPrivateData) + PD_WEAPON_AMMO) = params[2];
@@ -337,7 +339,7 @@ static cell AMX_NATIVE_CALL TFC_GetUserGoalItem(AMX *amx, cell *params)
 {
 	int index = params[1];
 	
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
 	cell *team = MF_GetAmxAddr(amx, params[2]);
@@ -392,7 +394,7 @@ static cell AMX_NATIVE_CALL TFC_IsMelee(AMX *amx, cell *params){ // player,wid
 
 static cell AMX_NATIVE_CALL TFC_UserKill(AMX *amx, cell *params){ // player,wid
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	pPlayer->killPlayer();
 
@@ -423,7 +425,7 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL TFC_IsFeigning(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
 	return (pPlayer->pEdict->v.playerclass == TFC_PC_SPY && pPlayer->pEdict->v.deadflag == 5);

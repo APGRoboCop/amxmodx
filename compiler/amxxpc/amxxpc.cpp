@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -84,7 +86,7 @@ int main(int argc, char **argv)
 
 	pc_printf("AMX Mod X Compiler %s\n", AMXX_VERSION);
 	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase\n");
-        pc_printf("Copyright (c) 2004-2020 AMX Mod X Team\n\n");
+        pc_printf("Copyright (c) 2004-2024 AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{
@@ -220,7 +222,7 @@ bool CompressPl(abl *pl)
 	pl->cmpsize = compressBound(pl->size);
 	pl->cmp = new char[pl->cmpsize];
 
-	int err = compress((Bytef *)(pl->cmp), (uLongf *)&(pl->cmpsize), (const Bytef *)(pl->data), pl->size);
+	const int err = compress((Bytef *)(pl->cmp), (uLongf *)&(pl->cmpsize), (const Bytef *)(pl->data), pl->size);
 
 	delete [] pl->data;
 	pl->data = nullptr;
@@ -264,7 +266,7 @@ char *swiext(const char *file, const char *ext, int isO)
 {
 	int i = 0, pos = -1, j = 0;
 	int fileLen = strlen(file);
-	int extLen = strlen(ext);
+	const int extLen = strlen(ext);
 	int odirFlag = -1;
 
 	for (i=fileLen-1; i>=0; i--)

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn compiler - code generation (unoptimized "assembler" code)
  *
  *  Copyright (c) ITB CompuPhase, 1997-2005
@@ -36,14 +38,10 @@
  */
 SC_FUNC void writeleader(symbol *root)
 {
-  int lbl_nostate,lbl_table;
-  int statecount;
-  symbol *sym;
-  constvalue *fsa, *state, *stlist;
-  int fsa_id,listid;
-  char lbl_default[sNAMEMAX+1];
+	symbol *sym;
+  constvalue *fsa;
 
-  assert(code_idx==0);
+	assert(code_idx==0);
 
   begcseg();
   stgwrite(";program exit point\n");
@@ -59,7 +57,7 @@ SC_FUNC void writeleader(symbol *root)
 
   /* generate an error function that is called for an undefined state */
   stgwrite("\n;exit point for functions called from the wrong state\n");
-  lbl_nostate=getlabel();
+	const int lbl_nostate = getlabel();
   setlabel(lbl_nostate);
   stgwrite("\thalt ");
   outval(AMX_ERR_INVSTATE,TRUE);
@@ -74,7 +72,7 @@ SC_FUNC void writeleader(symbol *root)
   for (fsa=sc_automaton_tab.next; fsa!=NULL; fsa=fsa->next) {
     defstorage();
     stgwrite("0\t; automaton ");
-    if (strlen(fsa->name)==0)
+    if (fsa->name[0] == '\0')
       stgwrite("(anonymous)");
     else
       stgwrite(fsa->name);
@@ -87,9 +85,10 @@ SC_FUNC void writeleader(symbol *root)
   begcseg();
   for (sym=root->next; sym!=NULL; sym=sym->next) {
     if (sym->ident==iFUNCTN && (sym->usage & uREAD)!=0 && sym->states!=NULL) {
-      stlist=sym->states->next;
+	    char lbl_default[sNAMEMAX+1];
+	    constvalue* stlist = sym->states->next;
       assert(stlist!=NULL);     /* there should be at least one state item */
-      listid=stlist->index;
+      int listid = stlist->index;
       assert(listid==-1 || listid>0);
       if (listid==-1 && stlist->next!=NULL) {
         /* first index is the "fallback", take the next one (if available) */
@@ -106,7 +105,7 @@ SC_FUNC void writeleader(symbol *root)
       } /* if */
       /* generate label numbers for all statelist ids */
       for (stlist=sym->states->next; stlist!=NULL; stlist=stlist->next) {
-        assert(strlen(stlist->name)==0);
+          assert(stlist->name[0] == '\0');
         strcpy(stlist->name,itoh(getlabel()));
       } /* for */
       if (strcmp(sym->name,uENTRYFUNC)==0)
@@ -114,13 +113,13 @@ SC_FUNC void writeleader(symbol *root)
       sym->addr=code_idx;       /* fix the function address now */
       /* get automaton id for this function */
       assert(listid>0);
-      fsa_id=state_getfsa(listid);
+	    const int fsa_id = state_getfsa(listid);
       assert(fsa_id>=0);        /* automaton 0 exists */
       fsa=automaton_findid(fsa_id);
       /* count the number of states actually used; at the sane time, check
        * whether there is a default state function
        */
-      statecount=0;
+      int statecount = 0;
       strcpy(lbl_default,itoh(lbl_nostate));
       for (stlist=sym->states->next; stlist!=NULL; stlist=stlist->next) {
         if (stlist->index==-1) {
@@ -137,12 +136,12 @@ SC_FUNC void writeleader(symbol *root)
       stgwrite(sym->name);
       stgwrite("\n");
       code_idx+=opcodes(1)+opargs(1);   /* calculate code length */
-      lbl_table=getlabel();
+	    const int lbl_table = getlabel();
       ffswitch(lbl_table);
       /* generate the jump table */
       setlabel(lbl_table);
       ffcase(statecount,lbl_default,TRUE);
-      for (state=sc_state_tab.next; state!=NULL; state=state->next) {
+      for (constvalue* state = sc_state_tab.next; state!=NULL; state=state->next) {
         if (state->index==fsa_id) {
           /* find the label for this list id */
           for (stlist=sym->states->next; stlist!=NULL; stlist=stlist->next) {
@@ -347,8 +346,8 @@ SC_FUNC void alignframe(int numbytes)
 {
   #if !defined NDEBUG
     /* "numbytes" should be a power of 2 for this code to work */
-    int i,count=0;
-    for (i=0; i<sizeof numbytes*8; i++)
+    int count=0;
+    for (int i = 0; i<sizeof numbytes*8; i++)
       if (numbytes & (1 << i))
         count++;
     assert(count==1);
@@ -375,9 +374,7 @@ SC_FUNC void load_i()
  */
 SC_FUNC void rvalue(value *lval)
 {
-  symbol *sym;
-
-  sym=lval->sym;
+	symbol* sym = lval->sym;
   if (lval->ident==iARRAYCELL) {
     /* indirect fetch, address already in PRI */
     load_i();
@@ -506,9 +503,7 @@ SC_FUNC void load_hidden_arg()
  */
 SC_FUNC void store(value *lval)
 {
-  symbol *sym;
-
-  sym=lval->sym;
+	symbol* sym = lval->sym;
   if (lval->ident==iARRAYCELL) {
     /* store at address in ALT */
     stgwrite("\tstor.i\n");
@@ -1221,9 +1216,7 @@ SC_FUNC void nooperation(void)
  */
 SC_FUNC void inc(value *lval)
 {
-  symbol *sym;
-
-  sym=lval->sym;
+	const symbol* sym = lval->sym;
   if (lval->ident==iARRAYCELL) {
     /* indirect increment, address already in PRI */
     stgwrite("\tinc.i\n");
@@ -1279,9 +1272,7 @@ SC_FUNC void inc(value *lval)
  */
 SC_FUNC void dec(value *lval)
 {
-  symbol *sym;
-
-  sym=lval->sym;
+	const symbol* sym = lval->sym;
   if (lval->ident==iARRAYCELL) {
     /* indirect decrement, address already in PRI */
     stgwrite("\tdec.i\n");

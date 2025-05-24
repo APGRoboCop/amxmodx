@@ -27,9 +27,9 @@
 #include <cstdarg>
 #include "sh_stack.h"
 
-const int FORWARD_MAX_PARAMS = 32;
+constexpr int FORWARD_MAX_PARAMS = 32;
 
-enum ForwardExecType
+enum ForwardExecType : std::uint8_t
 {
 	ET_IGNORE = 0,					// Ignore return vaue
 	ET_STOP,						// Stop on PLUGIN_HANDLED
@@ -37,7 +37,7 @@ enum ForwardExecType
 	ET_CONTINUE,					// Continue; return biggest return value
 };
 
-enum ForwardParam
+enum ForwardParam : std::int8_t
 {
 	FP_DONE = -1,					// specify this as the last argument
 									// only tells the function that there are no more arguments
@@ -51,7 +51,7 @@ enum ForwardParam
 };
 
 // for prepareArray
-enum ForwardArrayElemType
+enum ForwardArrayElemType : std::uint8_t
 {
 	Type_Cell = 0,
 	Type_Char
@@ -88,8 +88,8 @@ class CForward
 
 public:
 	CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam * paramTypes);
-	CForward() {}		// leaves everything unitialized'
-	
+	CForward() = default; // leaves everything unitialized'
+
 	cell execute(cell *params, ForwardPreparedArray *preparedArrays);
 	
 	int getParamsNum() const
@@ -181,7 +181,7 @@ public:
 
 	CForwardMngr()
 	{ m_TmpArraysNum = 0; }
-	~CForwardMngr() {}
+	~CForwardMngr() = default;
 
 	// Interface
 	// Register normal forward

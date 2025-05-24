@@ -53,29 +53,29 @@ public:
 		ITextListener_INI *ini_listener,
 		unsigned int *line,
 		unsigned int *col,
-		bool inline_comment);
+		bool inline_comment) override;
 
 	SMCError ParseFile_SMC(const char *file,
 		ITextListener_SMC *smc_listener,
-		SMCStates *states);
+		SMCStates *states) override;
 
 	SMCError ParseSMCFile(const char *file,
 		ITextListener_SMC *smc_listener,
 		SMCStates *states,
 		char *buffer,
-		size_t maxsize);
+		size_t maxsize) override;
 
 	SMCError ParseSMCStream(const char *stream,
 		size_t length,
 		ITextListener_SMC *smc_listener,
 		SMCStates *states,
 		char *buffer,
-		size_t maxsize);
+		size_t maxsize) override;
 
-	unsigned int GetUTF8CharBytes(const char *stream);
+	unsigned int GetUTF8CharBytes(const char *stream) override;
 
-	const char *GetSMCErrorString(SMCError err);
-	bool IsWhitespace(const char *stream);
+	const char *GetSMCErrorString(SMCError err) override;
+	bool IsWhitespace(const char *stream) override;
 private:
 	SMCError ParseStream_SMC(void *stream,
 		STREAMREADER srdr,

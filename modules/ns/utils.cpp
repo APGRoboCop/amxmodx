@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -53,7 +55,7 @@ edict_t *UTIL_FindEntityByString(edict_t *Start, const char *Keyword, const char
  * Returns TRUE if the provided native is used in a loaded plugin
  * FALSE otherwise.
  */
-BOOL UTIL_CheckForNative(const char *NativeName)
+bool UTIL_CheckForNative(const char* NativeName)
 {
 	AMX				*amx;
 	char			 blah[64];
@@ -80,7 +82,7 @@ BOOL UTIL_CheckForNative(const char *NativeName)
  * Scans an amxx plugin for a public
  * returns whether or not that public exists
  */
-BOOL UTIL_CheckForPublic(const char *publicname)
+bool UTIL_CheckForPublic(const char* publicname)
 {
 	AMX				*amx;
 	char			 blah[64];

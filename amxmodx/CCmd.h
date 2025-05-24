@@ -14,7 +14,7 @@
 // class CmdMngr
 // *****************************************************
 
-enum
+enum : std::uint8_t
 {
 	CMD_ConsoleCommand,
 	CMD_ClientCommand,
@@ -50,15 +50,15 @@ public:
 		Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, int pfunc, bool pviewable, bool pinfo_ml, CmdMngr* pparent);
 		~Command();
 	public:
-		inline const char* getCommand() { return command.chars(); }
-		inline const char* getArgument() { return argument.chars(); }
-		inline const char* getCmdInfo() { return info.chars(); }
-		inline const char* getCmdLine() { return commandline.chars(); }
-		inline bool matchCommandLine(const char* cmd, const char* arg) 	{return (!stricmp(command.chars() + prefix, cmd + prefix) && (!argument.length() || !stricmp(argument.chars(), arg)));}
-		inline bool matchCommand(const char* cmd) {	return (!stricmp(command.chars(), cmd)); }
+		inline const char* getCommand() const { return command.chars(); }
+		inline const char* getArgument() const { return argument.chars(); }
+		inline const char* getCmdInfo() const { return info.chars(); }
+		inline const char* getCmdLine() const { return commandline.chars(); }
+		inline bool matchCommandLine(const char* cmd, const char* arg) const {return (!stricmp(command.chars() + prefix, cmd + prefix) && (!argument.length() || !stricmp(argument.chars(), arg)));}
+		inline bool matchCommand(const char* cmd) const {	return (!stricmp(command.chars(), cmd)); }
 		inline int getFunction() const { return function; }
 		inline bool gotAccess(int f) const { return (!flags || ((flags & f) != 0)); }
-		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
+		inline CPluginMngr::CPlugin* getPlugin() const { return plugin; }
 		inline bool isViewable() const { return listable; }
 		inline bool isInfoML() const { return info_ml; }
 		inline int getFlags() const { return flags; }
@@ -124,7 +124,7 @@ public:
 		bool operator==(const iterator& b) const { return a == b.a; }
 		bool operator!=(const iterator& b) const { return !operator==(b); }
 		operator bool () const { return a ? true : false; }
-		Command& operator*() { return *a->cmd; }
+		Command& operator*() const { return *a->cmd; }
 	};
 
 	inline iterator clcmdprefixbegin(const char* nn)
@@ -136,7 +136,7 @@ public:
 	inline iterator clcmdbegin() const { return iterator(clcmdlist); }
 	inline iterator srvcmdbegin() const { return iterator(srvcmdlist); }
 	inline iterator begin(int type) const { return iterator(sortedlists[type]); }
-	inline iterator end() const { return iterator(nullptr); }
+	static inline iterator end() { return iterator(nullptr); }
 
 private:
 	int buf_cmdid;

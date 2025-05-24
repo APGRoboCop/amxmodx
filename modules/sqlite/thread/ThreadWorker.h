@@ -19,21 +19,21 @@ class ThreadWorker : public BaseWorker, public IThread
 public:
 	ThreadWorker();
 	ThreadWorker(IThreader *pThreader, unsigned int thinktime=DEFAULT_THINK_TIME_MS);
-	virtual ~ThreadWorker();
+	~ThreadWorker() override;
 public:	//IThread
-	virtual void OnTerminate(IThreadHandle *pHandle, bool cancel);
-	virtual void RunThread(IThreadHandle *pHandle);
+	void OnTerminate(IThreadHandle *pHandle, bool cancel) override;
+	void RunThread(IThreadHandle *pHandle) override;
 public:	//IWorker
 	//Controls the worker
-	virtual bool Pause();
-	virtual bool Unpause();
-	virtual bool Start();
-	virtual bool Stop(bool flush_cancel);
+	bool Pause() override;
+	bool Unpause() override;
+	bool Start() override;
+	bool Stop(bool flush_cancel) override;
 	//returns status and number of threads in queue
-	virtual WorkerState GetStatus(unsigned int *numThreads);
+	WorkerState GetStatus(unsigned int *numThreads) override;
 public:	//BaseWorker
-	virtual void AddThreadToQueue(SWThreadHandle *pHandle);
-	virtual SWThreadHandle *PopThreadFromQueue();
+	void AddThreadToQueue(SWThreadHandle *pHandle) override;
+	SWThreadHandle *PopThreadFromQueue() override;
 protected:
 	IThreader *m_Threader;
 	IMutex *m_QueueLock;

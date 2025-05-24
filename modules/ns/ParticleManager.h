@@ -38,7 +38,7 @@ public:
 		m_iFileLoaded=0;
 		m_iEventID=0;
 		Systems.ensure(64);
-	};
+	}
 
 	// Remove all non-static particle systems
 	inline void Prune()
@@ -58,7 +58,7 @@ public:
 				break;
 			}
 		}
-	};
+	}
 
 	void ReadFile();
 
@@ -73,22 +73,24 @@ public:
 		Systems.append(ps);
 
 		return Systems.length()-1;
-	};
+	}
+
 	inline void FireSystem(int id, float *Origin, float *Angles, int flags)
 	{
 		PLAYBACK_EVENT_FULL(flags,		/*flags*/
-							NULL,		/*pInvoker*/
+		                    nullptr,	/*pInvoker*/
 							m_iEventID, /*eventid*/
-							0.0,		/*delay*/
+							0.0f,		/*delay*/
 							Origin,		/*origin*/
 							Angles,		/*angles*/
-							0.0,		/*fparam1*/
-							0.0,		/*fparam2*/
+							0.0f,		/*fparam1*/
+							0.0f,		/*fparam2*/
 							id,			/*iparam1 - particle system id*/
 							0,			/*iparam2*/
 							0,			/*bparam1*/
 							0);			/*bparam2*/
-	};
+	}
+
 	inline void PrecacheEvent(const char *file)
 	{
 		if (strcmp(file,"events/Particle.sc")==0)
@@ -103,7 +105,8 @@ public:
 			}
 			//printf("EVENT=%d\n",m_iEventID);
 		}
-	};
+	}
+
 	inline int Find(const char *Needle)
 	{
 		for (size_t i = 0; i < Systems.length(); ++i)
@@ -115,8 +118,7 @@ public:
 		}
 
 		return -1;
-	};
-
+	}
 };
 
 extern ParticleManager ParticleMan;

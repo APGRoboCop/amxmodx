@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -23,7 +25,7 @@ void Client_ResetHUD_End(void* mValue)
 void Client_RoundState(void* mValue)
 {
 	if ( mPlayer ) return;
-	int result = *(int*)mValue;
+	const int result = *static_cast<int*>(mValue);
 	if ( result == 1 )
 	{
 		for (int i=1;i<=gpGlobals->maxClients;i++)
@@ -44,16 +46,16 @@ void Client_TeamScore(void* mValue)
 	switch(mState++)
 	{
 	case 0:
-		index = *(int*)mValue;
+		index = *static_cast<int*>(mValue);
 		break;
 	case 1:
 		switch (index)
 		{
 		case 1:
-			AlliesScore = *(int*)mValue;
+			AlliesScore = *static_cast<int*>(mValue);
 			break;
 		case 2:
-			AxisScore = *(int*)mValue;
+			AxisScore = *static_cast<int*>(mValue);
 			break;
 		}
 		break;
@@ -68,14 +70,14 @@ void Client_ObjScore(void* mValue)
 	switch(mState++)
 	{
 	case 0:
-		pPlayer = GET_PLAYER_POINTER_I(*(int*)mValue);
+		pPlayer = GET_PLAYER_POINTER_I(*static_cast<int*>(mValue));
 		break;
 	case 1:
-		score = *(int*)mValue;
-		if ( (pPlayer->lastScore = score - (int)(pPlayer->savedScore)) && isModuleActive() )
+		score = *static_cast<int*>(mValue);
+		if ( (pPlayer->lastScore = score - static_cast<int>(pPlayer->savedScore)) && isModuleActive() )
 		{
 			pPlayer->updateScore(pPlayer->current,pPlayer->lastScore);
-			pPlayer->sendScore = (int)(gpGlobals->time + 0.25f);
+			pPlayer->sendScore = static_cast<int>(gpGlobals->time + 0.25f);
 		}
 		pPlayer->savedScore = score;
 		break;
@@ -90,21 +92,21 @@ void Client_CurWeapon(void* mValue)
 	switch (mState++)
 	{
 		case 0: 
-			iState = *(int*)mValue;
+			iState = *static_cast<int*>(mValue);
 			break;
 
 		case 1:
 			if (!iState) 
 				break; 
 
-			iId = *(int*)mValue;
+			iId = *static_cast<int*>(mValue);
 			break;
 
 		case 2:
 			if(!iState || !isModuleActive())
 				break;
 
-			int iClip = *(int*)mValue;
+			const int iClip = *static_cast<int*>(mValue);
 			mPlayer->old = mPlayer->current;
 			mPlayer->current = iId;
 
@@ -156,7 +158,7 @@ void Client_Health_End(void* mValue)
 		return;
 
 	edict_t *enemy = mPlayer->pEdict->v.dmg_inflictor;
-	int damage = (int)mPlayer->pEdict->v.dmg_take;
+    const int damage = static_cast<int>(mPlayer->pEdict->v.dmg_take);
 
 	if (!damage || !enemy)
 		return;
@@ -164,7 +166,7 @@ void Client_Health_End(void* mValue)
 	int weapon = 0;
 	int aim = 0;
 		
-	mPlayer->pEdict->v.dmg_take = 0.0; 
+	mPlayer->pEdict->v.dmg_take = 0.0f; 
 	
 	CPlayer* pAttacker = nullptr;
 
@@ -217,7 +219,7 @@ void Client_AmmoX(void* mValue)
   switch (mState++)
   {
   case 0:
-    iAmmo = *(int*)mValue;
+    iAmmo = *static_cast<int*>(mValue);
     break;
   case 1:
 	if (!mPlayer ) 
@@ -225,7 +227,7 @@ void Client_AmmoX(void* mValue)
     for(int i = 1; i < DODMAX_WEAPONS ; ++i)
 	{
       if (iAmmo == weaponData[i].ammoSlot)
-        mPlayer->weapons[i].ammo = *(int*)mValue;
+        mPlayer->weapons[i].ammo = *static_cast<int*>(mValue);
 	}
   }
 }
@@ -237,7 +239,7 @@ void Client_AmmoShort(void* mValue)
   switch (mState++)
   {
   case 0:
-    iAmmo = *(int*)mValue;
+    iAmmo = *static_cast<int*>(mValue);
     break;
 
   case 1:
@@ -247,7 +249,7 @@ void Client_AmmoShort(void* mValue)
     for(int i = 1; i < MAX_WEAPONS ; ++i) 
 	{
       if (iAmmo == weaponData[i].ammoSlot)
-		  mPlayer->weapons[i].ammo = *(int*)mValue;
+		  mPlayer->weapons[i].ammo = *static_cast<int*>(mValue);
 	}
   }
 }
@@ -258,7 +260,7 @@ void Client_SetFOV(void* mValue)
 	if(!mPlayer)
 		return;
 
-	mPlayer->Scoping(*(int*)mValue);
+	mPlayer->Scoping(*static_cast<int*>(mValue));
 }
 
 void Client_SetFOV_End(void* mValue)
@@ -288,7 +290,7 @@ void Client_Object(void* mValue)
 	if(!mPlayer->object.carrying)
 	{
 		// We grab the first object within the sphere of our player
-		pObject = FindEntityInSphere(mPlayer->pEdict, mPlayer->pEdict, 50.0);
+		pObject = FindEntityInSphere(mPlayer->pEdict, mPlayer->pEdict, 50.0f);
 
 		// The loop through all the objects within the sphere
 		while(pObject && !FNullEnt(pObject))
@@ -302,7 +304,7 @@ void Client_Object(void* mValue)
 				return;
 			}
 
-			pObject = FindEntityInSphere(pObject, mPlayer->pEdict, 50.0);
+			pObject = FindEntityInSphere(pObject, mPlayer->pEdict, 50.0f);
 		}
 	}
 
@@ -321,8 +323,8 @@ void Client_Object_End(void* mValue)
 
 	if(mPlayer->object.do_forward)
 	{
-		mPlayer->object.do_forward = (mPlayer->object.do_forward) ? false : true;
-		mPlayer->object.carrying = (mPlayer->object.carrying) ? false : true;
+		mPlayer->object.do_forward = (!(mPlayer->object.do_forward));
+		mPlayer->object.carrying = (!(mPlayer->object.carrying));
 
 		mPlayer->object.pEdict->v.origin.CopyToArray(fposition);
 		cell position[3]; 
@@ -333,7 +335,7 @@ void Client_Object_End(void* mValue)
 		MF_ExecuteForward(iFObjectTouched, mPlayer->index, ENTINDEX(mPlayer->object.pEdict), pos, mPlayer->object.carrying);
 
 		if(!mPlayer->object.carrying)
-			mPlayer->object.pEdict = NULL;
+			mPlayer->object.pEdict = nullptr;
 	}
 }
 
@@ -343,7 +345,7 @@ void Client_PStatus(void* mValue)
 	switch(mState++)
 	{
 		case 0:
-			MF_ExecuteForward(iFSpawnForward, *(int*)mValue);
+			MF_ExecuteForward(iFSpawnForward, *static_cast<int*>(mValue));
 		break;
 	}
 }

@@ -168,7 +168,8 @@ private:
 	size_t m_capacity;
 	size_t m_size;
 
-	enum DataPackType {
+	enum DataPackType : std::uint8_t
+	{
 		Raw,
 		Cell,
 		Float,

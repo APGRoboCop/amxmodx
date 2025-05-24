@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -471,8 +473,10 @@ static char OutputBuffer2[MAX_BUFFER_LENGTH];
 
 char* utf8stristr(const char *string1, const char *string2)
 {
-	auto string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
-	auto string2Length = utf8casefold(string2, strlen(string2), OutputBuffer2, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	const size_t string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1,
+	                                          UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	const size_t string2Length = utf8casefold(string2, strlen(string2), OutputBuffer2, MAX_BUFFER_LENGTH - 1,
+	                                          UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 	OutputBuffer1[string1Length] = '\0';
 	OutputBuffer2[string2Length] = '\0';
@@ -482,8 +486,10 @@ char* utf8stristr(const char *string1, const char *string2)
 
 int utf8strncasecmp(const char *string1, const char *string2, size_t n)
 {
-	auto string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
-	auto string2Length = utf8casefold(string2, strlen(string2), OutputBuffer2, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	const size_t string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1,
+	                                          UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	const size_t string2Length = utf8casefold(string2, strlen(string2), OutputBuffer2, MAX_BUFFER_LENGTH - 1,
+	                                          UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 	OutputBuffer1[string1Length] = '\0';
 	OutputBuffer2[string2Length] = '\0';
@@ -638,8 +644,8 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 						*/
 						/* We're going to have some bytes left over... */
 						const size_t origBytesToCopy = (textLen - (browsed + searchLen)) + 1;
-						size_t realBytesToCopy = (maxLen - (browsed + replaceLen)) + 1;
-						char *moveFrom = ptr + searchLen + (origBytesToCopy - realBytesToCopy);
+						const size_t realBytesToCopy = (maxLen - (browsed + replaceLen)) + 1;
+						const char *moveFrom = ptr + searchLen + (origBytesToCopy - realBytesToCopy);
 						char *moveTo = ptr + replaceLen;
 
 						/* First, move our old data out of the way. */
@@ -660,11 +666,11 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 					* POSITION:      ^
 					*/
 					/* Yes, we have enough space.  Do a normal move operation. */
-					char *moveFrom = ptr + searchLen;
+					const char *moveFrom = ptr + searchLen;
 					char *moveTo = ptr + replaceLen;
 
 					/* First move our old data out of the way. */
-					size_t bytesToCopy = (textLen - (browsed + searchLen)) + 1;
+					const size_t bytesToCopy = (textLen - (browsed + searchLen)) + 1;
 					memmove(moveTo, moveFrom, bytesToCopy);
 
 					/* Now do our replacement. */
@@ -684,7 +690,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 				/* If the replacement does not grow the string length, we do not
 				* need to do any fancy checking at all.  Yay!
 				*/
-				char *moveFrom = ptr + searchLen;		/* Start after the search pointer */
+				const char *moveFrom = ptr + searchLen;		/* Start after the search pointer */
 				char *moveTo = ptr + replaceLen;		/* Copy to where the replacement ends */
 
 				/* Copy our replacement in, if any */
@@ -694,7 +700,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 				}
 
 				/* Figure out how many bytes to move down, including null terminator */
-				size_t bytesToCopy = (textLen - (browsed + searchLen)) + 1;
+				const size_t bytesToCopy = (textLen - (browsed + searchLen)) + 1;
 
 				/* Move the rest of the string down */
 				memmove(moveTo, moveFrom, bytesToCopy);
@@ -726,7 +732,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 void UTIL_TrimLeft(char *buffer)
 {
 	/* Let's think of this as our iterator */
-	char *i = buffer;
+	const char *i = buffer;
 
 	/* Make sure the buffer isn't null */
 	if (i && *i)

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -23,7 +25,8 @@
  *         ---bail
  */
 
-NVault::NVault(const char *file)
+NVault::NVault(const char* file)
+	: m_File(file), m_Journal(nullptr), m_Open(false)
 {
 	m_File = file;
 	m_Journal = nullptr;
@@ -180,9 +183,9 @@ bool NVault::_SaveToFile()
 	
 	while (!iter.empty())
 	{
-		key = (*iter).key;
-		val = (*iter).value.value;
-		stamp = (*iter).value.stamp;
+		key = iter->key;
+		val = iter->value.value;
+		stamp = iter->value.stamp;
 		
 		if (!bw.WriteInt32(static_cast<int32_t>(stamp))) goto fail;
 		if (!bw.WriteUInt8(static_cast<unsigned char>(key.length()) )) goto fail;

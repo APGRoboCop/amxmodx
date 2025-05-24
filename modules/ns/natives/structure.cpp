@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -151,7 +153,7 @@ static cell AMX_NATIVE_CALL ns_get_build(AMX *amx, cell *params)
 	edict_t* pBuild = nullptr;
 	int iCount=0;
 
-	while ((pBuild = UTIL_FindEntityByString(pBuild,"classname",buildtype)) != NULL)
+	while ((pBuild = UTIL_FindEntityByString(pBuild,"classname",buildtype)) != nullptr)
 	{
 		if (iBuiltOnly > 0)
 		{
@@ -180,7 +182,7 @@ static cell AMX_NATIVE_CALL ns_set_hive_trait(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -192,7 +194,7 @@ static cell AMX_NATIVE_CALL ns_get_hive_trait(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -204,7 +206,7 @@ static cell AMX_NATIVE_CALL ns_get_struct_owner(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -222,7 +224,7 @@ static cell AMX_NATIVE_CALL ns_set_struct_owner(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -234,7 +236,7 @@ static cell AMX_NATIVE_CALL ns_get_obs_energy(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}	
@@ -246,7 +248,7 @@ static cell AMX_NATIVE_CALL ns_set_obs_energy(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -260,7 +262,7 @@ static cell AMX_NATIVE_CALL ns_add_obs_energy(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -273,7 +275,7 @@ static cell AMX_NATIVE_CALL ns_get_weld_time(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -285,7 +287,7 @@ static cell AMX_NATIVE_CALL ns_set_weld_time(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -299,7 +301,7 @@ static cell AMX_NATIVE_CALL ns_add_weld_time(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -311,7 +313,7 @@ static cell AMX_NATIVE_CALL ns_get_weld_done(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -323,7 +325,7 @@ static cell AMX_NATIVE_CALL ns_set_weld_done(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}
@@ -337,7 +339,7 @@ static cell AMX_NATIVE_CALL ns_add_weld_done(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL)
+	if (Entity->pvPrivateData == nullptr)
 	{
 		return 0;
 	}

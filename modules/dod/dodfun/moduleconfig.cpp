@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -62,7 +64,7 @@ struct sUserMsg {
 int RegUserMsg_Post(const char *pszName, int iSize){
 	for (int i = 0; g_user_msg[ i ].name; ++i ){
 		if ( !*g_user_msg[i].id && strcmp( g_user_msg[ i ].name , pszName  ) == 0 ){
-			int id = META_RESULT_ORIG_RET( int );
+			const int id = META_RESULT_ORIG_RET( int );
 
 			*g_user_msg[ i ].id = id;
 		
@@ -95,7 +97,7 @@ void ServerDeactivate() {
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  ){
+BOOL ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128]){
 	GET_PLAYER_POINTER(pEntity)->Connect();
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
@@ -186,7 +188,7 @@ void WriteEntity_Post(int iValue) {
 
 void PlayerPreThink_Post(edict_t *pEntity) 
 {
-	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	const CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
 	// Stamina
 	if(pPlayer->staminaSet) 
@@ -223,9 +225,9 @@ void SetModel_Post(edict_t *e, const char *m) {
 
 	if(e->v.owner && e->v.dmgtime) {	// owner was always set in my testing, but better safe than sorry
 
-		CPlayer* pPlayer = GET_PLAYER_POINTER(e->v.owner);
+		const CPlayer* pPlayer = GET_PLAYER_POINTER(e->v.owner);
 		// current weapon is never set to DODW_MILLS_BOMB; only DODW_HANDGRENADE/DODW_STICKGRENADE
-		bool newNade = (pPlayer->current == DODW_HANDGRENADE || pPlayer->current == DODW_STICKGRENADE) ? true : false;
+		const bool newNade = (pPlayer->current == DODW_HANDGRENADE || pPlayer->current == DODW_STICKGRENADE);
 
 		if(m[9]=='g' && m[10]=='r' && m[12]=='n') {			// w_grenade.mdl (Allies)
 			w_id = newNade ? DODW_HANDGRENADE : DODW_HANDGRENADE_EX;
@@ -249,11 +251,10 @@ void SetModel_Post(edict_t *e, const char *m) {
 			if(newNade) {
 
 				if(pPlayer->fuseType & 1<<0) {
-					e->v.dmgtime += pPlayer->nadeFuse - 5.0;
+					e->v.dmgtime += pPlayer->nadeFuse - 5.0f;
 				}
-			} else { 
-
-				float fExp = e->v.dmgtime - gpGlobals->time;
+			} else {
+				const float fExp = e->v.dmgtime - gpGlobals->time;
 				e->v.dmgtime += pPlayer->nadeFuse - fExp;
 			}
 		}

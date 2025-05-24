@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -56,12 +58,11 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 
 EventsMngr::ClEvent::~ClEvent()
 {
-	cond_t *tmp1 = m_Conditions;
-	cond_t *tmp2 = nullptr;
-	
+	const cond_t *tmp1 = m_Conditions;
+
 	while (tmp1)
 	{
-		tmp2 = tmp1->next;
+		const cond_t* tmp2 = tmp1->next;
 		delete tmp1;
 		tmp1 = tmp2;
 	}
@@ -71,7 +72,7 @@ EventsMngr::ClEvent::~ClEvent()
 
 void EventsMngr::NextParam()
 {
-	const int INITIAL_PARSEVAULT_SIZE = 32;
+	constexpr int INITIAL_PARSEVAULT_SIZE = 32;
 
 	if (m_ParsePos < m_ParseVaultSize)
 		return;
@@ -110,7 +111,7 @@ void EventsMngr::NextParam()
 	}
 }
 
-int EventsMngr::ClEvent::getFunction()
+int EventsMngr::ClEvent::getFunction() const
 {
 	return m_Func;
 }
@@ -132,7 +133,7 @@ EventsMngr::~EventsMngr()
 	clearEvents();
 }
 
-CPluginMngr::CPlugin * EventsMngr::ClEvent::getPlugin()
+CPluginMngr::CPlugin * EventsMngr::ClEvent::getPlugin() const
 {
 	return m_Plugin;
 }
@@ -204,9 +205,9 @@ int EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags,
 		return 0;
 	}
 
-	auto event = ke::AutoPtr<ClEvent>(new ClEvent(plugin, func, flags));
+	ke::AutoPtr<ClEvent> event = ke::AutoPtr<ClEvent>(new ClEvent(plugin, func, flags));
 
-	int handle = EventHandles.create(event.get());
+	const size_t handle = EventHandles.create(event.get());
 	
 	if (!handle)
 	{
@@ -232,7 +233,7 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 	m_ParseMsgType = msg_type;
 	m_Timer = timer;
 
-	for (auto &event : m_Events[msg_type])
+	for (const ke::AutoPtr<ClEvent>& event : m_Events[msg_type])
 	{
 		if (event->m_Done)
 			continue;
@@ -292,7 +293,7 @@ void EventsMngr::parseValue(int iValue)
 
 	// loop through the registered funcs, and decide whether they have to be called or not
 	// if they shouldnt, their m_Done is set to true
-	for (auto &event : *m_ParseFun)
+	for (const ke::AutoPtr<ClEvent>& event : *m_ParseFun)
 	{
 		if (event->m_Done)
 			continue;		// already skipped; don't bother with parsing
@@ -301,7 +302,7 @@ void EventsMngr::parseValue(int iValue)
 		bool execute = false;
 		bool anyConditions = false;
 		
-		for (auto condIter = event->m_Conditions; condIter; condIter = condIter->next)
+		for (const ClEvent::cond_t* condIter = event->m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
@@ -339,7 +340,7 @@ void EventsMngr::parseValue(float fValue)
 
 	// loop through the registered funcs, and decide whether they have to be called or not
 	// if they shouldnt, their m_Done is set to true
-	for (auto &event : *m_ParseFun)
+	for (const ke::AutoPtr<ClEvent>& event : *m_ParseFun)
 	{
 		if (event->m_Done)
 			continue;		// already skipped; don't bother with parsing
@@ -348,7 +349,7 @@ void EventsMngr::parseValue(float fValue)
 		bool execute = false;
 		bool anyConditions = false;
 		
-		for (auto condIter = event->m_Conditions; condIter; condIter = condIter->next)
+		for (const ClEvent::cond_t* condIter = event->m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
@@ -386,7 +387,7 @@ void EventsMngr::parseValue(const char *sz)
 
 	// loop through the registered funcs, and decide whether they have to be called or not
 	// if they shouldnt, their m_Done is set to true
-	for (auto &event : *m_ParseFun)
+	for (const auto &event : *m_ParseFun)
 	{
 		if (event->m_Done)
 			continue;		// already skipped; don't bother with parsing
@@ -426,7 +427,8 @@ void EventsMngr::executeEvents()
 	}
 
 	// Store old read data, which are either default values or previous event data
-	int oldMsgType = m_ReadMsgType, oldReadPos = m_ReadPos;
+	const int oldMsgType = m_ReadMsgType;
+	const int oldReadPos = m_ReadPos;
 	MsgDataEntry *oldReadVault = m_ReadVault, *readVault = nullptr;
 	
 	// We have a re-entrant call
@@ -455,13 +457,13 @@ void EventsMngr::executeEvents()
 	}
 
 	// Reset this here so we don't trigger re-entrancy for unregistered messages
-	auto parseFun = m_ParseFun;
+	const auto parseFun = m_ParseFun;
 	m_ParseFun = nullptr;
 
-	auto lastSize = parseFun->length();
+	const auto lastSize = parseFun->length();
 	for(auto i = 0u; i < lastSize; i++)
 	{
-		auto &event = parseFun->at(i);
+		const auto &event = parseFun->at(i);
 
 		if (event->m_Done) 
 		{
@@ -546,9 +548,9 @@ float EventsMngr::getArgFloat(int a) const
 
 void EventsMngr::clearEvents()
 {
-	for (int i = 0; i < MAX_AMX_REG_MSG; ++i)
+	for (ke::Vector<ke::AutoPtr<ClEvent>>& m_Event : m_Events)
 	{
-		m_Events[i].clear();
+		m_Event.clear();
 	}
 
 	EventHandles.clear();
@@ -601,7 +603,7 @@ int EventsMngr::getEventId(const char* msg)
 	return pos = GET_USER_MSG_ID(PLID, msg, nullptr);
 }
 
-int EventsMngr::getCurrentMsgType()
+int EventsMngr::getCurrentMsgType() const
 {
 	return m_ReadMsgType;
 }

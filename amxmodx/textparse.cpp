@@ -1,4 +1,6 @@
-/** 
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+/**
  * vim: set ts=4 sw=4 tw=99 noet:
  *
  * AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -20,7 +22,7 @@ cell createParser()
 
 cell destroyParser(cell *handle)
 {
-	ParseInfo *p = TextParsersHandles.lookup(*handle);
+	const ParseInfo *p = TextParsersHandles.lookup(*handle);
 
 	if (!p)
 	{
@@ -194,7 +196,7 @@ static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 	const char *file = build_pathname("%s", get_amxstring(amx, params[2], 0, length));
 
 	SMCStates states;
-	SMCError p_err = textparsers->ParseFile_SMC(file, p, &states);
+	const SMCError p_err = textparsers->ParseFile_SMC(file, p, &states);
 
 	*get_amxaddr(amx, params[3]) = states.line;
 	*get_amxaddr(amx, params[4]) = states.col;
@@ -257,7 +259,7 @@ static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 	}
 
 	unsigned int line, col;
-	bool result = textparsers->ParseFile_INI(file, p, &line, &col);
+	const bool result = textparsers->ParseFile_INI(file, p, &line, &col);
 
 	*get_amxaddr(amx, params[3]) = line;
 	*get_amxaddr(amx, params[4]) = col;

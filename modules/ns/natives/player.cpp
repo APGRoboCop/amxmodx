@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -71,7 +73,7 @@ static cell AMX_NATIVE_CALL ns_get_jpfuel(AMX *amx, cell *params)
 {
 	CreatePlayerPointer(amx,params[1]);
 
-	REAL ret=(player->GetPev()->fuser3) / 10.0;
+	REAL ret=(player->GetPev()->fuser3) / 10.0f;
 
 	return amx_ftoc2(ret);
 }
@@ -81,23 +83,23 @@ static cell AMX_NATIVE_CALL ns_set_jpfuel(AMX *amx, cell *params)
 	CreatePlayerPointer(amx,params[1]);
 
 	REAL fuel = amx_ctof2(params[2]);
-	if (fuel > 100.0)
+	if (fuel > 100.0f)
 	{
-		fuel = 100.0;
+		fuel = 100.0f;
 	}
-	if (fuel < 0.0)
+	if (fuel < 0.0f)
 	{
-		fuel = 0.0;
+		fuel = 0.0f;
 	}
 
-	player->GetPev()->fuser3 = fuel * 10.0;
+	player->GetPev()->fuser3 = fuel * 10.0f;
 	return 1;
 }
 static cell AMX_NATIVE_CALL ns_add_jpfuel(AMX *amx, cell *params)
 {
 	CreatePlayerPointer(amx,params[1]);
 
-	REAL fuel = clamp(amx_ctof2(params[2]),0.0,100.0);
+	REAL fuel = clamp(amx_ctof2(params[2]),0.0f,100.0f);
 
 	return amx_ftoc2(player->GetPev()->fuser3 = clamp(static_cast<float>(player->GetPev()->fuser3 + (fuel * 10.0)),static_cast<float>(0.0)));
 };

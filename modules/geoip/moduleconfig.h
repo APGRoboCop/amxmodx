@@ -20,7 +20,7 @@
 #define MODULE_NAME "GeoIP"
 #define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "http://www.amxmodx.org/"
+#define MODULE_URL "www.amxmodx.org/"
 #define MODULE_LOGTAG "GEOIP"
 #define MODULE_LIBRARY "geoip"
 #define MODULE_LIBCLASS ""

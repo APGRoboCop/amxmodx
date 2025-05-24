@@ -138,8 +138,8 @@ ret name##Class::name(p1type p1name, p2type p2name, p3type p3name, p4type p4name
 #define GET_MEMBER_CALLBACK(name) (void *)GetCodeAddress(&name##Class::name)
 #define GET_MEMBER_TRAMPOLINE(name) (void **)(&name##Class::name##_Actual)
 
-#define GET_STATIC_CALLBACK(name) (void *)&name
-#define GET_STATIC_TRAMPOLINE(name) (void **)&name##_Actual
+#define GET_STATIC_CALLBACK(name) ((void *)&name)
+#define GET_STATIC_TRAMPOLINE(name) ((void **)&name##_Actual)
 
 #define DETOUR_CREATE_MEMBER(name, gamedata, target)	CDetourManager::CreateDetour(GET_MEMBER_CALLBACK(name), GET_MEMBER_TRAMPOLINE(name), gamedata, target);
 #define DETOUR_CREATE_MEMBER_FIXED(name, address)		CDetourManager::CreateDetour(GET_MEMBER_CALLBACK(name), GET_MEMBER_TRAMPOLINE(name), address);
@@ -273,7 +273,7 @@ class JitWriter
 public:
 	inline cell read_cell()
 	{
-		cell val = *(inptr);
+		const cell val = *(inptr);
 		inptr++;
 		return val;
 	}
@@ -337,7 +337,7 @@ public:
 	}
 	inline unsigned int get_inputpos()
 	{
-		return (unsigned int)((char *)inptr - (char *)inbase);
+		return static_cast<unsigned int>((char*)inptr - (char*)inbase);
 	}
 public:
 	cell *inptr;		/* input pointer */
@@ -365,7 +365,7 @@ inline void IA32_Write_Jump32_Abs(JitWriter *jit, unsigned int jmp, void *target
 	//save old ptr
 	char *oldptr = jit->outptr;
 	//get relative difference
-	long diff = ((long)target - ((long)jit->outbase + jmp + 4));
+	const long diff = ((long)target - ((long)jit->outbase + jmp + 4));
 	//overwrite old value
 	jit->outptr = jit->outbase + jmp;
 	jit->write_int32(diff);

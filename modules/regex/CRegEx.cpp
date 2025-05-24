@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -39,7 +41,7 @@ void RegEx::Clear()
 		pcre_free(re);
 	re = nullptr;
 	mFree = true;
-	if (subject)
+	//if (subject)
 		delete[] subject;
 	subject = nullptr;
 	mSubStrings.clear();
@@ -161,7 +163,7 @@ int RegEx::Match(const char *str)
 	subject = new char[strlen(str) + 1];
 	strcpy(subject, str);
 
-	rc = pcre_exec(re, nullptr, subject, (int)strlen(subject), 0, 0, ovector, REGEX_MAX_SUBPATTERNS);
+	rc = pcre_exec(re, nullptr, subject, static_cast<int>(strlen(subject)), 0, 0, ovector, REGEX_MAX_SUBPATTERNS);
 
 	if (rc < 0)
 	{
@@ -191,12 +193,12 @@ int RegEx::Match(const char *str)
 int RegEx::MatchAll(const char *str)
 {
 	int rr = 0;
-	int rc = 0;
+	int rc = 0; //Unused? [APG]RoboCop[CL]
 	int startOffset = 0;
 	int exoptions = 0;
 	int notEmpty = 0;
-	int sizeOffsets = mNumSubpatterns * 3;
-	int subjectLen = strlen(str);
+	const int sizeOffsets = mNumSubpatterns * 3;
+	const size_t subjectLen = strlen(str);
 
 	if (mFree || re == nullptr)
 	{
@@ -212,7 +214,7 @@ int RegEx::MatchAll(const char *str)
 
 	while (true)
 	{
-		rr = pcre_exec(re, nullptr, subject, (int)subjectLen, startOffset, exoptions | notEmpty, ovector, REGEX_MAX_SUBPATTERNS);
+		rr = pcre_exec(re, nullptr, subject, static_cast<int>(subjectLen), startOffset, exoptions | notEmpty, ovector, REGEX_MAX_SUBPATTERNS);
 
 		/**
 		 * The string was already proved to be valid UTF-8
@@ -296,7 +298,7 @@ void RegEx::ClearMatch()
 	// Clears match results
 	mErrorOffset = 0;
 	mError = nullptr;
-	if (subject)
+	//if (subject)
 		delete[] subject;
 	subject = nullptr;
 	mSubStrings.clear();
@@ -306,8 +308,8 @@ void RegEx::ClearMatch()
 const char *getSubstring(char *subject, size_t start, size_t end, char buffer[], size_t max, size_t *outlen)
 {
 	size_t i;
-	char * substr_a = subject + start;
-	size_t substr_l = end - start;
+	const char * substr_a = subject + start;
+	const size_t substr_l = end - start;
 
 	for (i = 0; i < substr_l; i++)
 	{
@@ -333,7 +335,7 @@ const char *RegEx::GetSubstring(size_t start, char buffer[], size_t max, size_t 
 		return nullptr;
 	}
 
-	RegExSub sub = mSubStrings.at(start);
+	const RegExSub sub = mSubStrings.at(start);
 
 	return getSubstring(subject, sub.start, sub.end, buffer, max, outlen);
 }
@@ -354,8 +356,8 @@ void RegEx::MakeSubpatternsTable(int numSubpatterns)
 		int nameSize = 0;
 		int i = 0;
 
-		int rc1 = pcre_fullinfo(re, nullptr, PCRE_INFO_NAMETABLE, &nameTable);
-		int rc2 = pcre_fullinfo(re, nullptr, PCRE_INFO_NAMEENTRYSIZE, &nameSize);
+		const int rc1 = pcre_fullinfo(re, nullptr, PCRE_INFO_NAMETABLE, &nameTable);
+		const int rc2 = pcre_fullinfo(re, nullptr, PCRE_INFO_NAMEENTRYSIZE, &nameSize);
 
 		rc = rc2 ? rc2 : rc1;
 
@@ -369,7 +371,7 @@ void RegEx::MakeSubpatternsTable(int numSubpatterns)
 
 		while (i++ < nameCount) 
 		{
-			data.index = 0xff * (unsigned char)nameTable[0] + (unsigned char)nameTable[1];
+			data.index = 0xff * static_cast<unsigned char>(nameTable[0]) + static_cast<unsigned char>(nameTable[1]);
 			data.name = nameTable + 2;
 
 			mSubsNameTable.append(ke::Move(data));
@@ -391,7 +393,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 		return -1;
 	}
 
-	size_t subjectLen = strlen(subject);
+	const size_t subjectLen = strlen(subject);
 	size_t total = 0;
 	size_t baseIndex = 0;
 	size_t diffLength = 0;
@@ -432,7 +434,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 		 */
 		for (const char *s = replace, *end = s + replaceLen; s < end && browsed <= textMaxLen; ++s, ++browsed)
 		{
-			unsigned int c = *s;
+			const char c = *s;
 
 			/**
 			 * Supported format specifiers:
@@ -572,7 +574,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 									 * A named group maximum character is 32 (PCRE).
 									 */
 									char name[32];
-									size_t nameLength = strncopy(name, walk, pch - walk + 1);
+									/*size_t nameLength =*/ strncopy(name, walk, pch - walk + 1);
 
 									int flags, num = 0;
 									pcre_fullinfo(re, nullptr, PCRE_INFO_OPTIONS, &flags);
@@ -618,7 +620,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 										}
 									}
 
-									if (num == PCRE_ERROR_NOSUBSTRING || num >= (int)mMatchesSubs.at(i))
+									if (num == PCRE_ERROR_NOSUBSTRING || num >= static_cast<int>(mMatchesSubs.at(i)))
 									{
 										/**
 										 * If a sub-string for a given match is not found,  or if > to
@@ -810,11 +812,8 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 	}
 
 	delete[] toReplace;
-	
-	if (toSearch != nullptr)
-	{
-		delete[] toSearch;
-	}
+
+	delete[] toSearch;
 
 	/**
 	 * Return the number of successful replacements.

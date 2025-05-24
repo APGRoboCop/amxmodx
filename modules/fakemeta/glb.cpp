@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -55,7 +57,7 @@ void initialize_glb_offsets()
 
 static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 {
-	int iSwitch = params[1];
+	const int iSwitch = params[1];
 
 	if (iSwitch <= glb_start_int || iSwitch >= glb_end_pchar)
 	{
@@ -63,7 +65,7 @@ static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int offset = g_glob_offset_table[iSwitch];
+	const int offset = g_glob_offset_table[iSwitch];
 	if (offset == -1)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global index: %d", iSwitch);
@@ -122,7 +124,7 @@ static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 		Valtype = Ret_PChar;
 	}
 
-	size_t paramnum = params[0] / sizeof(cell) - 1;
+	const size_t paramnum = params[0] / sizeof(cell) - 1;
 
 	if (paramnum == 0)
 	{
@@ -156,7 +158,7 @@ static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 	}
 	else if (paramnum == 2)
 	{
-		cell size = *(MF_GetAmxAddr(amx, params[3]));
+		const cell size = *(MF_GetAmxAddr(amx, params[3]));
 		if (Valtype == Ret_PChar)
 		{
 			const char *str = rets.c;
@@ -168,10 +170,10 @@ static cell AMX_NATIVE_CALL amx_glb(AMX *amx, cell *params)
 	}
 	else if (paramnum == 3)
 	{
-		cell size = *(MF_GetAmxAddr(amx, params[4]));
+		const cell size = *(MF_GetAmxAddr(amx, params[4]));
 		if (Valtype == Ret_PChar)
 		{
-			cell *str = MF_GetAmxAddr(amx, params[2]);
+			const cell *str = MF_GetAmxAddr(amx, params[2]);
 			return MF_SetAmxString(amx, params[3], STRING((int)*str), size);
 		}
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");

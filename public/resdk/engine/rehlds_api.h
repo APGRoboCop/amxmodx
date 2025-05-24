@@ -209,7 +209,7 @@ typedef IHookChainRegistry<bool, netadr_t &, const uint8_t *, int> IRehldsHookRe
 
 class IRehldsHookchains {
 public:
-	virtual ~IRehldsHookchains() { }
+	virtual ~IRehldsHookchains() = default;
 
 	virtual IRehldsHookRegistry_Steam_NotifyClientConnect* Steam_NotifyClientConnect() = 0;
 	virtual IRehldsHookRegistry_SV_ConnectClient* SV_ConnectClient() = 0;
@@ -362,7 +362,7 @@ struct RehldsFuncs_t {
 
 class IRehldsApi {
 public:
-	virtual ~IRehldsApi() {	}
+	virtual ~IRehldsApi() = default;
 
 	virtual int GetMajorVersion() = 0;
 	virtual int GetMinorVersion() = 0;

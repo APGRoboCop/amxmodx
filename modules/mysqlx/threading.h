@@ -34,27 +34,27 @@ class AtomicResult :
 	friend class MysqlThread;
 public:
 	AtomicResult();
-	~AtomicResult();
+	~AtomicResult() override;
 public:
 	//free the handle if necessary (see IQuery).
-	virtual void FreeHandle();
-	virtual unsigned int RowCount();
-	virtual unsigned int FieldCount();
-	virtual const char *FieldNumToName(unsigned int num);
-	virtual bool FieldNameToNum(const char *name, unsigned int *columnId);
-	virtual bool IsDone();
-	virtual IResultRow *GetRow();
-	virtual void NextRow();
-	virtual void Rewind();
-	virtual bool NextResultSet();
+	void FreeHandle() override;
+	unsigned int RowCount() override;
+	unsigned int FieldCount() override;
+	const char *FieldNumToName(unsigned int num) override;
+	bool FieldNameToNum(const char *name, unsigned int *columnId) override;
+	bool IsDone() override;
+	IResultRow *GetRow() override;
+	void NextRow() override;
+	void Rewind() override;
+	bool NextResultSet() override;
 public:
-	virtual const char *GetString(unsigned int columnId);
+	const char *GetString(unsigned int columnId) override;
 	virtual const char *GetStringSafe(unsigned int columnId);
-	virtual double GetDouble(unsigned int columnId);
-	virtual float GetFloat(unsigned int columnId);
-	virtual int GetInt(unsigned int columnId);
-	virtual bool IsNull(unsigned int columnId);
-	virtual const char *GetRaw(unsigned int columnId, size_t *length);
+	double GetDouble(unsigned int columnId) override;
+	float GetFloat(unsigned int columnId) override;
+	int GetInt(unsigned int columnId) override;
+	bool IsNull(unsigned int columnId) override;
+	const char *GetRaw(unsigned int columnId, size_t *length) override;
 public:
 	void CopyFrom(IResultSet *rs);
 private:
@@ -72,7 +72,7 @@ class MysqlThread : public IThread
 {
 public:
 	MysqlThread();
-	~MysqlThread();
+	~MysqlThread() override;
 public:
 	void SetInfo(const char *host, const char *user, const char *pass, const char *db, int port, unsigned int max_timeout);
 	void SetCharacterSet(const char *charset);
@@ -82,8 +82,8 @@ public:
 	void Invalidate();
 	void Execute();
 public:
-	void RunThread(IThreadHandle *pHandle);
-	void OnTerminate(IThreadHandle *pHandle, bool cancel);
+	void RunThread(IThreadHandle *pHandle) override;
+	void OnTerminate(IThreadHandle *pHandle, bool cancel) override;
 private:
 	ke::AString m_query;
 	ke::AString m_host;

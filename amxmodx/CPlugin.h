@@ -21,7 +21,7 @@
 // class CPluginMngr
 // *****************************************************
 
-enum
+enum : std::uint8_t
 {
 	ps_bad_load,	//Load failed
 	ps_error,	//Erroneous state
@@ -83,7 +83,7 @@ public:
 		const char* getUrl() { return url.chars(); }
 		const char* getDescription() { return description.chars(); }
 		const char* getError() { return errorMsg.chars();}
-		int getStatusCode() { return status; }
+		int getStatusCode() const { return status; }
 		int getId() const { return id; }
 		AMX* getAMX() { return &amx; }
 		const AMX* getAMX() const { return &amx; }
@@ -112,7 +112,7 @@ public:
 		cell* getNullVectorOfs() const { return m_pNullVectorOfs; }
 	public:
 		void AddConfig(bool create, const char *name, const char *folder);
-		size_t GetConfigCount();
+		size_t GetConfigCount() const;
 		AutoConfig *GetConfig(size_t index);
 	}; 
 	
@@ -132,10 +132,10 @@ public:
 	void unloadPlugin(CPlugin** a);
 	int loadPluginsFromFile(const char* filename, bool warn=true);
 
-	CPlugin* findPluginFast(AMX *amx) { return (CPlugin*)(amx->userdata[UD_FINDPLUGIN]); }
-	CPlugin* findPlugin(AMX *amx);
-	CPlugin* findPlugin(int index);
-	CPlugin* findPlugin(const char* name);
+	CPlugin* findPluginFast(AMX *amx) { return static_cast<CPlugin*>(amx->userdata[UD_FINDPLUGIN]); }
+	CPlugin* findPlugin(AMX *amx) const;
+	CPlugin* findPlugin(int index) const;
+	CPlugin* findPlugin(const char* name) const;
 
 	int getPluginsNum() const { return pCounter; }
 	void Finalize();
@@ -150,7 +150,7 @@ public:
 		bool operator==(const iterator& b) const { return a == b.a; }
 		bool operator!=(const iterator& b) const { return !operator==(b); }
 		operator bool () const { return a ? true : false; }
-		CPlugin& operator*() { return *a; }
+		CPlugin& operator*() const { return *a; }
 	};
 
 	iterator begin() const { return iterator(head); }

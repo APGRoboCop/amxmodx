@@ -47,19 +47,19 @@ class NVault : public IVault
 {
 public:
 	NVault(const char *file);
-	~NVault();
+	~NVault() override;
 public:
-	bool GetValue(const char *key, time_t &stamp, char buffer[], size_t len);
+	bool GetValue(const char *key, time_t &stamp, char buffer[], size_t len) override;
 	const char *GetValue(const char *key);
-	void SetValue(const char *key, const char *val);
-	void SetValue(const char *key, const char *val, time_t stamp);
-	void Touch(const char *key, time_t stamp);
-	size_t Prune(time_t start, time_t end);
-	void Clear();
-	void Remove(const char *key);
+	void SetValue(const char *key, const char *val) override;
+	void SetValue(const char *key, const char *val, time_t stamp) override;
+	void Touch(const char *key, time_t stamp) override;
+	size_t Prune(time_t start, time_t end) override;
+	void Clear() override;
+	void Remove(const char *key) override;
 	bool Open();
 	bool Close();
-	size_t Items();
+	size_t Items() override;
 	const char *GetFilename() { return m_File.chars(); }
 private:
 	VaultError _ReadFromFile();
@@ -81,7 +81,7 @@ class VaultMngr : public IVaultMngr
 public:
 	//when you delete it, it will be closed+saved automatically
 	//when you open it, it will read the file automatically, as well as begin/restore journaling
-	IVault *OpenVault(const char *file);
+	IVault *OpenVault(const char *file) override;
 };
 
 #endif //_INCLUDE_NVAULT_H

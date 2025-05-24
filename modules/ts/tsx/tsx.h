@@ -97,7 +97,7 @@ extern int gKnifeOffset;
 extern weapon_t weaponData[TSMAX_WEAPONS];
 
 bool isModuleActive();
-bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL);
+bool ignoreBots (edict_t *pEnt, edict_t *pOther = nullptr);
 
 #endif //TSX_H
 

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -14,8 +16,8 @@
 // class CmdMngr
 // *****************************************************
 
-CmdMngr::CmdMngr()
-{ 
+CmdMngr::CmdMngr(): buf_num(0)
+{
 	memset(sortedlists, 0, sizeof(sortedlists));
 	srvcmdlist = nullptr;
 	clcmdlist = nullptr;
@@ -26,11 +28,10 @@ CmdMngr::CmdMngr()
 	buf_cmdid = -1;
 	buf_cmdtype = -1;
 	buf_cmdaccess = 0;
-
 }
 
 CmdMngr::Command::Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, 
-							int pfunc, bool pviewable, bool pinfo_ml, CmdMngr* pparent) : commandline(pcmd), info(pinfo)
+                          int pfunc, bool pviewable, bool pinfo_ml, CmdMngr* pparent) : commandline(pcmd), info(pinfo)
 {
 	char szCmd[64], szArg[64];
 	*szCmd = 0; *szArg = 0;

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -26,7 +28,7 @@
 #include <amtl/am-string.h>
 
 extern int gmsgHudText2;
-extern BOOL iscombat;
+extern bool iscombat;
 
 TitleManager TitleMan;
 ParticleManager ParticleMan;

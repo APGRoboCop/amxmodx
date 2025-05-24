@@ -69,43 +69,48 @@ public:
 		m_pev=&(Ent->v);
 
 		m_iIndex=ENTINDEX_NEW(Ent);
-	};
+	}
 
 	inline edict_t *GetEdict()
 	{
 		return m_pEdict;
-	};
+	}
+
 	inline entvars_t *GetPev()
 	{
 		return m_pev;
-	};
+	}
+
 	inline int IsBot()
 	{
 		return m_iIsBot;
-	};
+	}
+
 	inline void SetBot(int onoff)
 	{
 		m_iIsBot=onoff;
-	};
-	inline int IsConnected()
+	}
+
+	inline int IsConnected() const
 	{
 		return m_iIsConnected;
-	};
+	}
 
-	inline BOOL HasPrivateData()
+	inline bool HasPrivateData()
 	{
-		if (m_pEdict && m_pEdict->pvPrivateData != NULL)
+		if (m_pEdict && m_pEdict->pvPrivateData != nullptr)
 		{
-			return TRUE;
+			return true;
 		}
 
-		return FALSE;
-	};
+		return false;
+	}
 
-	inline int IsInitialized()
+	inline int IsInitialized() const
 	{
 		return m_iInitialized;
-	};
+	}
+
 	inline void Initialize()
 	{
 		if (!IsConnected())
@@ -119,7 +124,8 @@ public:
 		
 
 		m_iInitialized=1;
-	};
+	}
+
 	inline void PreThink()
 	{
 		if (!IsInitialized())
@@ -148,7 +154,7 @@ public:
 		m_iOldImpulse=m_pev->impulse;
 		m_iOldDeadFlag=m_pev->deadflag;
 		m_iOldTeam=m_pev->team;
-	};
+	}
 
 	inline void PreThink_Post()
 	{
@@ -156,7 +162,7 @@ public:
 		// Change the users speed here
 		m_fMaxSpeed=m_pev->maxspeed;
 		m_pev->maxspeed+=m_iSpeedChange;
-	};
+	}
 
 	/**
 	 * This is only hooked if at least 1 
@@ -176,7 +182,7 @@ public:
 		{
 			m_pev->body=m_iBody;
 		}
-	};
+	}
 
 	void ChangeClass(int newclass)
 	{
@@ -219,7 +225,8 @@ public:
 	void FullReset()
 	{
 		memset(this,0x0,sizeof(*this));
-	};
+	}
+
 	void Reset()
 	{
 		m_iHasCustomModel=0;
@@ -230,7 +237,7 @@ public:
 		m_iOldDeadFlag=0;
 		m_iSpeedChange=0;
 		m_iClass=0;
-	};
+	}
 
 	int GetClass()
 	{
@@ -282,25 +289,27 @@ public:
 	  }
 
 	  return CLASS_UNKNOWN;
-	};
+	}
 
 	inline int &index() 
 	{ 
 		return m_iIndex; 
-	};
+	}
 
 	inline int &GetSpeedChange()
 	{
 		return m_iSpeedChange;
-	};
+	}
+
 	inline int GetMaxSpeed()
 	{
 		return (int)m_fMaxSpeed;
-	};
+	}
+
 	inline void SetSpeedChange(cell &SpeedChange)
 	{
 		m_iSpeedChange=SpeedChange;
-	};
+	}
 
 	inline void SetModel(char *Model)
 	{
@@ -317,7 +326,7 @@ public:
 		{
 			m_iHasCustomModel=0;
 		}
-	};
+	}
 
 	inline void SetSkin(cell &skin)
 	{
@@ -329,7 +338,7 @@ public:
 
 		m_iHasCustomSkin=1;
 		m_iSkin=skin;
-	};
+	}
 
 	inline void SetBody(cell &body)
 	{
@@ -341,7 +350,7 @@ public:
 
 		m_iHasCustomBody=1;
 		m_iBody=body;
-	};
+	}
 
 	/**
 	 * Called during pfnUpdateClientData()
@@ -353,7 +362,7 @@ public:
 		{
 			GetPev()->fov=m_fFOV;
 		}
-	};
+	}
 
 	/**
 	 * Called from the native directly.
@@ -369,7 +378,7 @@ public:
 			m_iHasFOV=0;
 			m_fFOV=0.0;
 
-			MESSAGE_BEGIN(MSG_ONE,GameMan.GetSetFOV(),NULL,GetEdict());
+			MESSAGE_BEGIN(MSG_ONE,GameMan.GetSetFOV(), nullptr,GetEdict());
 			WRITE_BYTE(0);
 			MESSAGE_END();
 			return 1;
@@ -378,14 +387,14 @@ public:
 		{
 			m_iHasFOV=1;
 			m_fFOV=Amount;
-			MESSAGE_BEGIN(MSG_ONE,GameMan.GetSetFOV(),NULL,GetEdict());
-			WRITE_BYTE((int)Amount);
+			MESSAGE_BEGIN(MSG_ONE,GameMan.GetSetFOV(), nullptr,GetEdict());
+			WRITE_BYTE(static_cast<int>(Amount));
 			MESSAGE_END();
 			return 1;
 		}
 		return 0;
 
-	};
+	}
 
 	/**
 	 * Returns 1 if this entity needs PreThink_Post hooked
@@ -394,7 +403,7 @@ public:
 	inline int NeedPreThink_Post()
 	{
 		return m_iSpeedChange != 0;
-	};
+	}
 
 	/**
 	 * Returns 1 if this entity needs PostThink_Post
@@ -403,7 +412,8 @@ public:
 	inline int NeedPostThink_Post()
 	{
 		return (m_iHasCustomModel != 0 || m_iHasCustomSkin != 0 || m_iHasCustomBody != 0);
-	};
+	}
+
 	/**
 	 * Returns 1 if this entity needs UpdateClientData
 	 * eg: This entity has a custom FOV set
@@ -411,8 +421,7 @@ public:
 	inline int NeedUpdateClientData()
 	{
 		return m_iHasFOV != 0;
-	};
-
+	}
 };
 #endif
 

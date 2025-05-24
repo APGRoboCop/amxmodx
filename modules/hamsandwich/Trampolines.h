@@ -205,12 +205,12 @@ namespace Trampolines
 			if (m_buffer== nullptr)
 			{
 				m_maxsize=512;
-				m_buffer=(unsigned char *)malloc(m_maxsize);
+				m_buffer=static_cast<unsigned char*>(malloc(m_maxsize));
 			}
 			else if (m_size > m_maxsize)
 			{
 				m_maxsize = m_size + 512;
-				m_buffer=(unsigned char *)realloc(m_buffer,m_maxsize);
+				m_buffer=static_cast<unsigned char*>(realloc(m_buffer, m_maxsize));
 			}
 
 			unsigned char *dat=m_buffer+orig; // point dat to the end of the prewritten 
@@ -221,7 +221,8 @@ namespace Trampolines
 
 				orig++;
 			}
-		};
+		}
+
 	public:
 		TrampolineMaker()
 		{
@@ -232,7 +233,7 @@ namespace Trampolines
 			m_paramstart=0;
 			m_thiscall=0;
 			m_maxsize=0;
-		};
+		}
 
 		/**
 		 * Inserts a breakpoint (int 3) into the trampoline.
@@ -240,7 +241,7 @@ namespace Trampolines
 		void Breakpoint()
 		{
 			Append(&Bytecode::codeBreakpoint[0],sizeof(Bytecode::codeBreakpoint));
-		};
+		}
 
 		/**
 		 * Adds the prologue, pushes registers, prepares the stack
@@ -250,7 +251,7 @@ namespace Trampolines
 			Append(&Bytecode::codePrologue[0],sizeof(Bytecode::codePrologue));
 			m_paramstart=0;
 			m_thiscall=0;
-		};
+		}
 
 		/**
 		 * Flags this trampoline as a thiscall trampoline, and prepares the prologue.
@@ -259,7 +260,7 @@ namespace Trampolines
 		{
 			this->Prologue();
 			m_thiscall=1;
-		};
+		}
 
 		/**
 		 * Epilogue for a function pops registers but does not free any more of the stack!
@@ -267,7 +268,7 @@ namespace Trampolines
 		void Epilogue()
 		{
 			Append(&Bytecode::codeEpilogue[0],sizeof(Bytecode::codeEpilogue));
-		};
+		}
 
 		/**
 		 * Epilogue that also frees it's estimated stack usage.  Useful for stdcall/thiscall/fastcall.
@@ -275,7 +276,7 @@ namespace Trampolines
 		void EpilogueAndFree()
 		{
 			this->Epilogue(m_mystack);
-		};
+		}
 
 		/**
 		 * Epilogue.  Pops registers, and frees given amount of data from the stack.
@@ -304,7 +305,7 @@ namespace Trampolines
 			*c++=bi.b[1];
 
 			Append(&code[0],sizeof(Bytecode::codeEpilogueN));
-		};
+		}
 
 		/**
 		 * Aligns stack on 16 byte boundary for functions that use aligned SSE instructions.
@@ -379,7 +380,7 @@ namespace Trampolines
 			m_mystack+=4;
 #endif
 			m_calledstack+=4;
-		};
+		}
 
 		/**
 		 * Frees what is estimated as the stack usage of the trampoline.
@@ -388,7 +389,7 @@ namespace Trampolines
 		{
 
 			this->FreeStack(m_mystack);
-		};
+		}
 
 		/**
 		 * Frees the estimated stack usage of the callee.
@@ -396,7 +397,7 @@ namespace Trampolines
 		void FreeTargetStack()
 		{
 			this->FreeStack(m_calledstack);
-		};
+		}
 
 
 		/**
@@ -405,7 +406,7 @@ namespace Trampolines
 		void FreeBothStacks()
 		{
 			this->FreeStack(m_calledstack + m_mystack);
-		};
+		}
 
 		/**
 		 * Frees a given amount of bytes from the stack.
@@ -436,7 +437,7 @@ namespace Trampolines
 
 			Append(&code[0],sizeof(Bytecode::codeFreeStack));
 
-		};
+		}
 
 		/**
 		 * Pushes a raw number onto the callee stack.
@@ -469,7 +470,7 @@ namespace Trampolines
 
 			m_calledstack+=4; // increase auto detected stack size
 
-		};
+		}
 
 
 		/**
@@ -506,7 +507,7 @@ namespace Trampolines
 			m_calledstack+=4; // increase auto detected stack size
 			m_mystack+=4;
 
-		};
+		}
 
 		/**
 		 * Insert a function to call into the trampoline.
@@ -538,7 +539,7 @@ namespace Trampolines
 			Append(&code[0],sizeof(Bytecode::codeCall));
 
 
-		};
+		}
 
 		/**
 		 * Finalizes the trampoline.  Do not try to modify it after this.
@@ -579,7 +580,7 @@ namespace Trampolines
 			m_maxsize=512;
 
 			return ret;
-		};
+		}
 	};
 };
 

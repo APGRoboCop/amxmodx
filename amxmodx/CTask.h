@@ -52,7 +52,7 @@ private:
 
 		bool shouldRepeat();//TODO: Not implemented [APG]RoboCop[CL]
 		
-		inline bool match(int id, AMX *amx)
+		inline bool match(int id, AMX *amx) const
 		{
 			return (!m_bFree) && (amx ? getAMX() == amx : true) && (m_iId == id);
 		}

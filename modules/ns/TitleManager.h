@@ -36,7 +36,7 @@ public:
 	TitleManager()
 	{
 		m_Loaded=0;
-	};
+	}
 
 	inline const char *Lookup(ke::AString &input)
 	{
@@ -49,7 +49,7 @@ public:
 		}
 
 		return (*ret)->chars();
-	};
+	}
 	void LoadTitles();
 };
 

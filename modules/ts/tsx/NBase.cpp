@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -384,13 +386,13 @@ static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params)
 
 	sprintf(szTemp,"%d",(int)params[2]);
 
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(pent->v.classname));
 	pkvd.szKeyName = "tsweaponid"; // weapon
 	pkvd.szValue = szTemp;
 	pkvd.fHandled = false;
 	MDLL_KeyValue(pent, &pkvd);
 
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(pent->v.classname));
 	pkvd.szKeyName = "wduration"; // duration
 	pkvd.szValue = "180";
 	pkvd.fHandled = false;
@@ -398,7 +400,7 @@ static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params)
 
 	sprintf(szTemp,"%d",(int)params[3]); 
 
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(pent->v.classname));
 	pkvd.szKeyName = "wextraclip"; // clips
 	pkvd.szValue = szTemp;
 	pkvd.fHandled = false;
@@ -406,7 +408,7 @@ static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params)
 
 	sprintf(szTemp,"%d",(int)params[4]);
 
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(pent->v.classname));
 	pkvd.szKeyName = "spawnflags"; // attachements :flashlight,lasersight,scope..
 	pkvd.szValue = szTemp;
 	pkvd.fHandled = false;
@@ -444,13 +446,13 @@ static cell AMX_NATIVE_CALL create_pwup(AMX *amx, cell *params){ // pwup ,origin
 
 	sprintf(szTemp,"%d",(int)params[1]);
 
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(pent->v.classname));
 	pkvd.szKeyName = "pwuptype"; // type
 	pkvd.szValue = szTemp;
 	pkvd.fHandled = false;
 	MDLL_KeyValue(pent, &pkvd);
 
-	pkvd.szClassName = (char *)STRING(pent->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(pent->v.classname));
 	pkvd.szKeyName = "pwupduration"; // duration
 	pkvd.szValue = "60";
 	pkvd.fHandled = false;

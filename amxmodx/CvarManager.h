@@ -18,7 +18,7 @@
 
 class CDetour;
 
-enum CvarBounds
+enum CvarBounds : std::uint8_t
 {
 	CvarBound_Upper = 0,
 	CvarBound_Lower
@@ -26,15 +26,15 @@ enum CvarBounds
 
 struct AutoForward
 {
-	enum fwdstate
+	enum fwdstate : std::uint8_t
 	{
 		FSTATE_INVALID = 0,
 		FSTATE_OK,
 		FSTATE_STOP,
 	};
 
-	AutoForward(int id_, const char* handler) : id(id_), state(FSTATE_OK), callback(handler) {};
-	AutoForward()                             : id(-1) , state(FSTATE_INVALID) {};
+	AutoForward(int id_, const char* handler) : id(id_), state(FSTATE_OK), callback(handler) {}
+	AutoForward()                             : id(-1) , state(FSTATE_INVALID) {}
 
 	~AutoForward()
 	{
@@ -48,8 +48,8 @@ struct AutoForward
 
 struct CvarHook
 {
-	CvarHook(int id, AutoForward* fwd) : pluginId(id), forward(fwd) {};
-	CvarHook(int id)                   : pluginId(id), forward(new AutoForward()) {};
+	CvarHook(int id, AutoForward* fwd) : pluginId(id), forward(fwd) {}
+	CvarHook(int id)                   : pluginId(id), forward(new AutoForward()) {}
 
 	int pluginId;
 	ke::AutoPtr<AutoForward> forward;
@@ -57,7 +57,7 @@ struct CvarHook
 
 struct CvarBind
 {
-	enum CvarType
+	enum CvarType : std::uint8_t
 	{
 		CvarType_Int,
 		CvarType_Float,
@@ -69,7 +69,7 @@ struct CvarBind
 		pluginId(id_), 
 		type(type_), 
 		varAddress(varAddress_), 
-		varLength(varLength_) {};
+		varLength(varLength_) {}
 
 	int      pluginId;
 	CvarType type;
@@ -84,7 +84,7 @@ struct CvarBound
 		hasMin(false), minVal(0), 
 		hasMax(false), maxVal(0),
 		minPluginId(-1),
-		maxPluginId(-1) {};
+		maxPluginId(-1) {}
 
 	bool    hasMin;
 	float   minVal;
@@ -100,14 +100,18 @@ typedef ke::Vector<CvarBind*> CvarsBind;
 struct CvarInfo : public ke::InlineListNode<CvarInfo>
 {
 	CvarInfo(const char* name_, const char* helpText, const char* plugin_, int pluginId_)
-		:
-		name(name_), description(helpText),	
-		plugin(plugin_), pluginId(pluginId_), bound() {};
+		: var(nullptr),
+		  name(name_), description(helpText),
+		  plugin(plugin_), pluginId(pluginId_), bound(), amxmodx(false)
+	{
+	}
 
 	CvarInfo(const char* name_)
-		:
-		name(name_), defaultval(""), description(""), 
-		plugin(""), pluginId(-1), bound(), amxmodx(false) {};
+		: var(nullptr),
+		  name(name_), defaultval(""), description(""),
+		  plugin(""), pluginId(-1), bound(), amxmodx(false)
+	{
+	}
 
 	cvar_t*      var;
 	ke::AString  name;
@@ -156,7 +160,7 @@ class CvarManager
 		void          SetCvarMin(CvarInfo* info, bool set, float value, int pluginId);
 		void          SetCvarMax(CvarInfo* info, bool set, float value, int pluginId);
 
-		size_t    GetRegCvarsCount();
+		size_t    GetRegCvarsCount() const;
 		CvarsList* GetCvarsList();
 
 		void      OnConsoleCommand();

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -85,7 +87,7 @@ int CFlagManager::LoadFile(const int force)
 
 		nonconst = TempLine;
 
-		char *start= nullptr;
+		const char *start= nullptr;
 		char *end= nullptr;
 
 		// move up line until the first ", mark this down as the start
@@ -231,7 +233,7 @@ void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 			m_FlagList.push_back(Entry);
 			return;
 		}
-		iter++;
+		++iter;
 	}
 
 	// was not found, add it

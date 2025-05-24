@@ -21,7 +21,8 @@ namespace SourceMod
 	class IResultRow
 	{
 	public:
-		virtual ~IResultRow() { };
+		virtual ~IResultRow() { }
+
 	public:
 		/**
 		 * This will return NULL if the entry is NULL.
@@ -42,7 +43,8 @@ namespace SourceMod
 	class IResultSet
 	{
 	public:
-		virtual ~IResultSet() { };
+		virtual ~IResultSet() { }
+
 	public:
 		//free the handle if necessary (see IQuery).
 		virtual void FreeHandle() =0;
@@ -92,7 +94,8 @@ namespace SourceMod
     class IQuery
 	{
 	public:
-		virtual ~IQuery() { };
+		virtual ~IQuery() { }
+
 	public:
 		//you must free the handle when done
 		virtual void FreeHandle() =0;
@@ -127,7 +130,8 @@ namespace SourceMod
 	class IDatabase
 	{
 	public:
-		virtual ~IDatabase() { };
+		virtual ~IDatabase() { }
+
 	public:
 		/** 
 		 * Closes the database and frees the handle.
@@ -162,7 +166,7 @@ namespace SourceMod
 
 	struct DatabaseInfo
 	{
-		DatabaseInfo() : max_timeout(0) { };
+		DatabaseInfo() : max_timeout(0) { }
 		const char *host;
 		const char *database;
 		const char *user;
@@ -175,7 +179,8 @@ namespace SourceMod
 	class ISQLDriver
 	{
 	public:
-		virtual ~ISQLDriver() { };
+		virtual ~ISQLDriver() { }
+
 	public:
 		virtual IDatabase *Connect(DatabaseInfo *info, int *errcode, char *error, size_t maxlength) =0;
 		//Supports the timeout clause

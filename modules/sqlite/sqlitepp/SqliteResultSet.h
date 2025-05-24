@@ -28,31 +28,31 @@ namespace SourceMod
 		 */
 	public:
 		SqliteResultSet(SqliteQuery::SqliteResults &res);
-		~SqliteResultSet();
+		~SqliteResultSet() override;
 	public:
-		void FreeHandle();
+		void FreeHandle() override;
 	public: 
-		unsigned int RowCount();
-		unsigned int FieldCount();
-		const char *FieldNumToName(unsigned int num);
-		bool FieldNameToNum(const char *name, unsigned int *columnId);
+		unsigned int RowCount() override;
+		unsigned int FieldCount() override;
+		const char *FieldNumToName(unsigned int num) override;
+		bool FieldNameToNum(const char *name, unsigned int *columnId) override;
 	public:
-		bool IsDone();
-		IResultRow *GetRow();
-		void NextRow();
-		void Rewind();
+		bool IsDone() override;
+		IResultRow *GetRow() override;
+		void NextRow() override;
+		void Rewind() override;
 	public:
 		/** 
 		 * IResultRow
 		 */
 	public:
-		const char *GetString(unsigned int columnId);
-		double GetDouble(unsigned int columnId);
-		float GetFloat(unsigned int columnId);
-		int GetInt(unsigned int columnId);
-		bool IsNull(unsigned int columnId);
-		const char *GetRaw(unsigned int columnId, size_t *length);
-		bool NextResultSet();
+		const char *GetString(unsigned int columnId) override;
+		double GetDouble(unsigned int columnId) override;
+		float GetFloat(unsigned int columnId) override;
+		int GetInt(unsigned int columnId) override;
+		bool IsNull(unsigned int columnId) override;
+		const char *GetRaw(unsigned int columnId, size_t *length) override;
+		bool NextResultSet() override;
 	private:
 		const char *GetStringSafe(unsigned int columnId);
 	private:

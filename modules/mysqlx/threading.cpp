@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -262,7 +264,7 @@ void MysqlThread::Execute()
 	} 
 	else 
 	{
-		static cell tmpdata[1] = {0};
+		static cell tmpdata[1] = {};
 		data_addr = MF_PrepareCellArray(tmpdata, 1);
 	}
 	int state = 0;

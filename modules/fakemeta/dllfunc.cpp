@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -44,14 +46,14 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_Spawn:	// int )				( edict_t *pent );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		return gpGamedllFuncs->dllapi_table->pfnSpawn(TypeConversion.id_to_edict(index));
 
 		// pfnThink
 	case	DLLFunc_Think:	// void )				( edict_t *pent );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnThink(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -59,10 +61,10 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_Use:	// void )				( edict_t *pentUsed, edict_t *pentOther );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
-		CHECK_ENTITY(indexb);
+		CHECK_ENTITY(indexb)
 		gpGamedllFuncs->dllapi_table->pfnUse(TypeConversion.id_to_edict(index), TypeConversion.id_to_edict(indexb));
 		return 1;
 
@@ -70,7 +72,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		{
 			cRet = MF_GetAmxAddr(amx, params[2]);
 			index=cRet[0];
-			CHECK_ENTITY(index);
+			CHECK_ENTITY(index)
 			cRet = MF_GetAmxAddr(amx, params[3]);
 
 			KeyValueData *kvd;
@@ -87,20 +89,20 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_Touch:	// void )				( edict_t *pentTouched, edict_t *pentOther );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
-		CHECK_ENTITY(indexb);
+		CHECK_ENTITY(indexb)
 		gpGamedllFuncs->dllapi_table->pfnTouch(TypeConversion.id_to_edict(index), TypeConversion.id_to_edict(indexb));
 		return 1;
 
 	case	DLLFunc_Blocked:	// void )			( edict_t *pentBlocked, edict_t *pentOther );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		indexb=cRet[0];
-		CHECK_ENTITY(indexb);
+		CHECK_ENTITY(indexb)
 		gpGamedllFuncs->dllapi_table->pfnBlocked(TypeConversion.id_to_edict(index), TypeConversion.id_to_edict(indexb));
 		return 1;
 
@@ -108,7 +110,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_SetAbsBox:			// void )			( edict_t *pent );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnSetAbsBox(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -116,7 +118,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		// index,szName,szAddress,szRetRejectReason,size
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		temp = MF_GetAmxString(amx,params[3],0,&len);
 		temp2 = MF_GetAmxString(amx,params[4],1,&len);
 		//temp3 = GET_AMXSTRING(amx,params[5],2,len);
@@ -128,21 +130,21 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_ClientDisconnect:	// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnClientDisconnect(TypeConversion.id_to_edict(index));
 		return 1;
 
 	case	DLLFunc_ClientKill:		// void )		( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnClientKill(TypeConversion.id_to_edict(index));
 		return 1;
 
 	case	DLLFunc_ClientPutInServer:	// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnClientPutInServer(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -153,14 +155,14 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_PlayerPreThink:		// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnPlayerPreThink(TypeConversion.id_to_edict(index));
 		return 1;
 
 	case	DLLFunc_PlayerPostThink:		// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnPlayerPostThink(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -187,19 +189,19 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case	DLLFunc_SpectatorConnect:	// void)		( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnSpectatorConnect(TypeConversion.id_to_edict(index));
 		return 1;
 	case	DLLFunc_SpectatorDisconnect:	// void )	( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnSpectatorDisconnect(TypeConversion.id_to_edict(index));
 		return 1;
 	case	DLLFunc_SpectatorThink:		// void )		( edict_t *pEntity );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnSpectatorThink(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -243,19 +245,19 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		temp = MF_GetAmxString(amx,params[2],0,&len);
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		iparam1 = gpMetaUtilFuncs->pfnCallGameEntity(PLID,STRING(ALLOC_STRING(temp)),VARS(TypeConversion.id_to_edict(index)));
 		return iparam1;
 	case	DLLFunc_ClientUserInfoChanged: // void ) (edict_t *pEntity, char *infobuffer)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		gpGamedllFuncs->dllapi_table->pfnClientUserInfoChanged(TypeConversion.id_to_edict(index),(*g_engfuncs.pfnGetInfoKeyBuffer)(TypeConversion.id_to_edict(index)));
 		return 1;
 	case	DLLFunc_UpdateClientData:		// void ) (const struct edict_s *ent, int sendweapons, struct clientdata_s *cd)
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx, params[3]);
 		iparam1 = cRet[0];
 
@@ -291,12 +293,12 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		// edict_t *ent
 		cRet = MF_GetAmxAddr(amx, params[4]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 
 		// edict_t *host
 		cRet = MF_GetAmxAddr(amx, params[5]);
 		indexb = cRet[0];
-		CHECK_ENTITY(indexb);
+		CHECK_ENTITY(indexb)
 
 		// int hostflags
 		cRet = MF_GetAmxAddr(amx, params[6]);
@@ -314,7 +316,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case DLLFunc_CmdStart:			// void ) (const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed)
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 
 		usercmd_t *uc;
 		cRet = MF_GetAmxAddr(amx, params[3]);
@@ -334,7 +336,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 	case DLLFunc_CmdEnd:			// void ) (const edict_t *player)
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 
 		gpGamedllFuncs->dllapi_table->pfnCmdEnd(TypeConversion.id_to_edict(index));
 
@@ -359,7 +361,7 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		cRet = MF_GetAmxAddr(amx, params[6]);
 		iparam3 = cRet[0];
 
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 
 		cRet = MF_GetAmxAddr(amx, params[7]);
 		Vec1.x = amx_ctof(cRet[0]);

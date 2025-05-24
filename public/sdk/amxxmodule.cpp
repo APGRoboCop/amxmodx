@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -67,7 +69,7 @@ static DLL_FUNCTIONS g_EntityAPI_Table =
 #ifdef FN_DispatchKeyValue
 	FN_DispatchKeyValue,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_DispatchSave
 	FN_DispatchSave,
@@ -117,7 +119,7 @@ static DLL_FUNCTIONS g_EntityAPI_Table =
 #ifdef FN_ClientDisconnect
 	FN_ClientDisconnect,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_ClientKill
 	FN_ClientKill,
@@ -147,7 +149,7 @@ static DLL_FUNCTIONS g_EntityAPI_Table =
 #ifdef FN_ServerDeactivate
 	FN_ServerDeactivate,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_PlayerPreThink
 	FN_PlayerPreThink,
@@ -367,7 +369,7 @@ static DLL_FUNCTIONS g_EntityAPI_Post_Table =
 #ifdef FN_ClientConnect_Post
 	FN_ClientConnect_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_ClientDisconnect_Post
 	FN_ClientDisconnect_Post,
@@ -382,7 +384,7 @@ static DLL_FUNCTIONS g_EntityAPI_Post_Table =
 #ifdef FN_ClientPutInServer_Post
 	FN_ClientPutInServer_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_ClientCommand_Post
 	FN_ClientCommand_Post,
@@ -392,12 +394,12 @@ static DLL_FUNCTIONS g_EntityAPI_Post_Table =
 #ifdef FN_ClientUserInfoChanged_Post
 	FN_ClientUserInfoChanged_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_ServerActivate_Post
 	FN_ServerActivate_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_ServerDeactivate_Post
 	FN_ServerDeactivate_Post,
@@ -407,7 +409,7 @@ static DLL_FUNCTIONS g_EntityAPI_Post_Table =
 #ifdef FN_PlayerPreThink_Post
 	FN_PlayerPreThink_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_PlayerPostThink_Post
 	FN_PlayerPostThink_Post,
@@ -1281,7 +1283,7 @@ static enginefuncs_t g_EngineFuncs_Post_Table =
 #ifdef FN_SetModel_Post
 	FN_SetModel_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_ModelIndex_Post
 	FN_ModelIndex_Post,
@@ -1426,7 +1428,7 @@ static enginefuncs_t g_EngineFuncs_Post_Table =
 #ifdef FN_TraceLine_Post
 	FN_TraceLine_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_TraceToss_Post
 	FN_TraceToss_Post,
@@ -1501,52 +1503,52 @@ static enginefuncs_t g_EngineFuncs_Post_Table =
 #ifdef FN_MessageBegin_Post
 	FN_MessageBegin_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_MessageEnd_Post
 	FN_MessageEnd_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteByte_Post
 	FN_WriteByte_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteChar_Post
 	FN_WriteChar_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteShort_Post
 	FN_WriteShort_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteLong_Post
 	FN_WriteLong_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteAngle_Post
 	FN_WriteAngle_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteCoord_Post
 	FN_WriteCoord_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteString_Post
 	FN_WriteString_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_WriteEntity_Post
 	FN_WriteEntity_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_CVarRegister_Post
 	FN_CVarRegister_Post,
@@ -1646,7 +1648,7 @@ static enginefuncs_t g_EngineFuncs_Post_Table =
 #ifdef FN_RegUserMsg_Post
 	FN_RegUserMsg_Post,
 #else
-	NULL,
+	nullptr,
 #endif
 #ifdef FN_AnimationAutomove_Post
 	FN_AnimationAutomove_Post,
@@ -2453,7 +2455,7 @@ C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo
 }
 
 // request function
-#define REQFUNC(name, fptr, type) if ((fptr = (type)reqFnptrFunc(name)) == 0) return AMXX_FUNC_NOT_PRESENT
+#define REQFUNC(name, fptr, type) if (((fptr) = (type)reqFnptrFunc(name)) == 0) return AMXX_FUNC_NOT_PRESENT
 // request optional function
 #define REQFUNC_OPT(name, fptr, type) fptr = (type)reqFnptrFunc(name)
 

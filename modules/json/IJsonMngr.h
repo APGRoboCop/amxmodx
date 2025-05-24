@@ -386,6 +386,7 @@ namespace AMXX
 			 * @brief                 Appends a number in the array.
 			 *
 			 * @param array           JSON handle
+			 * @param number
 			 * @param string          Number to set
 			 *
 			 * @return                True if succeed, false otherwise
@@ -419,6 +420,7 @@ namespace AMXX
 			 * @note                  Order of values in array may change during execution.
 			 *
 			 * @param array           JSON handle
+			 * @param index
 			 * @param position        Position in the array (starting from 0)
 			 *
 			 * @return                True if succeed, false otherwise

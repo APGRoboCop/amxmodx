@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Float arithmetic for the Small AMX engine
  *
  *  Copyright (c) Artran, Inc. 1999
@@ -35,16 +37,16 @@
   #endif
 */
 
-#define PI  3.1415926535897932384626433832795
+constexpr double PI = 3.1415926535897932384626433832795;
 
 static REAL FromRadians(REAL angle, int radix)
 {
 	switch (radix)
 	{
 		case 1:         /* degrees, sexagesimal system (technically: degrees/minutes/seconds) */
-			return (REAL)(angle / PI * 180.0);
+			return static_cast<float>(angle / PI * 180.0f);
 		case 2:         /* grades, centesimal system */
-			return (REAL)(angle / PI * 200.0);
+			return static_cast<float>(angle / PI * 200.0f);
 		default:        /* assume already radian */
 			return angle;
 	} /* switch */
@@ -92,14 +94,14 @@ static cell AMX_NATIVE_CALL n_floatstr(AMX *amx,cell *params)
 
     /* Find out how long the string is in characters. */
     amx_StrLen(pString, &nLen);
-    if (nLen == 0 || (unsigned int)nLen >= sizeof szSource)
+    if (nLen == 0 || static_cast<unsigned int>(nLen) >= sizeof szSource)
         return 0;
 
     /* Now convert the Small String into a C type null terminated string */
     amx_GetStringOld(szSource, pString, 0);
 
     /* Now convert this to a float. */
-    fNum = (REAL)atof(szSource);
+    fNum = static_cast<float>(atof(szSource));
 
     return amx_ftoc(fNum);
 }
@@ -176,7 +178,7 @@ static cell AMX_NATIVE_CALL n_floatfract(AMX *amx,cell *params)
     *   params[1] = float operand
     */
     REAL fA = amx_ctof(params[1]);
-    fA = fA - (REAL)(floor((double)fA));
+    fA = fA - static_cast<float>(floor(static_cast<double>(fA)));
     return amx_ftoc(fA);
 }
 
@@ -197,19 +199,19 @@ static cell AMX_NATIVE_CALL n_floatround(AMX *amx,cell *params)
     switch (params[2])
     {
         case 1:       /* round downwards (truncate) */
-            fA = (REAL)(floor((double)fA));
+            fA = static_cast<float>(floor(static_cast<double>(fA)));
             break;
         case 2:       /* round upwards */
-            fA = (REAL)(ceil((double)fA));
+            fA = static_cast<float>(ceil(static_cast<double>(fA)));
             break;
         case 3:       /* round towards zero */
             if ( fA>=0.0 )
-                fA = (REAL)(floor((double)fA));
+                fA = static_cast<float>(floor(static_cast<double>(fA)));
             else
-                fA = (REAL)(ceil((double)fA));
+                fA = static_cast<float>(ceil(static_cast<double>(fA)));
             break;
         default:      /* standard, round to nearest */
-            fA = (REAL)(floor((double)fA+.5));
+            fA = static_cast<float>(floor(static_cast<double>(fA) + .5));
             break;
     }
 
@@ -227,10 +229,9 @@ static cell AMX_NATIVE_CALL n_floatcmp(AMX *amx,cell *params)
     *   params[1] = float operand 1
     *   params[2] = float operand 2
     */
-    REAL fA, fB;
 
-    fA = amx_ctof(params[1]);
-    fB = amx_ctof(params[2]);
+    REAL fA = amx_ctof(params[1]);
+    REAL fB = amx_ctof(params[2]);
     if (fA == fB)
         return 0;
     else if (fA>fB)
@@ -284,9 +285,9 @@ static cell AMX_NATIVE_CALL n_floatlog(AMX *amx,cell *params)
     */
     REAL fValue = amx_ctof(params[1]);
     REAL fBase = amx_ctof(params[2]);
-    if (fValue <= 0.0 || fBase <= 0)
+    if (fValue <= 0.0f || fBase <= 0)
         return amx_RaiseError(amx, AMX_ERR_DOMAIN);
-    if (fBase == 10.0) // ??? epsilon
+    if (fBase == 10.0f) // ??? epsilon
         fValue = (REAL)log10(fValue);
     else
         fValue = (REAL)(log(fValue) / log(fBase));
@@ -298,9 +299,9 @@ static REAL ToRadians(REAL angle, int radix)
     switch (radix)
     {
         case 1:         /* degrees, sexagesimal system (technically: degrees/minutes/seconds) */
-            return (REAL)(angle * PI / 180.0);
+            return static_cast<float>(angle * PI / 180.0);
         case 2:         /* grades, centesimal system */
-            return (REAL)(angle * PI / 200.0);
+            return static_cast<float>(angle * PI / 200.0);
         default:        /* assume already radian */
             return angle;
     } /* switch */
@@ -418,8 +419,7 @@ static cell AMX_NATIVE_CALL n_floatatan2(AMX *amx, cell *params)
 	 */
 	REAL fA = amx_ctof(params[1]);
 	REAL fB = amx_ctof(params[2]);
-	REAL fC;
-	fC = atan2(fA, fB);
+	REAL fC = atan2(fA, fB);
 	fC = FromRadians(fC, params[3]);
 	return amx_ftoc(fC);
 }

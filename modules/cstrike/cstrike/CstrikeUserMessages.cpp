@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -87,8 +89,8 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 		{
 			if (msg_type == MessageIdSetFOV)
 			{
-				int index = TypeConversion.edict_to_id(pEntity);
-				int zoom = Players[index].GetZoom();
+				const int index = TypeConversion.edict_to_id(pEntity);
+				const int zoom = Players[index].GetZoom();
 
 				if (zoom)
 				{
@@ -107,7 +109,7 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 			}
 			else if (msg_type == MessageIdResetHUD)
 			{
-				int index = TypeConversion.edict_to_id(pEntity);
+				const int index = TypeConversion.edict_to_id(pEntity);
 
 				if (Players[index].GetZoom())
 				{

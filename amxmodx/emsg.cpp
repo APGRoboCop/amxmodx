@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -45,11 +47,11 @@ void Client_VGUIMenu(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			mPlayer->menu = -(*(int*)mValue);
+			mPlayer->menu = -(*static_cast<int*>(mValue));
 			mPlayer->newmenu = -1;
 			break;
 		case 1:
-			mPlayer->keys = *(int*)mValue;
+			mPlayer->keys = *static_cast<int*>(mValue);
 	}
 }
 
@@ -62,11 +64,11 @@ void Client_ShowMenu(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			mPlayer->keys = *(int*)mValue;
+			mPlayer->keys = *static_cast<int*>(mValue);
 			break;
 		case 3:
 			{
-			mPlayer->menu = g_menucmds.findMenuId((char*)mValue);
+			mPlayer->menu = g_menucmds.findMenuId(static_cast<char*>(mValue));
 			mPlayer->newmenu = -1;
 			break;
 			}
@@ -82,14 +84,14 @@ void Client_TeamInfo(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			index = *(int*)mValue;
+			index = *static_cast<int*>(mValue);
 			break;
 		case 1:
 			if (index < 1 || index > gpGlobals->maxClients) break;
-			char* msg = (char*)mValue;
+			const char* msg = static_cast<char*>(mValue);
 			if (!msg) break;
 
-			auto pPlayer = GET_PLAYER_POINTER_I(index);
+			const auto pPlayer = GET_PLAYER_POINTER_I(index);
 		
 			pPlayer->team = msg;
 			g_teamsIds.registerTeam(msg, -1);
@@ -140,7 +142,7 @@ void Client_TextMsg(void* mValue)
 	{
 		case 1:
 		{
-			char * msg = (char*)mValue;
+			const char * msg = static_cast<char*>(mValue);
 			if (!msg) break;
 			
 			if (!strncmp("#Game_C", msg, 7))
@@ -162,7 +164,7 @@ void Client_TextMsg(void* mValue)
 		}
 		case 2:
 		{
-			char * msg = (char*)mValue;
+			const char * msg = static_cast<char*>(mValue);
 			if (!msg) break;
 			
 			if (g_game_timeleft == -2)
@@ -177,7 +179,7 @@ void Client_TextMsg(void* mValue)
 		}
 		case 3:
 		{
-			char * msg = (char*)mValue;
+			const char * msg = static_cast<char*>(mValue);
 			if (!msg) break;
 			if (g_game_timeleft != -3) break;
 			g_game_restarting += atoi(msg);
@@ -198,13 +200,13 @@ void Client_WeaponList(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			wpnName = (char*)mValue;
+			wpnName = static_cast<char*>(mValue);
 			break;
 		case 1:
-			iSlot = *(int*)mValue;
+			iSlot = *static_cast<int*>(mValue);
 			break;
 		case 7:
-			int iId = *(int*)mValue;
+			const int iId = *static_cast<int*>(mValue);
 			if ((iId < 0 || iId >= MAX_WEAPONS) || (wpnList & (1<<iId)))
 			break;
 			wpnList |= (1<<iId);
@@ -222,11 +224,11 @@ void Client_CurWeapon(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			iState = *(int*)mValue;
+			iState = *static_cast<int*>(mValue);
 			break;
 		case 1:
 			if (!iState) break;
-			iId = *(int*)mValue;
+			iId = *static_cast<int*>(mValue);
 			break;
 		case 2:
 			if (!mPlayer) return;
@@ -234,12 +236,12 @@ void Client_CurWeapon(void* mValue)
 			mPlayer->current = iId;
 
 			
-			if (*(int*)mValue < mPlayer->weapons[iId].clip && // Only update the lastHit vector if the clip size is decreasing
-				*(int*)mValue != -1) // But not if it's a melee weapon
+			if (*static_cast<int*>(mValue) < mPlayer->weapons[iId].clip && // Only update the lastHit vector if the clip size is decreasing
+				*static_cast<int*>(mValue) != -1) // But not if it's a melee weapon
 			{
 				mPlayer->lastHit = mPlayer->lastTrace;
 			}
-			mPlayer->weapons[iId].clip = *(int*)mValue;
+			mPlayer->weapons[iId].clip = *static_cast<int*>(mValue);
 	}
 }
 
@@ -250,13 +252,13 @@ void Client_AmmoX(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			iAmmo = *(int*)mValue;
+			iAmmo = *static_cast<int*>(mValue);
 			break;
 		case 1:
 			if (!mPlayer) return;
 			for (int i = 1; i < MAX_WEAPONS; ++i)
 				if (iAmmo == g_weaponsData[i].ammoSlot)
-					mPlayer->weapons[i].ammo = *(int*)mValue;
+					mPlayer->weapons[i].ammo = *static_cast<int*>(mValue);
 	}
 }
 
@@ -267,13 +269,13 @@ void Client_AmmoPickup(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			iSlot = *(int*)mValue;
+			iSlot = *static_cast<int*>(mValue);
 			break;
 		case 1:
 			if (!mPlayer) return;
 			for (int i = 1; i < MAX_WEAPONS; ++i)
 				if (g_weaponsData[i].ammoSlot==iSlot)
-					mPlayer->weapons[i].ammo += *(int*)mValue;
+					mPlayer->weapons[i].ammo += *static_cast<int*>(mValue);
 	}
 }
 
@@ -285,16 +287,16 @@ void Client_ScoreInfo(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			index = *(int*)mValue;
+			index = *static_cast<int*>(mValue);
 			break;
 		case 2:
-			deaths = *(int*)mValue;
+			deaths = *static_cast<int*>(mValue);
 			break;
 		case 4:
 			if (index < 1 || index > gpGlobals->maxClients) break;
 			CPlayer*pPlayer = GET_PLAYER_POINTER_I(index);
 			pPlayer->deaths = deaths;
-			pPlayer->teamId = *(int*)mValue;
+			pPlayer->teamId = *static_cast<int*>(mValue);
 			if (g_teamsIds.isNewTeam())
 				g_teamsIds.registerTeam(pPlayer->team.chars(), pPlayer->teamId);
 	}
@@ -328,20 +330,20 @@ void Client_DeathMsg(void* mValue)
 	switch (mState++)
 	{
 		case 0:
-			killer_id = *(int*)mValue;
+			killer_id = *static_cast<int*>(mValue);
 			killer = (killer_id > 0 && killer_id < 33) ? GET_PLAYER_POINTER_I(killer_id) : nullptr;
 			break;
 		case 1:
-			victim_id = *(int*)mValue;
+			victim_id = *static_cast<int*>(mValue);
 			victim = (victim_id > 0 && victim_id < 33) ? GET_PLAYER_POINTER_I(victim_id) : nullptr;
 			break;
 		case 2:	
-			hs = *(int*)mValue;
+			hs = *static_cast<int*>(mValue);
 			break;
 		case 3:
 			if (!killer || !victim) break;
 			victim->death_killer = killer_id;
-			victim->death_weapon = (char*)mValue;
+			victim->death_weapon = static_cast<char*>(mValue);
 			victim->death_headshot = hs;
 			victim->death_tk = (killer->teamId == victim->teamId);
 	}

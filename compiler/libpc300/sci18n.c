@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Codepage translation to Unicode, and UTF-8 support
  *
  *  The translation is based on codepage mapping files that are distributed
@@ -235,7 +237,7 @@ SC_FUNC int cp_set(const char *name)
     if (*ptr!='\0') {
       /* content on line */
       unsigned code=LEADBYTE;
-      int num=sscanf(ptr,"%i %i",&index,&code);
+      const int num=sscanf(ptr,"%i %i",&index,&code);
       /* if sscanf() returns 1 and the index is in range 0..255, then the
        * code is a DBCS lead byte; if sscanf() returns 2 and index>=256, this
        * is a double byte pair (lead byte + follower)
@@ -246,10 +248,8 @@ SC_FUNC int cp_set(const char *name)
         /* store the DBCS character in wordtable */
         if (wordtabletop>=wordtablesize) {
           /* grow the list */
-          int newsize;
-          struct wordpair *newblock;
-          newsize= (wordtablesize==0) ? 128 : 2*wordtablesize;
-          newblock=(struct wordpair *)malloc(newsize*sizeof(*wordtable));
+          const int newsize = (wordtablesize == 0) ? 128 : 2 * wordtablesize;
+          struct wordpair* newblock = (struct wordpair*)malloc(newsize * sizeof(*wordtable));
           if (newblock!=NULL) {
             memcpy(newblock,wordtable,wordtabletop*sizeof(*wordtable));
             free(wordtable);
@@ -278,20 +278,17 @@ SC_FUNC int cp_set(const char *name)
 
 SC_FUNC cell cp_translate(const unsigned char *string,const unsigned char **endptr)
 {
-  wchar_t result;
-
-  result=bytetable[*string++];
+	wchar_t result = bytetable[*string++];
   /* check whether this is a leader code */
   if ((unsigned)result==LEADBYTE && wordtable!=NULL) {
     /* look up the code via binary search */
-    int low,high,mid;
-    unsigned short index=(unsigned short)(((*(string-1)) << 8) | *string);
+    const unsigned short index=(unsigned short)(((*(string-1)) << 8) | *string);
     string++;
     assert(wordtabletop>0);
-    low=0;
-    high=wordtabletop-1;
+    int low = 0;
+    int high = wordtabletop - 1;
     while (low<high) {
-      mid=(low+high)/2;
+	    const int mid = (low + high) / 2;
       assert(low<=mid && mid<high);
       if (index>wordtable[mid].index)
         low=mid+1;

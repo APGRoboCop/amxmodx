@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -997,7 +999,7 @@ const char *Hook_Str_Void(Hook *hook, void *pthis)
 
 	KILL_VECTOR()
 	POP()
-	CHECK_RETURN_STR();
+	CHECK_RETURN_STR()
 
 	return ret.chars();
 }
@@ -3331,7 +3333,7 @@ const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)
 
 	KILL_VECTOR()
 	POP()
-	CHECK_RETURN_STR();
+	CHECK_RETURN_STR()
 
 	return ret.chars();
 }

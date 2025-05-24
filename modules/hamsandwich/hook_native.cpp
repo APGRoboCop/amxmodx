@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -595,7 +597,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	int func=params[1];
 	int post=params[4];
 
-	CHECK_FUNCTION(func);
+	CHECK_FUNCTION(func)
 
 	// Fixes a buffer issue by copying locally the strings.
 	// REMOVE_ENTITY invokes pfnOnFreeEntPrivateData which plugins can hook and `function` and `classname` strings are used after that
@@ -702,7 +704,7 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 	int func=params[1];
 	int post=params[4];
 
-	CHECK_FUNCTION(func);
+	CHECK_FUNCTION(func)
 
 	char *function=MF_GetAmxString(amx, params[3], 0, nullptr);
 	int entid=params[2];
@@ -792,7 +794,7 @@ static cell AMX_NATIVE_CALL ExecuteHam(AMX *amx, cell *params)
 {
 	int func=params[1];
 
-	CHECK_FUNCTION(func);
+	CHECK_FUNCTION(func)
 
 	gDoForwards=false;
 	return hooklist[func].call(amx, params);
@@ -801,7 +803,7 @@ static cell AMX_NATIVE_CALL ExecuteHamB(AMX *amx, cell *params)
 {
 	int func=params[1];
 
-	CHECK_FUNCTION(func);
+	CHECK_FUNCTION(func)
 
 	gDoForwards=true;
 	return hooklist[func].call(amx, params);

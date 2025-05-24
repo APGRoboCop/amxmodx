@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /******************************************************************************
 ** This file is an amalgamation of many separate C source files from SQLite
 ** version 3.24.0.  By combining all the individual C code files into this
@@ -24818,6 +24820,7 @@ SQLITE_PRIVATE sqlite3_mutex_methods const *sqlite3DefaultMutex(void){
 #ifdef SQLITE_MUTEX_PTHREADS
 
 #include <pthread.h>
+#include <limits.h>
 
 /*
 ** The sqlite3_mutex.id, sqlite3_mutex.nRef, and sqlite3_mutex.owner fields
@@ -27015,7 +27018,13 @@ SQLITE_API void sqlite3_str_vappendf(
           }
           nOut = (int)n;
         }
-        bufpt = &zOut[nOut-1];
+        if (nOut > INT_MIN) {
+            bufpt = &zOut[nOut - 1];
+        }
+        else {
+            // Handle the error case appropriately
+            bufpt = NULL; // or some other appropriate value or error handling
+        }
         if( xtype==etORDINAL ){
           static const char zOrd[] = "thstndrd";
           int x = (int)(longvalue % 10);
@@ -27033,7 +27042,13 @@ SQLITE_API void sqlite3_str_vappendf(
             longvalue = longvalue/base;
           }while( longvalue>0 );
         }
-        length = (int)(&zOut[nOut-1]-bufpt);
+        if (nOut > INT_MIN) {
+            length = (int)(&zOut[nOut - 1] - bufpt);
+        }
+        else {
+            // Handle the error case appropriately
+            length = 0; // or some other appropriate value or error handling
+        }
         while( precision>length ){
           *(--bufpt) = '0';                             /* Zero pad */
           length++;
@@ -27059,7 +27074,13 @@ SQLITE_API void sqlite3_str_vappendf(
           pre = &aPrefix[infop->prefix];
           for(; (x=(*pre))!=0; pre++) *(--bufpt) = x;
         }
-        length = (int)(&zOut[nOut-1]-bufpt);
+        if (nOut > INT_MIN) {
+            length = (int)(&zOut[nOut - 1] - bufpt);
+        }
+        else {
+            // Handle the error case appropriately
+            length = 0; // or some other appropriate value or error handling
+        }
         break;
       case etFLOAT:
       case etEXP:

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -89,9 +91,9 @@ char *stripPort(char *ip)
 
 const char* stristr(const char* str, const char* substr)
 {
-	char *needle = (char *)substr;
-	char *prevloc = (char *)str;
-	char *haystack = (char *)str;
+	const char *needle = const_cast<char*>(substr);
+	char *prevloc = const_cast<char*>(str);
+	const char *haystack = const_cast<char*>(str);
 
 	while (*haystack)
 	{
@@ -107,7 +109,7 @@ const char* stristr(const char* str, const char* substr)
 		else
 		{
 			haystack = ++prevloc;
-			needle = (char *)substr;
+			needle = const_cast<char*>(substr);
 		}
 	}
 
@@ -176,7 +178,7 @@ const char *lookupString(const char *ip, const char **path, int *length)
 	}
 
 	// Let's avoid a crash in case we go over the buffer size.
-	size_t maxLength = ke::Min((size_t)result.data_size, sizeof(buffer) - 1);
+	const size_t maxLength = ke::Min((size_t)result.data_size, sizeof(buffer) - 1);
 
 	// Strings from database are not null terminated.
 	memcpy(buffer, result.utf8_string, maxLength);

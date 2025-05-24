@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -160,10 +162,10 @@ void initialze_offsets()
 // originally by mahnsawce
 static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY(index);
+	const int index = params[1];
+	CHECK_ENTITY(index)
 	edict_t *pEdict = TypeConversion.id_to_edict(index);
-	int iSwitch = params[2];
+	const int iSwitch = params[2];
 
 	//onto normal cases - sanity check
 	if (iSwitch <= pev_string_start || iSwitch >= pev_absolute_end)
@@ -172,7 +174,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		return 0;
 	}
 
-	int offs = g_offset_table[iSwitch];
+	const int offs = g_offset_table[iSwitch];
 
 	//sanity check #2
 	if (offs == -1)
@@ -246,7 +248,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		ValType |= Ret_Edict;
 	}
 
-	size_t count = params[0] / sizeof(cell) - 2;
+	const size_t count = params[0] / sizeof(cell) - 2;
 
 	if (count == 0)
 	{
@@ -255,9 +257,9 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		{
 			return rets.i;
 		} else if (ValType == Ret_Float) {
-			return (cell)rets.f;
+			return static_cast<cell>(rets.f);
 		} else if (ValType == Ret_String) {
-			return (cell)rets.s;
+			return static_cast<cell>(rets.s);
 		} else {
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");
 			return 0;
@@ -269,7 +271,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		{
 			*addr = amx_ftoc(rets.f);
 		} else if (ValType == Ret_Int) {
-			REAL f = (REAL)rets.i;
+			REAL f = static_cast<float>(rets.i);
 			*addr = amx_ftoc(f);
 		} else if (ValType == Ret_Vec) {
 			addr[0] = amx_ftoc(vr.x);
@@ -289,13 +291,13 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 		}
 		return 1;
 	} else if (count == 2) {
-		cell size = *(MF_GetAmxAddr(amx, params[4]));
+		const cell size = *(MF_GetAmxAddr(amx, params[4]));
 		if (ValType == Ret_String)
 		{
 			const char *str = STRING(rets.s);
 			if (!str)
 				str = "";
-			int num = MF_SetAmxString(amx, params[3], str, size);
+			const int num = MF_SetAmxString(amx, params[3], str, size);
 			return num;
 		} else if (ValType & Ret_Int) {
 			char temp[32];
@@ -321,15 +323,15 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid return type");
 	} else if (count == 3) {
-		cell size = *(MF_GetAmxAddr(amx, params[5]));
+		const cell size = *(MF_GetAmxAddr(amx, params[5]));
 		if (ValType == Ret_String)
 		{
 			const char *str = STRING(rets.s);
 			cell *addr = MF_GetAmxAddr(amx, params[3]);
-			*addr = (cell)rets.s;
+			*addr = static_cast<cell>(rets.s);
 			if (!str)
 				str = "";
-			int num = MF_SetAmxString(amx, params[4], str, size);
+			const int num = MF_SetAmxString(amx, params[4], str, size);
 			return num;
 		}
 
@@ -345,10 +347,10 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 {
 	// index, pevdata
-	int index = params[1];
-	CHECK_ENTITY(index);
+	const int index = params[1];
+	CHECK_ENTITY(index)
 	edict_t *pEdict = TypeConversion.id_to_edict(index);
-	int iSwitch = params[2];
+	const int iSwitch = params[2];
 
 	//onto normal cases - sanity check
 	if (iSwitch <= pev_string_start || iSwitch >= pev_absolute_end)
@@ -357,7 +359,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int offs = g_offset_table[iSwitch];
+	const int offs = g_offset_table[iSwitch];
 
 	//sanity check #2
 	if (offs == -1)
@@ -366,19 +368,19 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell *blah = MF_GetAmxAddr(amx,params[3]);
+	const cell *blah = MF_GetAmxAddr(amx,params[3]);
 	entvars_t *v = &(pEdict->v);
 
 	if (iSwitch > pev_int_start && iSwitch < pev_int_end)
 	{
-		*(int *)EDICT_OFFS(v, offs) = (int)*blah;
+		*(int *)EDICT_OFFS(v, offs) = static_cast<int>(*blah);
 	} else if (iSwitch > pev_float_start && iSwitch < pev_float_end) {
 		*(float *)EDICT_OFFS(v, offs) = (float)amx_ctof(blah[0]);
 	} else if ( (iSwitch > pev_string_start && iSwitch < pev_string_end)
 				|| (iSwitch > pev_string2_begin && iSwitch < pev_string2_end) ) {
 		int len;
-		char *string = MF_GetAmxString(amx, params[3], 0, &len);
-		string_t value = ALLOC_STRING(string);
+		const char *string = MF_GetAmxString(amx, params[3], 0, &len);
+		const string_t value = ALLOC_STRING(string);
 		*(string_t *)EDICT_OFFS(v, offs) = value;
 	} else if ( (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
 				|| (iSwitch > pev_edict2_start && iSwitch < pev_absolute_end) ) {
@@ -391,7 +393,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 		vec[2] = amx_ctof(blah[2]);
 		*(vec3_t *)EDICT_OFFS(v, offs) = vec;
 	} else if (iSwitch > pev_byte_start && iSwitch < pev_byte_end) {
-		byte b = static_cast<byte>(blah[0]);
+		const byte b = static_cast<byte>(blah[0]);
 		*(byte *)EDICT_OFFS(v, offs) = b;
 	} else if (iSwitch > pev_bytearray_start && iSwitch < pev_bytearray_end) {
         switch(iSwitch)
@@ -414,10 +416,10 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_set_pev_string(AMX *amx, cell *params)
 {
 	// index, pevdata
-	int index = params[1];
-	CHECK_ENTITY(index);
+	const int index = params[1];
+	CHECK_ENTITY(index)
 	edict_t *pEdict = TypeConversion.id_to_edict(index);
-	int iSwitch = params[2];
+	const int iSwitch = params[2];
 
 	//onto normal cases - sanity check
 	if (iSwitch <= pev_string_start || iSwitch >= pev_absolute_end)
@@ -426,7 +428,7 @@ static cell AMX_NATIVE_CALL amx_set_pev_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int offs = g_offset_table[iSwitch];
+	const int offs = g_offset_table[iSwitch];
 
 	//sanity check #2
 	if (offs == -1)
@@ -453,9 +455,9 @@ static cell AMX_NATIVE_CALL amx_set_pev_string(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
 {
-	int idx = static_cast<int>(params[1]);
+	const int idx = static_cast<int>(params[1]);
 
-	edict_t *e = TypeConversion.id_to_edict(idx);
+	const edict_t *e = TypeConversion.id_to_edict(idx);
 
 	if (FNullEnt(e))
 		return 0;
@@ -467,10 +469,10 @@ static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL amx_pev_serial(AMX* amx, cell* params)
 {
-	int id = static_cast<int>(params[1]);
+	const int id = static_cast<int>(params[1]);
 
-	CHECK_ENTITY(id);
-	edict_t* ent = TypeConversion.id_to_edict(id);
+	CHECK_ENTITY(id)
+	const edict_t* ent = TypeConversion.id_to_edict(id);
 
 	return ent->serialnumber;
 }

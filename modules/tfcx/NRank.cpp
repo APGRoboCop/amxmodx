@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -18,9 +20,9 @@
 static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int attacker = params[2];
-	CHECK_PLAYERRANGE(attacker);
+	CHECK_PLAYERRANGE(attacker)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->attackers[attacker].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -45,9 +47,9 @@ static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int victim = params[2];
-	CHECK_PLAYERRANGE(victim);
+	CHECK_PLAYERRANGE(victim)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->victims[victim].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -72,7 +74,7 @@ static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param */ // DEC-Weapon (round) stats (end)
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int weapon = params[2];
 	if (weapon<0||weapon>=TFCMAX_WEAPONS){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
@@ -100,7 +102,7 @@ static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param 
 static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int weapon = params[2];
 	if (weapon<0||weapon>=TFCMAX_WEAPONS){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
@@ -128,7 +130,7 @@ static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param *
 static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	GET_PLAYER_POINTER_I(index)->restartStats();
 	return 1;
 }
@@ -136,7 +138,7 @@ static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param
 static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->rank ){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -160,7 +162,7 @@ static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->rank){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -241,10 +243,10 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 	}
 
 	int att = params[2];
-	CHECK_PLAYERRANGE(att);
+	CHECK_PLAYERRANGE(att)
 
 	int vic = params[3];
-	CHECK_PLAYERRANGE(vic);
+	CHECK_PLAYERRANGE(vic)
 
 	const int dmg = params[4];
 	if ( dmg<1 ){
@@ -281,7 +283,7 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 
 static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params){ // player,wid
 	int index = params[2];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 
 	int weapon = params[1];
 	if (  weapon < TFCMAX_WEAPONS-TFCMAX_CUSTOMWPNS ){

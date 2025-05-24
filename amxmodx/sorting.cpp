@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -58,7 +60,7 @@
  Note that the inner expression can be heavily reduced; it is expanded for readability.
  **********************************/
 
-enum SortOrder
+enum SortOrder : std::uint8_t
 {
 	Sort_Ascending = 0,
 	Sort_Descending = 1,
@@ -75,9 +77,10 @@ int sort_ints_desc(const void *int1, const void *int2)
 	return (*(int *)int2) - (*(int *)int1);
 }
 
-void sort_random(cell *array, cell size)
+//TODO: replace it with std::shuffle [APG]RoboCop[CL]
+void sort_random(cell* array, cell size)
 {
-	srand((unsigned int)time(nullptr));
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	for (int i = size-1; i > 0; i--)
 	{
@@ -95,8 +98,8 @@ void sort_random(cell *array, cell size)
 static cell AMX_NATIVE_CALL SortIntegers(AMX *amx, cell *params)
 {
 	cell *array = get_amxaddr(amx, params[1]);
-	cell array_size = params[2];
-	cell type = params[3];
+	const cell array_size = params[2];
+	const cell type = params[3];
 
 	if (type == Sort_Ascending) 
 	{
@@ -147,8 +150,8 @@ int sort_floats_desc(const void *float1, const void *float2)
 static cell AMX_NATIVE_CALL SortFloats(AMX *amx, cell *params)
 {
 	cell *array = get_amxaddr(amx, params[1]);
-	cell array_size = params[2];
-	cell type = params[3];
+	const cell array_size = params[2];
+	const cell type = params[3];
 
 	if (type == Sort_Ascending)
 	{
@@ -171,11 +174,11 @@ static cell *g_CurRebaseMap = nullptr;
 
 int sort_strings_asc(const void *blk1, const void *blk2)
 {
-	cell reloc1 = *(cell *)blk1;
-	cell reloc2 = *(cell *)blk2;
+	const cell reloc1 = *(cell *)blk1;
+	const cell reloc2 = *(cell *)blk2;
 
-	cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
-	cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
+	const cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
+	const cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
 
 	while (*str1 == *str2++)
 	{
@@ -190,11 +193,11 @@ int sort_strings_asc(const void *blk1, const void *blk2)
 
 int sort_strings_desc(const void *blk1, const void *blk2)
 {
-	cell reloc1 = *(cell *)blk1;
-	cell reloc2 = *(cell *)blk2;
+	const cell reloc1 = *(cell *)blk1;
+	const cell reloc2 = *(cell *)blk2;
 
-	cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
-	cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
+	const cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
+	const cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
 
 	while (*str1 == *str2++)
 	{
@@ -210,8 +213,8 @@ int sort_strings_desc(const void *blk1, const void *blk2)
 static cell AMX_NATIVE_CALL SortStrings(AMX *amx, cell *params)
 {
 	cell *array = get_amxaddr(amx, params[1]);
-	cell array_size = params[2];
-	cell type = params[3];
+	const cell array_size = params[2];
+	const cell type = params[3];
 
 	/** HACKHACK - back up the old indices, replace the indices with something easier */
 	cell amx_addr, *phys_addr;
@@ -278,8 +281,8 @@ static CStack<sort_info *> g_AMXSortStack;
 
 int sort1d_amx_custom(const void *elem1, const void *elem2)
 {
-	cell c1 = *(cell *)elem1;
-	cell c2 = *(cell *)elem2;
+	const cell c1 = *(cell *)elem1;
+	const cell c2 = *(cell *)elem2;
 	const sort_info *pInfo = g_AMXSortStack.front();
 
 	return executeForwards(pInfo->pfn, c1, c2, pInfo->array_addr, pInfo->data_addr, pInfo->data_size);
@@ -288,11 +291,11 @@ int sort1d_amx_custom(const void *elem1, const void *elem2)
 static cell AMX_NATIVE_CALL SortCustom1D(AMX *amx, cell *params)
 {
 	cell *array = get_amxaddr(amx, params[1]);
-	cell array_size = params[2];
+	const cell array_size = params[2];
 	int len;
 	const char *funcname = get_amxstring(amx, params[3], 0, len);
 
-	int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	const int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	if (pfn < 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", funcname);
@@ -320,12 +323,12 @@ static cell AMX_NATIVE_CALL SortCustom1D(AMX *amx, cell *params)
 
 int sort2d_amx_custom(const void *elem1, const void *elem2)
 {
-	cell c1 = *(cell *)elem1;
-	cell c2 = *(cell *)elem2;
-	sort_info *pInfo = g_AMXSortStack.front();
+	const cell c1 = *(cell *)elem1;
+	const cell c2 = *(cell *)elem2;
+	const sort_info *pInfo = g_AMXSortStack.front();
 
-	cell c1_addr = pInfo->array_addr + (c1 * sizeof(cell)) + pInfo->array_remap[c1];
-	cell c2_addr = pInfo->array_addr + (c2 * sizeof(cell)) + pInfo->array_remap[c2];
+	const cell c1_addr = pInfo->array_addr + (c1 * sizeof(cell)) + pInfo->array_remap[c1];
+	const cell c2_addr = pInfo->array_addr + (c2 * sizeof(cell)) + pInfo->array_remap[c2];
 
 	//cell *c1_r = get_amxaddr(pInfo->amx, c1_addr);
 	//cell *c2_r = get_amxaddr(pInfo->amx, c2_addr);
@@ -336,7 +339,7 @@ int sort2d_amx_custom(const void *elem1, const void *elem2)
 static cell AMX_NATIVE_CALL SortCustom2D(AMX *amx, cell *params)
 {
 	cell *array = get_amxaddr(amx, params[1]);
-	cell array_size = params[2];
+	const cell array_size = params[2];
 	int len;
 	const char *funcname = get_amxstring(amx, params[3], 0, len);
 
@@ -349,7 +352,7 @@ static cell AMX_NATIVE_CALL SortCustom2D(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	const int pfn = registerSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	if (pfn < 0)
 	{
 		amx_Release(amx, amx_addr);
@@ -395,7 +398,7 @@ static cell AMX_NATIVE_CALL SortCustom2D(AMX *amx, cell *params)
 	return 1;
 }
 
-enum SortType
+enum SortType : std::uint8_t
 {
 	Sort_Integer = 0,
 	Sort_Float,
@@ -449,7 +452,7 @@ static cell AMX_NATIVE_CALL SortADTArray(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell order = params[2];
+	const cell order = params[2];
 
 	if (order == Sort_Random)
 	{
@@ -458,9 +461,9 @@ static cell AMX_NATIVE_CALL SortADTArray(AMX *amx, cell *params)
 		return 1;
 	}
 
-	cell type = params[3];
-	size_t arraysize = vec->size();
-	size_t blocksize = vec->blocksize();
+	const cell type = params[3];
+	const size_t arraysize = vec->size();
+	const size_t blocksize = vec->blocksize();
 	cell *array = vec->base();
 
 	if (type == Sort_Integer)

@@ -185,10 +185,10 @@ namespace SourceMod
 	{
 	public:
 		virtual IMutex *MakeMutex() =0;
-		virtual void MakeThread(IThread *pThread) =0;
-		virtual IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags) =0;
-		virtual IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params) =0;
-		virtual void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min) =0;
+		void MakeThread(IThread *pThread) override =0;
+		IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags) override =0;
+		IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params) override =0;
+		void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min) override =0;
 		virtual void ThreadSleep(unsigned int ms) =0;
 		/**
 		 * Creates a non-signalled event.
@@ -214,10 +214,10 @@ namespace SourceMod
 	{
 	public:
 		virtual unsigned int RunFrame() =0;
-		virtual void MakeThread(IThread *pThread) =0;
-		virtual IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags) =0;
-		virtual IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params) =0;
-		virtual void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min) =0;
+		void MakeThread(IThread *pThread) override =0;
+		IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags) override =0;
+		IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params) override =0;
+		void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min) override =0;
 	public:
 		//Controls the worker
 		virtual bool Pause() =0;

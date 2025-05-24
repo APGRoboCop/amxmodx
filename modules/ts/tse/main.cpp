@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -172,7 +174,7 @@ void PlayerPreThink_Post(edict_t *player)
 	// client_onkungfuhit processing
 	float damage = pl->GetPDataFloat(483);
 	float duration = pl->GetPDataFloat(482);
-	if (pl->HooksInfo.KnockDamage == -1.0 && pl->HooksInfo.KnockTime == -1.0)
+	if (pl->HooksInfo.KnockDamage == -1.0f && pl->HooksInfo.KnockTime == -1.0f)
 	{
 		pl->HooksInfo.KnockTime = duration;
 		pl->HooksInfo.KnockDamage = damage;
@@ -181,13 +183,13 @@ void PlayerPreThink_Post(edict_t *player)
 	{
 		if (pl->HooksInfo.KnockTime != duration && pl->HooksInfo.KnockDamage != damage)
 		{
-			if (pl->GetPDataFloat(482) != 0.0 && pl->GetPDataFloat(483) != 0.0) {
+			if (pl->GetPDataFloat(482) != 0.0f && pl->GetPDataFloat(483) != 0.0f) {
 				if (MF_ExecuteForward(OnPlayerMeleeHit, pl->PlayerIndex, pl->GetPDataFloat(483), pl->GetPDataFloat(482)))
 				{
-					pl->SetPDataFloat(482, 0.0);
-					pl->SetPDataFloat(483, 0.0);
-					pl->HooksInfo.KnockTime = -1.0;
-					pl->HooksInfo.KnockDamage = -1.0;
+					pl->SetPDataFloat(482, 0.0f);
+					pl->SetPDataFloat(483, 0.0f);
+					pl->HooksInfo.KnockTime = -1.0f;
+					pl->HooksInfo.KnockDamage = -1.0f;
 				}
 			}
 			pl->HooksInfo.KnockTime = duration;
@@ -221,7 +223,7 @@ int RegUserMsg_Post(const char *msgname, int size)
 			PRINT("%s registered with ID %d\n", msgdecl->name, msgdecl->id);
 	}
 	RETURN_META_VALUE(MRES_IGNORED, 0);
-	return 0;
+	//return 0;
 }
 
 void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
@@ -252,24 +254,24 @@ void HookMsg_WeaponInfo(void* data)
 	switch (MsgState++) {
 		static int weapon;
 	case 0: {
-			weapon = *(int *)data;
+			weapon = *static_cast<int*>(data);
 			MsgPlayer->CurrentWeapon = weapon;
 			break;
 		}
 		case 1: {
-			MsgPlayer->Weapons[weapon].clip = *(int *)data;
+			MsgPlayer->Weapons[weapon].clip = *static_cast<int*>(data);
 			break;
 		}
 		case 2: {
-			MsgPlayer->Weapons[weapon].ammo = *(int *)data;
+			MsgPlayer->Weapons[weapon].ammo = *static_cast<int*>(data);
 			break;
 		}
 		case 3: {
-			MsgPlayer->Weapons[weapon].mode = *(int *)data;
+			MsgPlayer->Weapons[weapon].mode = *static_cast<int*>(data);
 			break;
 		}
 		case 4: {
-			MsgPlayer->Weapons[weapon].attachments = *(int *)data;
+			MsgPlayer->Weapons[weapon].attachments = *static_cast<int*>(data);
 			break;
 		}
 	}
@@ -280,12 +282,12 @@ void HookMsg_PwUp(void* data)
 	switch (MsgState++) {
 		case 0: {
 			if (!MsgPlayer->HooksInfo.PwupFlag)
-				MsgPlayer->HooksInfo.PwupType = *(uint16_t *)data;
+				MsgPlayer->HooksInfo.PwupType = *static_cast<uint16_t*>(data);
 			break;
 		}
 		case 1: {
 			if (!MsgPlayer->HooksInfo.PwupFlag) {
-				MsgPlayer->HooksInfo.PwupDuration = *(byte *)data;
+				MsgPlayer->HooksInfo.PwupDuration = *static_cast<byte*>(data);
 				MsgPlayer->HooksInfo.IsPwupTaken = true;
 			}
 			else
@@ -298,7 +300,7 @@ void HookMsg_PwUp(void* data)
 void HookMsg_TSState(void* data)
 {
 	MsgPlayer->HooksInfo.OldState = MsgPlayer->HooksInfo.State;
-	MsgPlayer->HooksInfo.State = *(byte *)data;
+	MsgPlayer->HooksInfo.State = *static_cast<byte*>(data);
 	MsgPlayer->HooksInfo.IsStateChecked = true;
 }
 
@@ -306,7 +308,7 @@ void WriteByte_Post(int val) {
 	if (IsDebugMode)
 		if (hmlist[MsgID])
 			PRINT("BYTE | %d\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -314,7 +316,7 @@ void WriteChar_Post(int val) {
 	if (IsDebugMode) 
 		if (hmlist[MsgID])
 			PRINT("CHAR | %d\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -322,7 +324,7 @@ void WriteShort_Post(int val) {
 	if (IsDebugMode)
 		if (hmlist[MsgID])
 			PRINT("SHORT | %d\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -330,7 +332,7 @@ void WriteLong_Post(int val) {
 	if (IsDebugMode)
 		if (hmlist[MsgID])
 			PRINT("LONG | %d\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -338,7 +340,7 @@ void WriteAngle_Post(float val) {
 	if (IsDebugMode)
 		if (hmlist[MsgID])
 			PRINT("ANGLE | %f\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -346,7 +348,7 @@ void WriteCoord_Post(float val) {
 	if (IsDebugMode)
 		if (hmlist[MsgID])
 			PRINT("COORD | %f\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -362,6 +364,6 @@ void WriteEntity_Post(int val) {
 	if (IsDebugMode)
 		if (hmlist[MsgID])
 			PRINT("ENTITY | %d\n", val);
-	if (MFunction) (*MFunction)((void *)&val);
+	if (MFunction) (*MFunction)(static_cast<void*>(&val));
 	RETURN_META(MRES_IGNORED);
 }

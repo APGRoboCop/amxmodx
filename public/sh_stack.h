@@ -36,7 +36,7 @@
 			{
 			}
 			
-			iterator() : m_pParent(NULL), m_Index(0)
+			iterator() : m_pParent(nullptr), m_Index(0)
 			{
 			}
 
@@ -106,7 +106,7 @@
 		{
 		}
 
-		CStack(const CStack &other) : m_Elements(NULL),
+		CStack(const CStack &other) : m_Elements(nullptr),
 			m_AllocatedSize(0),
 			m_UsedSize(0)
 		{
@@ -193,7 +193,7 @@
 		}
 		bool empty()
 		{
-			return m_UsedSize == 0 ? true : false;
+			return m_UsedSize == 0;
 		}
 		bool reserve(size_t size)
 		{

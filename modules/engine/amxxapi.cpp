@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -13,7 +15,7 @@
 
 #include "engine.h"
 
-BOOL CheckForPublic(const char *publicname);
+bool CheckForPublic(const char* publicname);
 void CreateDetours();
 void DestroyDetours();
 
@@ -22,7 +24,7 @@ HLTypeConversion TypeConversion;
 
 int AmxStringToEngine(AMX *amx, cell param, int &len)
 {
-	char *szString = MF_GetAmxString(amx, param, 0, &len);
+	const char *szString = MF_GetAmxString(amx, param, 0, &len);
 
 	return ALLOC_STRING(szString);
 }
@@ -92,41 +94,41 @@ void OnPluginsLoaded()
 
 	// These will be reset through native calls, if need be
 
-	g_pFunctionTable->pfnAddToFullPack=NULL;
+	g_pFunctionTable->pfnAddToFullPack= nullptr;
 
-	g_pFunctionTable->pfnKeyValue=NULL;
+	g_pFunctionTable->pfnKeyValue= nullptr;
 	if (CheckForPublic("pfn_keyvalue"))
 		g_pFunctionTable->pfnKeyValue=KeyValue;
 
-	g_pengfuncsTable->pfnPlaybackEvent=NULL; // "pfn_playbackevent"
+	g_pengfuncsTable->pfnPlaybackEvent= nullptr; // "pfn_playbackevent"
 	if (CheckForPublic("pfn_playbackevent"))
 		g_pengfuncsTable->pfnPlaybackEvent=PlaybackEvent;
 
-	g_pFunctionTable->pfnPlayerPreThink=NULL; // "client_PreThink"
+	g_pFunctionTable->pfnPlayerPreThink= nullptr; // "client_PreThink"
 	if (CheckForPublic("client_PreThink"))
 		g_pFunctionTable->pfnPlayerPreThink=PlayerPreThink;
 
-	g_pFunctionTable_Post->pfnPlayerPostThink=NULL; // "client_PostThink"
+	g_pFunctionTable_Post->pfnPlayerPostThink= nullptr; // "client_PostThink"
 	if (CheckForPublic("client_PostThink"))
 		g_pFunctionTable->pfnPlayerPostThink=PlayerPostThink_Post;
 
-	g_pFunctionTable->pfnSpawn=NULL; // "pfn_spawn"
+	g_pFunctionTable->pfnSpawn= nullptr; // "pfn_spawn"
 	//if (CheckForPublic("pfn_spawn")) // JGHG: I commented this if out because we always need the Spawn to precache the rocket mdl used with SetView native
 	g_pFunctionTable->pfnSpawn=Spawn;
 
-	g_pFunctionTable->pfnClientKill=NULL; // "client_kill"
+	g_pFunctionTable->pfnClientKill= nullptr; // "client_kill"
 	if (CheckForPublic("client_kill"))
 		g_pFunctionTable->pfnClientKill=ClientKill;
 
-	g_pFunctionTable->pfnCmdStart=NULL; // "client_impulse","register_impulse","client_cmdStart"
+	g_pFunctionTable->pfnCmdStart= nullptr; // "client_impulse","register_impulse","client_cmdStart"
 	if (CheckForPublic("client_impulse") || CheckForPublic("client_cmdStart"))
 		g_pFunctionTable->pfnCmdStart=CmdStart;
 	
-	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"
+	g_pFunctionTable->pfnThink= nullptr; // "pfn_think", "register_think"
 	if (CheckForPublic("pfn_think"))
 		g_pFunctionTable->pfnThink=Think;
 
-	g_pFunctionTable->pfnStartFrame=NULL; // "server_frame","ServerFrame"
+	g_pFunctionTable->pfnStartFrame= nullptr; // "server_frame","ServerFrame"
 	if (CheckForPublic("server_frame"))
 		g_pFunctionTable->pfnStartFrame=StartFrame;
 
@@ -134,7 +136,7 @@ void OnPluginsLoaded()
 		g_pFunctionTable->pfnStartFrame=StartFrame;
 
 
-	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
+	g_pFunctionTable->pfnTouch= nullptr; // "pfn_touch","vexd_pfntouch"
 	if (CheckForPublic("pfn_touch"))
 		g_pFunctionTable->pfnTouch=pfnTouch;
 
@@ -175,7 +177,7 @@ int AddToFullPack_Post(struct entity_state_s *state, int e, edict_t *ent, edict_
 
 void ClientDisconnect(edict_t *pEntity)
 {
-	auto id = TypeConversion.edict_to_id(pEntity);
+	const auto id = TypeConversion.edict_to_id(pEntity);
 
 	if (plinfo[id].iViewType != CAMERA_NONE) // Verify that they were originally in a modified view
 	{
@@ -183,7 +185,7 @@ void ClientDisconnect(edict_t *pEntity)
 		if (g_CameraCount < 0)
 			g_CameraCount=0;
 		if (g_CameraCount==0) // Reset the AddToFullPack pointer if there's no more cameras in use...
-			g_pFunctionTable->pfnAddToFullPack=NULL;
+			g_pFunctionTable->pfnAddToFullPack= nullptr;
 	}
 
 	plinfo[id].iSpeakFlags = SPEAK_NORMAL;
@@ -194,11 +196,11 @@ void ClientDisconnect(edict_t *pEntity)
 
 BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-	auto id = TypeConversion.edict_to_id(pEntity);
+	const int id = TypeConversion.edict_to_id(pEntity);
 
 	plinfo[id].iSpeakFlags = SPEAK_NORMAL;
 	plinfo[id].iViewType = CAMERA_NONE;
-	plinfo[id].pViewEnt = NULL;
+	plinfo[id].pViewEnt = nullptr;
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -210,17 +212,17 @@ void ServerDeactivate()
 	glinfo.bCheckLights = false;
 	
 	// Reset all forwarding function tables (so that forwards won't be called before plugins are initialized)
-	g_pFunctionTable->pfnAddToFullPack=NULL;
-	g_pFunctionTable->pfnKeyValue=NULL;
-	g_pengfuncsTable->pfnPlaybackEvent=NULL; // "pfn_playbackevent"
-	g_pFunctionTable->pfnPlayerPreThink=NULL; // "client_PreThink"
-	g_pFunctionTable_Post->pfnPlayerPostThink=NULL; // "client_PostThink"
-	g_pFunctionTable->pfnSpawn=NULL; // "pfn_spawn"
-	g_pFunctionTable->pfnClientKill=NULL; // "client_kill"
-	g_pFunctionTable->pfnCmdStart=NULL; // "client_impulse","register_impulse"
-	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"
-	g_pFunctionTable->pfnStartFrame=NULL; // "server_frame","ServerFrame"
-	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
+	g_pFunctionTable->pfnAddToFullPack= nullptr;
+	g_pFunctionTable->pfnKeyValue= nullptr;
+	g_pengfuncsTable->pfnPlaybackEvent= nullptr; // "pfn_playbackevent"
+	g_pFunctionTable->pfnPlayerPreThink= nullptr; // "client_PreThink"
+	g_pFunctionTable_Post->pfnPlayerPostThink= nullptr; // "client_PostThink"
+	g_pFunctionTable->pfnSpawn= nullptr; // "pfn_spawn"
+	g_pFunctionTable->pfnClientKill= nullptr; // "client_kill"
+	g_pFunctionTable->pfnCmdStart= nullptr; // "client_impulse","register_impulse"
+	g_pFunctionTable->pfnThink= nullptr; // "pfn_think", "register_think"
+	g_pFunctionTable->pfnStartFrame= nullptr; // "server_frame","ServerFrame"
+	g_pFunctionTable->pfnTouch= nullptr; // "pfn_touch","vexd_pfntouch"
 
 	ClearHooks();
 
@@ -241,7 +243,7 @@ DETOUR_DECL_STATIC2(LightStyle, void, int, style, const char *, val) // void (*p
 
 void StartFrame_Post()
 {
-	g_pFunctionTable_Post->pfnStartFrame = NULL;
+	g_pFunctionTable_Post->pfnStartFrame = nullptr;
 
 	LightStyleDetour->DisableDetour();
 	LIGHT_STYLE(0, glinfo.szLastLights);
@@ -250,7 +252,7 @@ void StartFrame_Post()
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL CheckForPublic(const char *publicname)
+bool CheckForPublic(const char* publicname)
 {
 	AMX* amx;
 	char blah[64];

@@ -118,7 +118,7 @@ md -p JIT 2&gt;NUL
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\third_party\utf8rewind;..\..\public\sdk;..\..\public\amtl;..\..\metamod-bu\metamod;..\..\hlsdk-bu\common;..\..\hlsdk-bu\engine;..\..\hlsdk-bu\dlls;..\..\hlsdk-bu\pm_shared;..\..\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -137,6 +137,7 @@ md -p JIT 2&gt;NUL
       <CompileAs>Default</CompileAs>
       <ShowIncludes>false</ShowIncludes>
       <PrecompiledHeaderFile>amxmodx.h</PrecompiledHeaderFile>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

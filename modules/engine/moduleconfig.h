@@ -20,7 +20,7 @@
 #define MODULE_NAME "Engine"
 #define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "http://www.amxmodx.org"
+#define MODULE_URL "www.amxmodx.org"
 #define MODULE_LOGTAG "ENGINE"
 #define MODULE_LIBRARY "engine"
 #define MODULE_LIBCLASS ""

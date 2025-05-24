@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -24,9 +26,7 @@ CoreConfig::CoreConfig()
 	Clear();
 }
 
-CoreConfig::~CoreConfig()
-{
-}
+CoreConfig::~CoreConfig() = default;
 
 void CoreConfig::OnAmxxInitialized()
 {
@@ -39,11 +39,11 @@ void CoreConfig::Clear()
 	m_ConfigsExecuted = false;
 	m_PendingForwardPush = false;
 	m_LegacyMainConfigExecuted = false;
-	m_LegacyMapConfigsExecuted = false,
+	m_LegacyMapConfigsExecuted = false;
 	m_legacyMapConfigNextTime = 0.0f;
 }
 
-void CoreConfig::ExecuteMainConfig()
+void CoreConfig::ExecuteMainConfig() const
 {
 	if (m_LegacyMainConfigExecuted)
 	{
@@ -63,7 +63,7 @@ void CoreConfig::ExecuteAutoConfigs()
 {
 	for (size_t i = 0; i < static_cast<size_t>(g_plugins.getPluginsNum()); ++i)
 	{
-		auto plugin = g_plugins.findPlugin(i);
+		CPluginMngr::CPlugin* plugin = g_plugins.findPlugin(i);
 
 		bool can_create = true;
 
@@ -151,7 +151,7 @@ bool CoreConfig::ExecuteAutoConfig(CPluginMngr::CPlugin *plugin, AutoConfig *con
 
 	if (!file_exists && will_create)
 	{
-		auto list = g_CvarManager.GetCvarsList();
+		CvarsList* list = g_CvarManager.GetCvarsList();
 
 		if (list->empty())
 		{
@@ -175,9 +175,9 @@ bool CoreConfig::ExecuteAutoConfig(CPluginMngr::CPlugin *plugin, AutoConfig *con
 
 			fprintf(fp, "\n\n");
 
-			for (auto iter = list->begin(); iter != list->end(); ++iter)
+			for (ke::InlineList<CvarInfo>::iterator iter = list->begin(); iter != list->end(); ++iter)
 			{
-				auto info = (*iter);
+				CvarInfo* info = (*iter);
 
 				if (info->pluginId == plugin->getId())
 				{

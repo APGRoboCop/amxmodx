@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -22,8 +24,8 @@ static cell AMX_NATIVE_CALL get_client_listening(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_receiver, arg_sender };
 
-	CHECK_PLAYER(params[arg_receiver]);
-	CHECK_PLAYER(params[arg_sender]);
+	CHECK_PLAYER(params[arg_receiver])
+	CHECK_PLAYER(params[arg_sender])
 
 	return GETCLIENTLISTENING(params[arg_receiver], params[arg_sender]);
 }
@@ -33,8 +35,8 @@ static cell AMX_NATIVE_CALL set_client_listening(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_receiver, arg_sender, arg_listen };
 
-	CHECK_PLAYER(params[arg_receiver]);
-	CHECK_PLAYER(params[arg_sender]);
+	CHECK_PLAYER(params[arg_receiver])
+	CHECK_PLAYER(params[arg_sender])
 
 	return SETCLIENTLISTENING(params[arg_receiver], params[arg_sender], params[arg_listen]);
 }
@@ -44,7 +46,7 @@ static cell AMX_NATIVE_CALL set_user_godmode(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_user, arg_godmode };
 
-	CHECK_PLAYER(params[arg_user]);
+	CHECK_PLAYER(params[arg_user])
 
 	const auto pPlayer = TypeConversion.id_to_edict(params[arg_user]);
 
@@ -58,7 +60,7 @@ static cell AMX_NATIVE_CALL get_user_godmode(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_user };
 
-	CHECK_PLAYER(params[arg_user]);
+	CHECK_PLAYER(params[arg_user])
 
 	const auto pPlayer = TypeConversion.id_to_edict(params[arg_user]);
 
@@ -70,10 +72,10 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_item };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	auto itemLength = 0;
-	const auto item = MF_GetAmxString(amx, params[arg_item], 1, &itemLength);
+	int itemLength = 0;
+	char* item = MF_GetAmxString(amx, params[arg_item], 1, &itemLength);
 
 	if (!itemLength
 		||(strncmp(item, "weapon_", 7) != 0
@@ -84,7 +86,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto pEntity = CREATE_NAMED_ENTITY(ALLOC_STRING(item));
+	edict_t* pEntity = CREATE_NAMED_ENTITY(ALLOC_STRING(item));
 
 	if (FNullEnt(pEntity))
 	{
@@ -92,7 +94,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params)
 		return 0;
 	}
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	pEntity->v.origin = pPlayer->v.origin;
 	pEntity->v.spawnflags |= SF_NORESPAWN;
@@ -117,7 +119,7 @@ static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index };
 
-	CHECK_ENTITY(params[arg_index]);
+	CHECK_ENTITY(params[arg_index])
 
 	const auto pEntity = TypeConversion.id_to_edict(params[arg_index]);
 
@@ -131,10 +133,10 @@ static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_health };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
-	const auto health  = float(params[arg_health]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	float health = float(params[arg_health]);
 
 	if (health > 0.0f)
 	{
@@ -153,9 +155,9 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_frags };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	pPlayer->v.frags = float(params[arg_frags]);
 
@@ -167,9 +169,9 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_armor };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	pPlayer->v.armorvalue = float(params[arg_armor]);
 
@@ -181,9 +183,9 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_origin };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 	const auto pVector = MF_GetAmxAddr(amx, params[arg_origin]);
 
 	SET_SIZE(pPlayer, pPlayer->v.mins, pPlayer->v.maxs);
@@ -197,9 +199,9 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_fx, arg_red, arg_green, arg_blue, arg_render, arg_amount };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	pPlayer->v.renderfx    = params[arg_fx];
 	pPlayer->v.rendercolor = Vector(float(params[arg_red]), float(params[arg_green]), float(params[arg_blue]));
@@ -214,9 +216,9 @@ static cell AMX_NATIVE_CALL get_user_rendering(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_fx, arg_red, arg_green, arg_blue, arg_render, arg_amount };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	*MF_GetAmxAddr(amx, params[arg_fx])     = pPlayer->v.renderfx;
 	*MF_GetAmxAddr(amx, params[arg_red])    = pPlayer->v.rendercolor[0];
@@ -233,10 +235,10 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_speed };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer  = TypeConversion.id_to_edict(params[arg_index]);
-	const auto newSpeed = amx_ctof(params[arg_speed]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	const float newSpeed = amx_ctof(params[arg_speed]);
 
 	SETCLIENTMAXSPEED(pPlayer, newSpeed);
 	pPlayer->v.maxspeed = newSpeed;
@@ -249,9 +251,9 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	return amx_ftoc(pPlayer->v.maxspeed);
 }
@@ -261,9 +263,9 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_gravity };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	pPlayer->v.gravity = amx_ctof(params[arg_gravity]);
 
@@ -275,9 +277,9 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	return amx_ftoc(pPlayer->v.gravity);
 }
@@ -297,20 +299,20 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params)
 	}
 	else if (attacker == 0 && target != 0)
 	{
-		CHECK_PLAYER(target);
+		CHECK_PLAYER(target)
 
 		Players.SetAttackersBodyHits(target, hitzones);
 	}
 	else if (attacker != 0 && target == 0)
 	{
-		CHECK_PLAYER(attacker);
+		CHECK_PLAYER(attacker)
 
 		Players.SetTargetsBodyHits(attacker, hitzones);
 	}
 	else
 	{
-		CHECK_PLAYER(attacker);
-		CHECK_PLAYER(target);
+		CHECK_PLAYER(attacker)
+		CHECK_PLAYER(target)
 
 		Players.SetBodyHits(attacker, target, hitzones);
 	}
@@ -325,11 +327,11 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params)
 
 	const auto attacker = params[arg_attacker];
 
-	CHECK_PLAYER(attacker);
+	CHECK_PLAYER(attacker)
 
 	const auto target = params[arg_target];
 
-	CHECK_PLAYER(target);
+	CHECK_PLAYER(target)
 
 	return Players[attacker].GetBodyHits(target);
 }
@@ -339,9 +341,9 @@ static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_noclip };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	pPlayer->v.movetype = params[arg_noclip] != 0 ? MOVETYPE_NOCLIP : MOVETYPE_WALK;
 
@@ -353,9 +355,9 @@ static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index };
 
-	CHECK_PLAYER(params[arg_index]);
+	CHECK_PLAYER(params[arg_index])
 
-	const auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
 	return pPlayer->v.movetype == MOVETYPE_NOCLIP;
 }
@@ -367,9 +369,9 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params)
 
 	const auto index = params[arg_index];
 
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
-	const auto pPlayer = TypeConversion.id_to_edict(index);
+	edict_t* pPlayer = TypeConversion.id_to_edict(index);
 
 	if (params[arg_footsteps] != 0)
 	{
@@ -399,7 +401,7 @@ static cell AMX_NATIVE_CALL get_user_footsteps(AMX *amx, cell *params)
 
 	const auto index = params[arg_index];
 
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	return Players[index].HasSilentFootsteps();
 }
@@ -411,10 +413,10 @@ static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params)
 
 	const auto index = params[arg_index];
 
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
-	const auto pPlayer = TypeConversion.id_to_edict(index);
-	const auto pEntity = CREATE_NAMED_ENTITY(MAKE_STRING("player_weaponstrip"));
+	edict_t* pPlayer = TypeConversion.id_to_edict(index);
+	edict_t* pEntity = CREATE_NAMED_ENTITY(MAKE_STRING("player_weaponstrip"));
 
 	if (FNullEnt(pEntity))
 	{
@@ -475,7 +477,7 @@ void PlayerPreThink(edict_t *pEntity)
 
 int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-	const auto index = TypeConversion.edict_to_id(pPlayer);
+	const int index = TypeConversion.edict_to_id(pPlayer);
 
 	Players[index].Clear();
 
@@ -489,12 +491,12 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shoot
 	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT))
 	    && shooter &&  (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) )
 	{
-		const auto shooterIndex = TypeConversion.edict_to_id(shooter);
-		const auto targetIndex  = TypeConversion.edict_to_id(ptr->pHit);
+		const int shooterIndex = TypeConversion.edict_to_id(shooter);
+		const int targetIndex = TypeConversion.edict_to_id(ptr->pHit);
 
 		if (!(Players[shooterIndex].GetBodyHits(targetIndex) & (1 << ptr->iHitgroup)))
 		{
-			ptr->flFraction = 1.0;
+			ptr->flFraction = 1.0f;
 		}
 	}
 

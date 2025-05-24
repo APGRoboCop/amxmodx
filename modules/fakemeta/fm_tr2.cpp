@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -40,7 +42,7 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell *ptr = MF_GetAmxAddr(amx, params[3]);
+	const cell *ptr = MF_GetAmxAddr(amx, params[3]);
 
 	switch (params[2])
 	{
@@ -204,7 +206,7 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
 				return 0;
 			}
-			cell *ptr = MF_GetAmxAddr(amx, params[4]);
+			const cell *ptr = MF_GetAmxAddr(amx, params[4]);
 			return MF_SetAmxString(amx, params[3], kvd->szClassName, (int)*ptr);
 		}
 	case KV_KeyName:
@@ -214,7 +216,7 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
 				return 0;
 			}
-			cell *ptr = MF_GetAmxAddr(amx, params[4]);
+			const cell *ptr = MF_GetAmxAddr(amx, params[4]);
 			return MF_SetAmxString(amx, params[3], kvd->szKeyName, (int)*ptr);
 		}
 	case KV_Value:
@@ -224,7 +226,7 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
 				return 0;
 			}
-			cell *ptr = MF_GetAmxAddr(amx, params[4]);
+			const cell *ptr = MF_GetAmxAddr(amx, params[4]);
 			return MF_SetAmxString(amx, params[3], kvd->szValue, (int)*ptr);
 		}
 	}
@@ -263,7 +265,7 @@ static cell AMX_NATIVE_CALL set_kvd(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell *ptr = MF_GetAmxAddr(amx, params[3]);
+	const cell *ptr = MF_GetAmxAddr(amx, params[3]);
 	int len;
 
 	switch (params[2])
@@ -460,7 +462,7 @@ static cell AMX_NATIVE_CALL set_cd(AMX *amx, cell *params)
 	else
 		cd = reinterpret_cast<clientdata_t *>(params[1]);
 
-	cell *ptr = MF_GetAmxAddr(amx, params[3]);
+	const cell *ptr = MF_GetAmxAddr(amx, params[3]);
 	char *phys;
 
 	switch(params[2])
@@ -859,7 +861,7 @@ static cell AMX_NATIVE_CALL set_es(AMX *amx, cell *params)
 	else
 		es = reinterpret_cast<entity_state_t *>(params[1]);
 
-	cell *ptr = MF_GetAmxAddr(amx, params[3]);
+	const cell *ptr = MF_GetAmxAddr(amx, params[3]);
 
 	switch(params[2])
 	{
@@ -1159,7 +1161,7 @@ static cell AMX_NATIVE_CALL set_uc(AMX *amx, cell *params)
 	else
 		uc = reinterpret_cast<usercmd_t *>(params[1]);
 
-	cell *ptr = MF_GetAmxAddr(amx, params[3]);
+	const cell *ptr = MF_GetAmxAddr(amx, params[3]);
 
 	switch(params[2])
 	{

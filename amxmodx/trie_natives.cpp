@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -219,7 +221,7 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto size = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4]);
+	const cell size = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4]);
 
 	if (refSize)
 	{
@@ -273,9 +275,9 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 	}
 
 	size_t length = r->value.arrayLength();
-	cell *base = r->value.array();
+	const cell *base = r->value.array();
 
-	if (length > size_t(params[4]))
+	if (length > static_cast<size_t>(params[4]))
 	{
 		length = params[4];
 	}
@@ -338,7 +340,7 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
 
-	CellTrie *t = TrieHandles.lookup(*ptr);
+	const CellTrie *t = TrieHandles.lookup(*ptr);
 
 	if (!t)
 	{
@@ -369,7 +371,7 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 // native TrieGetSize(Trie:handle);
 static cell AMX_NATIVE_CALL TrieGetSize(AMX *amx, cell *params)
 {
-	CellTrie *t = TrieHandles.lookup(params[1]);
+	const CellTrie *t = TrieHandles.lookup(params[1]);
 
 	if (!t)
 	{
@@ -390,7 +392,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int index = TrieSnapshotHandles.create();
+	const int index = TrieSnapshotHandles.create();
 	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(index);
 	snapshot->length = t->map.elements();
 	snapshot->keys = ke::MakeUnique<int[]>(snapshot->length);
@@ -407,7 +409,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL TrieSnapshotLength(AMX *amx, cell *params)
 {
-	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(params[1]);
+	const TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(params[1]);
 
 	if (!snapshot)
 	{
@@ -428,7 +430,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotKeyBufferSize(AMX *amx, cell *params)
 		return 0;
 	}
 
-	unsigned index = params[2];
+	const unsigned index = params[2];
 
 	if (index >= snapshot->length)
 	{
@@ -449,7 +451,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotGetKey(AMX *amx, cell *params)
 		return 0;
 	}
 
-	unsigned index = params[2];
+	const unsigned index = params[2];
 
 	if (index >= snapshot->length)
 	{
@@ -466,7 +468,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
 
-	TrieSnapshot *t = TrieSnapshotHandles.lookup(*ptr);
+	const TrieSnapshot *t = TrieSnapshotHandles.lookup(*ptr);
 
 	if (!t)
 	{
@@ -484,15 +486,15 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 
 
 #define CHECK_ITER_HANDLE(handle)                                                                       \
-	if (!handle) {                                                                                      \
+	if (!(handle)) {                                                                                    \
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]); \
 		return 0;                                                                                       \
 	}                                                                                                   \
-	if (!handle->trie) {                                                                                \
+	if (!(handle)->trie) {                                                                              \
 		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);  \
 		return 0;                                                                                       \
 	}                                                                                                   \
-	if (handle->mod_count != handle->trie->map.mod_count()) {                                           \
+	if ((handle)->mod_count != (handle)->trie->map.mod_count()) {                                       \
 		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[arg_handle]);\
 		return 0;                                                                                       \
 	}
@@ -500,9 +502,9 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 // native TrieIter:TrieIterCreate(Trie:handle)
 static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle };
+	enum args : std::uint8_t { arg_count, arg_handle };
 
-	auto handle = TrieHandles.lookup(params[arg_handle]);
+	CellTrie* handle = TrieHandles.lookup(params[arg_handle]);
 
 	if (!handle)
 	{
@@ -511,7 +513,7 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 	}
 
 	const size_t index = TrieIterHandles.create(handle);
-	auto iter  = TrieIterHandles.lookup(index);
+	CellTrieIter* iter = TrieIterHandles.lookup(index);
 
 	return static_cast<cell>(index);
 }
@@ -519,9 +521,9 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 // native bool:TrieIterEnded(TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterEnded(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle };
+	enum args : std::uint8_t { arg_count, arg_handle };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	const CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
@@ -531,9 +533,9 @@ static cell AMX_NATIVE_CALL TrieIterEnded(AMX *amx, cell *params)
 // native TrieIterNext(TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle };
+	enum args : std::uint8_t { arg_count, arg_handle };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
@@ -550,13 +552,13 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 // native TrieIterGetKey(TrieIter:handle, key[], outputsize)
 static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle, arg_output, arg_outputsize };
+	enum args : std::uint8_t { arg_count, arg_handle, arg_output, arg_outputsize };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
-	auto& iter = handle->iter;
+	const StringHashMapCustom<Entry>::iterator& iter = handle->iter;
 
 	if (iter.empty())
 	{
@@ -570,9 +572,9 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 // native TrieIterGetSize(TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterGetSize(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle };
+	enum args : std::uint8_t { arg_count, arg_handle };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	const CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
@@ -582,13 +584,13 @@ static cell AMX_NATIVE_CALL TrieIterGetSize(AMX *amx, cell *params)
 // native bool:TrieIterGetCell(TrieIter:handle, &any:value)
 static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle, arg_outputvalue };
+	enum args : std::uint8_t { arg_count, arg_handle, arg_outputvalue };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
-	auto& iter = handle->iter;
+	const StringHashMapCustom<Entry>::iterator& iter = handle->iter;
 
 	if (iter.empty() || !iter->value.isCell())
 	{
@@ -603,9 +605,9 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 // native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0)
 static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle, arg_output, arg_outputsize, arg_refsize };
+	enum args : std::uint8_t { arg_count, arg_handle, arg_output, arg_outputsize, arg_refsize };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
@@ -615,14 +617,14 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto& iter = handle->iter;
+	const StringHashMapCustom<Entry>::iterator& iter = handle->iter;
 
 	if (iter.empty() || !iter->value.isString())
 	{
 		return false;
 	}
 
-	auto refsize = get_amxaddr(amx, params[arg_refsize]);
+	cell* refsize = get_amxaddr(amx, params[arg_refsize]);
 
 	*refsize = set_amxstring_utf8(amx, params[arg_output], iter->value.chars(), strlen(iter->value.chars()), params[arg_outputsize]);
 
@@ -632,13 +634,13 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 // native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0)
 static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle, arg_output, arg_outputsize, arg_refsize };
+	enum args : std::uint8_t { arg_count, arg_handle, arg_output, arg_outputsize, arg_refsize };
 
-	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+	CellTrieIter* handle = TrieIterHandles.lookup(params[arg_handle]);
 
 	CHECK_ITER_HANDLE(handle)
 
-	auto outputSize = params[arg_outputsize];
+	const cell outputSize = params[arg_outputsize];
 
 	if (outputSize < 0)
 	{
@@ -646,15 +648,15 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto& iter = handle->iter;
+	const StringHashMapCustom<Entry>::iterator& iter = handle->iter;
 
 	if (iter.empty() || !iter->value.isArray())
 	{
 		return false;
 	}
 
-	auto pOutput = get_amxaddr(amx, params[arg_output]);
-	auto pSize   = get_amxaddr(amx, params[arg_refsize]);
+	cell* pOutput = get_amxaddr(amx, params[arg_output]);
+	cell* pSize = get_amxaddr(amx, params[arg_refsize]);
 
 	if (!iter->value.array() || !outputSize)
 	{
@@ -662,10 +664,10 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 		return false;
 	}
 
-	auto length = iter->value.arrayLength();
-	auto base   = iter->value.array();
+	size_t length = iter->value.arrayLength();
+	const cell* base = iter->value.array();
 
-	if (length > size_t(outputSize))
+	if (length > static_cast<size_t>(outputSize))
 	{
 		length = outputSize;
 	}
@@ -680,10 +682,10 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 // native TrieIterDestroy(&TrieIter:handle)
 static cell AMX_NATIVE_CALL TrieIterDestroy(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_handle };
+	enum args : std::uint8_t { arg_count, arg_handle };
 
-	auto refhandle = get_amxaddr(amx, params[arg_handle]);
-	auto handle = TrieIterHandles.lookup(*refhandle);
+	cell* refhandle = get_amxaddr(amx, params[arg_handle]);
+	CellTrieIter* handle = TrieIterHandles.lookup(*refhandle);
 
 	if (!handle)
 	{

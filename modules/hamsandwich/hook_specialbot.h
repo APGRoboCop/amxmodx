@@ -30,7 +30,9 @@ public:
 	CRegisterHamParams(AMX *arg_amx, int &arg_func, const char *arg_function, int &arg_post, Forward *arg_pfwd);
 	~CRegisterHamParams();
 private:
-	CRegisterHamParams(){}
+	CRegisterHamParams(): amx(nullptr), func(0), function(nullptr), post(0), pfwd(nullptr)
+	{
+	}
 };
 
 class CHamSpecialBotHandler

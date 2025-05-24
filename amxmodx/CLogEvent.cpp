@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -16,7 +18,7 @@ NativeHandle<LogEventHook> LogEventHandles;
 // class LogEventsMngr
 // *****************************************************
 
-LogEventsMngr::LogEventsMngr()
+LogEventsMngr::LogEventsMngr(): logString{}, logArgs{}, logArgc(0)
 {
 	logCurrent = logCounter = 0;
 	logcmplist = nullptr;
@@ -44,13 +46,13 @@ int LogEventsMngr::CLogCmp::compareCondition(const char* string)
 
 LogEventsMngr::CLogCmp* LogEventsMngr::registerCondition(char* filter)
 {
-	char* temp = filter;
+	const char* temp = filter;
 	// expand "1=message"
 
 	while (isdigit(*filter))
 		++filter;
 
-	bool in = (*filter=='&');
+	const bool in = (*filter=='&');
 	*filter++ = 0;
 	int pos = atoi(temp);
 	
@@ -91,7 +93,7 @@ void LogEventsMngr::CLogEvent::registerFilter(char* filter)
 	filters = new LogCond(cmp->pos, aa, filters);
 }
 
-void LogEventsMngr::setLogString(const char* frmt, va_list& vaptr)
+void LogEventsMngr::setLogString(const char* frmt, const va_list& vaptr)
 {
 	++logCounter;
 	int len = vsnprintf(logString, 255, frmt, vaptr);
@@ -132,11 +134,10 @@ void LogEventsMngr::setLogString(const char* frmt, ...)
 void LogEventsMngr::parseLogString()
 {
 	const char* b = logString;
-	int a;
-	
+
 	while (*b && logArgc < MAX_LOGARGS)
 	{
-		a = 0;
+		int a = 0;
 		
 		if (*b == '"')
 		{
@@ -179,15 +180,15 @@ int LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int 
 	}
 
 	arelogevents = true;
-	auto d = &logevents[pos];
+	CLogEvent** d = &logevents[pos];
 
 	while (*d)
 	{
 		d = &(*d)->next;
 	}
 
-	auto logevent = new CLogEvent(plugin, func, this);
-	auto handle = LogEventHandles.create(logevent);
+	CLogEvent* logevent = new CLogEvent(plugin, func, this);
+	const size_t handle = LogEventHandles.create(logevent);
 
 	if (!handle)
 	{
@@ -199,24 +200,22 @@ int LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int 
 	return handle;
 }
 
-void LogEventsMngr::executeLogEvents()
+void LogEventsMngr::executeLogEvents() const
 {
-	bool valid;
-
-	for (CLogEvent* a = logevents[logArgc]; a; a = a->next)
+	for (const CLogEvent* a = logevents[logArgc]; a; a = a->next)
 	{
 		if (a->m_State != FSTATE_ACTIVE)
 		{
 			continue;
 		}
 
-		valid = true;
+		bool valid = true;
 
-		for (CLogEvent::LogCond* b = a->filters; b; b = b->next)
+		for (const CLogEvent::LogCond* b = a->filters; b; b = b->next)
 		{
 			valid = false;
 
-			for (CLogEvent::LogCondEle* c = b->list; c; c = c->next)
+			for (const CLogEvent::LogCondEle* c = b->list; c; c = c->next)
 			{
 				if (c->cmp->compareCondition(logArgs[b->argnum]) == 0)
 				{
@@ -241,9 +240,9 @@ void LogEventsMngr::clearLogEvents()
 	logCurrent = logCounter = 0;
 	arelogevents = false;
 	
-	for (int i = 0; i < MAX_LOGARGS + 1; ++i)
+	for (CLogEvent*& logevent : logevents)
 	{
-		CLogEvent **a = &logevents[i];
+		CLogEvent **a = &logevent;
 		while (*a)
 		{
 			CLogEvent* bb = (*a)->next;
@@ -287,19 +286,17 @@ LogEventsMngr::CLogEvent::~CLogEvent()
 	}
 }
 
-LogEventsMngr::CLogEvent *LogEventsMngr::getValidLogEvent(CLogEvent * a)
+LogEventsMngr::CLogEvent *LogEventsMngr::getValidLogEvent(CLogEvent * a) const
 {
-	bool valid;
-	
 	while (a)
 	{
-		valid = true;
+		bool valid = true;
 		
-		for (CLogEvent::LogCond* b = a->filters; b; b = b->next)
+		for (const CLogEvent::LogCond* b = a->filters; b; b = b->next)
 		{
 			valid = false;
 
-			for (CLogEvent::LogCondEle* c = b->list; c; c = c->next)
+			for (const CLogEvent::LogCondEle* c = b->list; c; c = c->next)
 			{
 				if (c->cmp->compareCondition(logArgs[b->argnum]) == 0)
 				{

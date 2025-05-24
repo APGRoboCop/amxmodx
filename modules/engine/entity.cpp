@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -40,14 +42,14 @@ int is_ent_valid(int iEnt)
 
 static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 {
-	int idxa = params[1];
-	int idxb = params[2];
+	const int idxa = params[1];
+	const int idxb = params[2];
 
-	CHECK_ENTITY(idxa);
-	CHECK_ENTITY(idxb);
+	CHECK_ENTITY(idxa)
+	CHECK_ENTITY(idxb)
 
-	edict_t *pEntA = TypeConversion.id_to_edict(idxa);
-	edict_t *pEntB = TypeConversion.id_to_edict(idxb);
+	const edict_t *pEntA = TypeConversion.id_to_edict(idxa);
+	const edict_t *pEntB = TypeConversion.id_to_edict(idxb);
 
 	REAL fRet = (pEntA->v.origin - pEntB->v.origin).Length();
 
@@ -60,9 +62,9 @@ static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY(iEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
@@ -74,11 +76,11 @@ static cell AMX_NATIVE_CALL call_think(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL fake_touch(AMX *amx, cell *params)
 {
-	int iPtr = params[1];
-	int iPtd = params[2];
+	const int iPtr = params[1];
+	const int iPtd = params[2];
 
-	CHECK_ENTITY(iPtr);
-	CHECK_ENTITY(iPtd);
+	CHECK_ENTITY(iPtr)
+	CHECK_ENTITY(iPtd)
 
 	edict_t *pToucher = TypeConversion.id_to_edict(iPtr);
 	edict_t *pTouched = TypeConversion.id_to_edict(iPtd);
@@ -90,11 +92,11 @@ static cell AMX_NATIVE_CALL fake_touch(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL force_use(AMX *amx, cell *params)
 {
-	int iPtr = params[1];
-	int iPtd = params[2];
+	const int iPtr = params[1];
+	const int iPtd = params[2];
 
-	CHECK_ENTITY(iPtr);
-	CHECK_ENTITY(iPtd);
+	CHECK_ENTITY(iPtr)
+	CHECK_ENTITY(iPtd)
 
 	edict_t *pUser = TypeConversion.id_to_edict(iPtr);
 	edict_t *pUsed = TypeConversion.id_to_edict(iPtd);
@@ -107,7 +109,7 @@ static cell AMX_NATIVE_CALL force_use(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 {
 	int len;
-	int iszClass = AmxStringToEngine(amx, params[1], len);
+	const int iszClass = AmxStringToEngine(amx, params[1], len);
 
 	edict_t *pEnt = CREATE_NAMED_ENTITY(iszClass);
 
@@ -121,7 +123,7 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
 {
-	int id = params[1];
+	const int id = params[1];
 	if (id <= gpGlobals->maxClients || id > gpGlobals->maxEntities)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d can not be removed", id);
@@ -153,22 +155,22 @@ static cell AMX_NATIVE_CALL is_valid_ent(AMX *amx, cell *params)
 //uses mahnsawce's version now
 static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 {
-	int count = *params / sizeof(cell);
+	const int count = *params / sizeof(cell);
 
 	if (count == 3) 
 	{
-		cell *cVal = MF_GetAmxAddr(amx, params[1]);
-		int iValue = *cVal;
+		const cell *cVal = MF_GetAmxAddr(amx, params[1]);
+		const int iValue = *cVal;
 
-		CHECK_ENTITY_SIMPLE(iValue);
+		CHECK_ENTITY_SIMPLE(iValue)
 
 		edict_t *pEntity = TypeConversion.id_to_edict(iValue);
 		KeyValueData kvd;
 		int iLength=0;
-		char *char1 = MF_GetAmxString(amx, params[2], 0, &iLength);
-		char *char2 = MF_GetAmxString(amx, params[3], 1, &iLength);
+		const char *char1 = MF_GetAmxString(amx, params[2], 0, &iLength);
+		const char *char2 = MF_GetAmxString(amx, params[3], 1, &iLength);
 
-		kvd.szClassName = (char*)STRING(pEntity->v.classname);
+		kvd.szClassName = const_cast<char*>(STRING(pEntity->v.classname));
 		kvd.szKeyName = char1;
 		kvd.szValue = char2;
 		kvd.fHandled = 0;
@@ -182,8 +184,8 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		}
 
 		int iLength;
-		char *char1 = MF_GetAmxString(amx, params[1], 0, &iLength);
-		char *char2 = MF_GetAmxString(amx, params[2], 1, &iLength);
+		const char *char1 = MF_GetAmxString(amx, params[1], 0, &iLength);
+		const char *char2 = MF_GetAmxString(amx, params[2], 1, &iLength);
 		const char *charA = STRING(ALLOC_STRING(char1));
 		const char *charB = STRING(ALLOC_STRING(char2));
 
@@ -195,12 +197,12 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 {
-	int idx = params[1];
-	CHECK_ENTITY(idx);
+	const int idx = params[1];
+	CHECK_ENTITY(idx)
 	edict_t *pEntity = TypeConversion.id_to_edict(idx);
 	int iLength=0;
-	char *char1 = MF_GetAmxString(amx, params[2], 1, &iLength);
-	char *val = INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity), char1);
+	const char *char1 = MF_GetAmxString(amx, params[2], 1, &iLength);
+	const char *val = INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity), char1);
 	return MF_SetAmxStringUTF8Char(amx, params[3], val, strlen(val), params[4]); 
 }
 
@@ -221,9 +223,9 @@ static cell AMX_NATIVE_CALL copy_keyvalue(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY(iEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 	
@@ -238,13 +240,13 @@ static cell AMX_NATIVE_CALL DispatchSpawn(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	REAL fVal = 0;
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
-	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
+	const edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
 	{
@@ -361,7 +363,7 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return amx_ftoc(fVal);
@@ -369,11 +371,11 @@ static cell AMX_NATIVE_CALL entity_get_float(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	REAL fVal = amx_ctof(params[3]);
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
@@ -492,7 +494,7 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return 1;
@@ -500,13 +502,13 @@ static cell AMX_NATIVE_CALL entity_set_float(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	int iRetValue = 0;
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
-	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
+	const edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
 	{
@@ -623,7 +625,7 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return iRetValue;
@@ -631,11 +633,11 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
-	int iNewValue = params[3];
+	const int iEnt = params[1];
+	const int idx = params[2];
+	const int iNewValue = params[3];
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
@@ -754,7 +756,7 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return 1;
@@ -762,14 +764,14 @@ static cell AMX_NATIVE_CALL entity_set_int(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	cell *vRet = MF_GetAmxAddr(amx, params[3]);
 	Vector vRetValue = Vector(0, 0, 0);
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
-	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
+	const edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
 	{
@@ -844,7 +846,7 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	vRet[0] = amx_ftoc(vRetValue.x);
@@ -856,16 +858,16 @@ static cell AMX_NATIVE_CALL entity_get_vector(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
-	cell *vAmx = MF_GetAmxAddr(amx, params[3]);
+	const int iEnt = params[1];
+	const int idx = params[2];
+	const cell *vAmx = MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
 	REAL fX = amx_ctof(vAmx[0]);
 	REAL fY = amx_ctof(vAmx[1]);
 	REAL fZ = amx_ctof(vAmx[2]);
-	Vector vSet = Vector(fX, fY, fZ);
+	const Vector vSet = Vector(fX, fY, fZ);
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
@@ -941,7 +943,7 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return 1;
@@ -949,14 +951,14 @@ static cell AMX_NATIVE_CALL entity_set_vector(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	int iszString = 0;
 	const char *szRet = nullptr;
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
-	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
+	const edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
 	{
@@ -1001,7 +1003,7 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	szRet = STRING(iszString);
@@ -1011,12 +1013,12 @@ static cell AMX_NATIVE_CALL entity_get_string(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	int iLen;
-	int iszString = AmxStringToEngine(amx, params[3], iLen);
+	const int iszString = AmxStringToEngine(amx, params[3], iLen);
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 	
@@ -1063,7 +1065,7 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return 1;
@@ -1071,13 +1073,13 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_get_edict2(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	edict_t *pRet;
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
-	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
+	const edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
 	{
@@ -1116,7 +1118,7 @@ static cell AMX_NATIVE_CALL entity_get_edict2(AMX *amx, cell *params)
 			break;
 		default:
 			return -1;
-			break;
+			//break;
 	}
 
 	if (FNullEnt(pRet))
@@ -1137,11 +1139,11 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
-	int iSetEnt = params[3];
+	const int iEnt = params[1];
+	const int idx = params[2];
+	const int iSetEnt = params[3];
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 	edict_t *pSetEnt = TypeConversion.id_to_edict(iSetEnt);
@@ -1183,7 +1185,7 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return 1;
@@ -1191,13 +1193,13 @@ static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	int iRetValue = 0;
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
-	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
+	const edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
 	switch (idx)
 	{
@@ -1221,7 +1223,7 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return iRetValue;
@@ -1229,11 +1231,11 @@ static cell AMX_NATIVE_CALL entity_get_byte(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int idx = params[2];
+	const int iEnt = params[1];
+	const int idx = params[2];
 	int iNewValue = params[3];
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 
 	if(iNewValue > 255)
 			iNewValue = 255;
@@ -1264,7 +1266,7 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 			break;
 		default:
 			return 0;
-			break;
+			//break;
 	}
 
 	return 1;
@@ -1272,12 +1274,12 @@ static cell AMX_NATIVE_CALL entity_set_byte(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 	
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
-	cell *vVector = MF_GetAmxAddr(amx, params[2]);
+	const cell *vVector = MF_GetAmxAddr(amx, params[2]);
 	REAL fX = amx_ctof(vVector[0]);
 	REAL fY = amx_ctof(vVector[1]);
 	REAL fZ = amx_ctof(vVector[2]);
@@ -1291,13 +1293,13 @@ static cell AMX_NATIVE_CALL entity_set_origin(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 	
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 	int iLen;
-	char *szModel = MF_GetAmxString(amx, params[2], 0, &iLen);
+	const char *szModel = MF_GetAmxString(amx, params[2], 0, &iLen);
 	const char *szStatic = STRING(ALLOC_STRING(szModel));
 
 	SET_MODEL(pEnt, szStatic);
@@ -1307,23 +1309,23 @@ static cell AMX_NATIVE_CALL entity_set_model(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL entity_set_size(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 
-	CHECK_ENTITY_SIMPLE(iEnt);
+	CHECK_ENTITY_SIMPLE(iEnt)
 	
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
 
-	cell *cMin = MF_GetAmxAddr(amx, params[2]);
+	const cell *cMin = MF_GetAmxAddr(amx, params[2]);
 	REAL x1 = amx_ctof(cMin[0]);
 	REAL y1 = amx_ctof(cMin[1]);
 	REAL z1 = amx_ctof(cMin[2]);
-	Vector vMin = Vector(x1, y1, z1);
+	const Vector vMin = Vector(x1, y1, z1);
 
-	cell *cMax = MF_GetAmxAddr(amx, params[3]);
+	const cell *cMax = MF_GetAmxAddr(amx, params[3]);
 	REAL x2 = amx_ctof(cMax[0]);
 	REAL y2 = amx_ctof(cMax[1]);
 	REAL z2 = amx_ctof(cMax[2]);
-	Vector vMax = Vector(x2, y2, z2);
+	const Vector vMax = Vector(x2, y2, z2);
 
 	UTIL_SetSize(pEnt, vMin, vMax);
 
@@ -1341,11 +1343,11 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 
 static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
-	int idx = params[1];
+	const int idx = params[1];
 
 	edict_t *pEnt = TypeConversion.id_to_edict(idx);
-	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
-	float origin[3] = {
+	const cell *cAddr = MF_GetAmxAddr(amx, params[2]);
+	const float origin[3] = {
 		amx_ctof(cAddr[0]),
 		amx_ctof(cAddr[1]),
 		amx_ctof(cAddr[2])
@@ -1365,7 +1367,7 @@ static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param
 	edict_t *pEnt = TypeConversion.id_to_edict(params[1]);
 
 	int len;
-	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
+	const char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
 
 	if (!FNullEnt(pEnt = FIND_ENTITY_BY_CLASSNAME(pEnt, sValue)))
 	{
@@ -1380,7 +1382,7 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 	// params[1] = index to find around, if this is less than 1 then use around origin in last parameter.
 	// params[2] = classname to find
 	int len;
-	char* classToFind = MF_GetAmxString(amx, params[2], 0, &len);
+	const char* classToFind = MF_GetAmxString(amx, params[2], 0, &len);
 	// params[3] = radius, float...
 	REAL radius =amx_ctof(params[3]);
 	// params[4] = store ents in this list
@@ -1390,12 +1392,12 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 
 	vec3_t vecOrigin;
 	if (params[1] > 0) {
-		CHECK_ENTITY(params[1]);
+		CHECK_ENTITY(params[1])
 
-		edict_t* pEntity = TypeConversion.id_to_edict(params[1]);
+		const edict_t* pEntity = TypeConversion.id_to_edict(params[1]);
 		vecOrigin = pEntity->v.origin;
 	} else {
-		cell *cAddr = MF_GetAmxAddr(amx, params[6]);
+		const cell *cAddr = MF_GetAmxAddr(amx, params[6]);
 		vecOrigin = Vector(amx_ctof(cAddr[0]), amx_ctof(cAddr[1]), amx_ctof(cAddr[2]));
 	}
 	
@@ -1419,11 +1421,11 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 
 static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 {
-	int iStart = params[1];
+	const int iStart = params[1];
 	int iLength;
-	char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
+	const char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
 
-	auto pStart = TypeConversion.id_to_edict(iStart);
+	edict_t* pStart = TypeConversion.id_to_edict(iStart);
 
 	if (!FNullEnt(pStart = FIND_ENTITY_BY_TARGET(pStart, szValue)))
 	{
@@ -1433,11 +1435,11 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) { 
-	int iStart = params[1];
+static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
+	const int iStart = params[1];
 	int iLength, iLength2;
-	char *szClass = MF_GetAmxString(amx, params[2], 0, &iLength);
-	char *szModel = MF_GetAmxString(amx, params[3], 1, &iLength2);
+	const char *szClass = MF_GetAmxString(amx, params[2], 0, &iLength);
+	const char *szModel = MF_GetAmxString(amx, params[3], 1, &iLength2);
 
 	auto pEdict = TypeConversion.id_to_edict(iStart);
 
@@ -1453,11 +1455,11 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 }
 
 static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
-	int iStart = params[1];
+	const int iStart = params[1];
 	int iLength;
-	char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
+	const char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
 
-	auto pStart = TypeConversion.id_to_edict(iStart);
+	edict_t* pStart = TypeConversion.id_to_edict(iStart);
 
 	if (!FNullEnt(pStart = FIND_ENTITY_BY_TARGETNAME(pStart, szValue)))
 	{
@@ -1469,12 +1471,12 @@ static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 
 static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native find_ent_by_owner(start_from_ent, classname[], owner_index); = 3 params
 {
-	int iEnt = params[1];
-	int oEnt = params[3];
-	CHECK_ENTITY_SIMPLE(oEnt);
+	const int iEnt = params[1];
+	const int oEnt = params[3];
+	CHECK_ENTITY_SIMPLE(oEnt)
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);
-	edict_t *entOwner = TypeConversion.id_to_edict(oEnt);
+	const edict_t *entOwner = TypeConversion.id_to_edict(oEnt);
 
 	//optional fourth parameter is for jghg2 compatibility
 	const char* sCategory = nullptr; 
@@ -1487,7 +1489,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	// No need to check if there is a real ent where entOwner points at since we don't access it anyway.
 
 	int len;
-	char* classname = MF_GetAmxString(amx, params[2], 0, &len);
+	const char* classname = MF_GetAmxString(amx, params[2], 0, &len);
 
 	while (!FNullEnt(pEnt = FIND_ENTITY_BY_STRING(pEnt, sCategory, classname)))
 	{
@@ -1502,23 +1504,23 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 
 static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param */ 
 {
-	int index = params[1];
+	const int index = params[1];
 	const char *szModel;
 
 	if (params[4] > 0) {
-		CHECK_ENTITY_SIMPLE(params[4]);
+		CHECK_ENTITY_SIMPLE(params[4])
 	}
 
 	CHECK_ENTITY(index);
 
 	edict_t* pentFind = TypeConversion.id_to_edict(params[4]);
-	edict_t* pentOwner = TypeConversion.id_to_edict(index);
+	const edict_t* pentOwner = TypeConversion.id_to_edict(index);
 
 	pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );
 	while (!FNullEnt(pentFind)) {
 		if (pentFind->v.owner == pentOwner) {
 			if (params[3]>0) {
-				szModel = (char*)STRING(pentFind->v.model);
+				szModel = const_cast<char*>(STRING(pentFind->v.model));
 				MF_SetAmxString(amx, params[2], szModel, params[3]);
 				return TypeConversion.edict_to_id(pentFind);
 			}
@@ -1538,14 +1540,14 @@ static cell AMX_NATIVE_CALL set_ent_rendering(AMX *amx, cell *params) // set_ent
 	// params[6] = render
 	// params[7] = amount
 
-	CHECK_ENTITY_SIMPLE(params[1]);
+	CHECK_ENTITY_SIMPLE(params[1])
 
 	edict_t *pEntity = TypeConversion.id_to_edict(params[1]);
 
 	pEntity->v.renderfx = params[2];
-	pEntity->v.rendercolor = Vector(float(params[3]), float(params[4]), float(params[5]));
+	pEntity->v.rendercolor = Vector(static_cast<float>(params[3]), static_cast<float>(params[4]), static_cast<float>(params[5]));
 	pEntity->v.rendermode = params[6];
-	pEntity->v.renderamt = float(params[7]);
+	pEntity->v.renderamt = static_cast<float>(params[7]);
 
 	return 1;
 }
@@ -1555,11 +1557,11 @@ static cell AMX_NATIVE_CALL entity_intersects(AMX *amx, cell *params) // bool:en
 	// params[1] = entity
 	// params[2] = other
 
-	CHECK_ENTITY_SIMPLE(params[1]);
-	CHECK_ENTITY_SIMPLE(params[2]);
+	CHECK_ENTITY_SIMPLE(params[1])
+	CHECK_ENTITY_SIMPLE(params[2])
 
-	entvars_s *pevEntity = VARS(TypeConversion.id_to_edict(params[1]));
-	entvars_s *pevOther = VARS(TypeConversion.id_to_edict(params[2]));
+	const entvars_s *pevEntity = VARS(TypeConversion.id_to_edict(params[1]));
+	const entvars_s *pevOther = VARS(TypeConversion.id_to_edict(params[2]));
 
 	if (pevOther->absmin.x > pevEntity->absmax.x ||
 		pevOther->absmin.y > pevEntity->absmax.y ||

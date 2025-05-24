@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include "mod_regamedll_api.h"
 
@@ -14,8 +16,8 @@ bool RegamedllApi_Init()
 		return false;
 	}
 
-	const auto majorVersion = ReGameApi->GetMajorVersion();
-	const auto minorVersion = ReGameApi->GetMinorVersion();
+	const int majorVersion = ReGameApi->GetMajorVersion();
+	const int minorVersion = ReGameApi->GetMinorVersion();
 
 	if (majorVersion != REGAMEDLL_API_VERSION_MAJOR || minorVersion < REGAMEDLL_API_VERSION_MINOR)
 	{

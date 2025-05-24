@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -74,7 +76,7 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params)
 	const char* path = get_amxstring(amx, params[1], 0, length);
 	const char* realpath = build_pathname("%s", path);
 
-	AutoPtr<SystemFile> fp(SystemFile::Open(realpath, "r"));
+	const AutoPtr<SystemFile> fp(SystemFile::Open(realpath, "r"));
 
 	if (!fp)
 	{
@@ -85,7 +87,7 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params)
 	static char buffer[2048];
 
 	size_t currentLine = 0;
-	size_t targetLine = Max(0, params[2]);
+	const size_t targetLine = Max(0, params[2]);
 
 	while (currentLine <= targetLine && fp->ReadLine(buffer, sizeof(buffer) - 1))
 	{
@@ -119,7 +121,7 @@ static cell AMX_NATIVE_CALL write_file(AMX *amx, cell *params)
 	int length;
 	const char* path = get_amxstring(amx, params[1], 0, length);
 	const char* text = get_amxstring(amx, params[2], 1, length);
-	int targetLine = params[3];
+	const int targetLine = params[3];
 
 	const char* realpath = build_pathname("%s", path);
 
@@ -264,7 +266,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params)
 
 	AutoPtr<FileObject> fp;
 
-	size_t numParams = *params / sizeof(cell);
+	const size_t numParams = *params / sizeof(cell);
 
 	if (numParams >= 3 && params[3] > 0)
 	{
@@ -364,9 +366,9 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell* data  = get_amxaddr(amx, params[2]);
-	cell blocks = params[3];
-	cell size   = params[4];
+	const cell* data  = get_amxaddr(amx, params[2]);
+	const cell blocks = params[3];
+	const cell size   = params[4];
 
 	size_t read = 0;
 
@@ -426,24 +428,24 @@ static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell   data = params[2];
-	size_t size = params[3];
+	const cell   data = params[2];
+	const size_t size = params[3];
 
 	switch (size)
 	{
 		case BLOCK_CHAR:
 		{
-			char value = static_cast<char>(data);
+			const char value = static_cast<char>(data);
 			return fp->Write(&value, sizeof(value));
 		}
 		case BLOCK_SHORT:
 		{
-			short value = static_cast<short>(data);
+			const short value = static_cast<short>(data);
 			return fp->Write(&value, sizeof(value));
 		}
 		case BLOCK_INT:
 		{
-			int value = static_cast<int>(data);
+			const int value = static_cast<int>(data);
 			return fp->Write(&value, sizeof(value));
 		}
 	}
@@ -498,21 +500,21 @@ static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 		case BLOCK_CHAR:
 		{
 			char value;
-			size_t res = fp->Read(&value, sizeof(value));
+			const size_t res = fp->Read(&value, sizeof(value));
 			*data = static_cast<cell>(value);
 			return res;
 		}
 		case BLOCK_SHORT:
 		{
 			short value;
-			size_t res = fp->Read(&value, sizeof(value));
+			const size_t res = fp->Read(&value, sizeof(value));
 			*data = static_cast<cell>(value);
 			return res;
 		}
 		case BLOCK_INT:
 		{
 			int value;
-			size_t res = fp->Read(&value, sizeof(value));
+			const size_t res = fp->Read(&value, sizeof(value));
 			*data = static_cast<cell>(value);
 			return res;
 		}
@@ -532,8 +534,8 @@ static cell AMX_NATIVE_CALL amx_fread_blocks(AMX *amx, cell *params)
 	}
 
 	cell *data  = get_amxaddr(amx, params[2]);
-	cell blocks = params[3];
-	cell size   = params[4];
+	const cell blocks = params[3];
+	const cell size   = params[4];
 
 	size_t read = 0;
 
@@ -596,14 +598,14 @@ static cell AMX_NATIVE_CALL amx_fputs(AMX *amx, cell *params)
 	}
 
 	int length;
-	char *string = get_amxstring(amx, params[2], 0, length);
+	const char *string = get_amxstring(amx, params[2], 0, length);
 
 	if (*params / sizeof(cell) >= 3 && params[3] > 0)
 	{
 		++length;
 	}
 
-	if (fp->Write(string, length) != (size_t)length)
+	if (fp->Write(string, length) != static_cast<size_t>(length))
 	{
 		return -1;
 	}
@@ -668,11 +670,11 @@ static cell AMX_NATIVE_CALL amx_fprintf(AMX *amx, cell *params)
 	int length;
 	const char* string = format_amxstring(amx, params, 2, length);
 
-	if (ValveFile *vfile = fp->AsValveFile())
+	if (const ValveFile *vfile = fp->AsValveFile())
 	{
 		return g_FileSystem->FPrintf(vfile->handle(), const_cast<char*>("%s"), string);
 	}
-	else if (SystemFile *sysfile = fp->AsSystemFile())
+	else if (const SystemFile *sysfile = fp->AsSystemFile())
 	{
 		return fprintf(sysfile->handle(), "%s", string);
 	}
@@ -716,7 +718,7 @@ static cell AMX_NATIVE_CALL amx_filesize(AMX *amx, cell *params)
 	int length;
 	const char *realpath = build_pathname("%s", format_amxstring(amx, params, 1, length));
 
-	AutoPtr<SystemFile> fp(SystemFile::Open(realpath, "rb"));
+	const AutoPtr<SystemFile> fp(SystemFile::Open(realpath, "rb"));
 
 	if (fp)
 	{
@@ -737,7 +739,7 @@ static cell AMX_NATIVE_CALL amx_build_pathname(AMX *amx, cell *params)
 	return set_amxstring(amx, params[2], build_pathname("%s", path), params[3]);
 }
 
-enum FileType
+enum FileType : std::uint8_t
 {
 	FileType_Unknown,       /* Unknown file type (device/socket) */
 	FileType_Directory,     /* File is a directory */
@@ -769,7 +771,7 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 		return 0;
 	}
 
-	size_t numParams = *params / sizeof(cell);
+	const size_t numParams = *params / sizeof(cell);
 
 	if (numParams >= 4 && params[5] > 0)
 	{
@@ -814,7 +816,7 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 // native close_dir(dirh);
 static cell AMX_NATIVE_CALL amx_close_dir(AMX *amx, cell *params)
 {
-	AutoPtr<DirectoryHandle> p(reinterpret_cast<DirectoryHandle*>(params[1]));
+	const AutoPtr<DirectoryHandle> p(reinterpret_cast<DirectoryHandle*>(params[1]));
 
 	if (!p)
 	{
@@ -823,7 +825,7 @@ static cell AMX_NATIVE_CALL amx_close_dir(AMX *amx, cell *params)
 
 	if (p->valvefs)
 	{
-		FileFindHandle_t handle = p->handle_vfs;
+		const FileFindHandle_t handle = p->handle_vfs;
 		g_FileSystem->FindClose(handle);
 	}
 	else
@@ -838,18 +840,18 @@ static cell AMX_NATIVE_CALL amx_close_dir(AMX *amx, cell *params)
 // native next_file(dirh, buffer[], length, &FileType:type = FileType_Unknown);
 static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 {
-	DirectoryHandle* p = reinterpret_cast<DirectoryHandle*>(params[1]);
+	const DirectoryHandle* p = reinterpret_cast<DirectoryHandle*>(params[1]);
 
 	if (!p)
 	{
 		return 0;
 	}
 
-	size_t numParams = *params / sizeof(cell);
+	const size_t numParams = *params / sizeof(cell);
 
 	if (p->valvefs)
 	{
-		FileFindHandle_t handle = p->handle_vfs;
+		const FileFindHandle_t handle = p->handle_vfs;
 
 		const char* entry = g_FileSystem->FindNext(handle);
 
@@ -926,7 +928,7 @@ static cell AMX_NATIVE_CALL amx_fputc(AMX *amx, cell *params)
 		return 0;
 	}
 
-	uint8_t val = static_cast<uint8_t>(params[2]);
+	const uint8_t val = static_cast<uint8_t>(params[2]);
 
 	if (fp->Write(&val, sizeof(val)) != sizeof(val))
 	{
@@ -946,7 +948,7 @@ static cell AMX_NATIVE_CALL amx_ungetc(AMX *amx, cell *params)
 		return 0;
 	}
 
-	SystemFile* sysfile = fp->AsSystemFile();
+	const SystemFile* sysfile = fp->AsSystemFile();
 
 	if (!sysfile)
 	{
@@ -1054,7 +1056,7 @@ static cell LoadFileForMe(AMX *amx, cell *params)
 	}
 
 	cell *buffer = get_amxaddr(amx, params[2]);
-	cell maxlength = params[3];
+	const cell maxlength = params[3];
 	cell *bytes_avail = get_amxaddr(amx, params[4]);
 
 	*bytes_avail = length;

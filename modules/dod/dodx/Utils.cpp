@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -118,12 +120,12 @@ int get_weaponid(CPlayer* pPlayer)
 
 traceVault traceData[] = 
 {
-	{ "grenade", 13, ACT_NADE_PUT|ACT_NADE_SHOT, 2.0 }, // or 36
-	{ "grenade2", 14, ACT_NADE_PUT|ACT_NADE_SHOT, 2.0 },  
-	{ "shell_bazooka", 29, ACT_ROCKET_PUT|ACT_ROCKET_SHOT, 2.0 },
-	{ "shell_pschreck", 30, ACT_ROCKET_PUT|ACT_ROCKET_SHOT, 2.0 },
-	{ "shell_piat", 31, ACT_ROCKET_PUT|ACT_ROCKET_SHOT, 2.0 },
-	{ "monster_mortar", 40, ACT_NADE_PUT|ACT_NADE_SHOT, 2.0 },
+	{ "grenade", 13, ACT_NADE_PUT|ACT_NADE_SHOT, 2.0f }, // or 36
+	{ "grenade2", 14, ACT_NADE_PUT|ACT_NADE_SHOT, 2.0f },  
+	{ "shell_bazooka", 29, ACT_ROCKET_PUT|ACT_ROCKET_SHOT, 2.0f },
+	{ "shell_pschreck", 30, ACT_ROCKET_PUT|ACT_ROCKET_SHOT, 2.0f },
+	{ "shell_piat", 31, ACT_ROCKET_PUT|ACT_ROCKET_SHOT, 2.0f },
+	{ "monster_mortar", 40, ACT_NADE_PUT|ACT_NADE_SHOT, 2.0f },
 };
 
 bool ignoreBots (edict_t *pEnt, edict_t *pOther)
@@ -136,7 +138,7 @@ bool ignoreBots (edict_t *pEnt, edict_t *pOther)
 
 bool isModuleActive()
 {
-	if(!(int)CVAR_GET_FLOAT("dodstats_pause"))
+	if(!static_cast<int>(CVAR_GET_FLOAT("dodstats_pause")))
 		return true;
 
 	return false;
@@ -144,8 +146,7 @@ bool isModuleActive()
 
 edict_t *FindEntityByString(edict_t *pentStart, const char *szKeyword, const char *szValue)
 {
-	edict_t *pentEntity;
-	pentEntity = FIND_ENTITY_BY_STRING(pentStart, szKeyword, szValue);
+	edict_t* pentEntity = FIND_ENTITY_BY_STRING(pentStart, szKeyword, szValue);
 
 	if(!FNullEnt(pentEntity))
 		return pentEntity;

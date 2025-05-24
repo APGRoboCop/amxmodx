@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -13,7 +15,7 @@
 // native Stack:CreateStack(blocksize = 1);
 static cell AMX_NATIVE_CALL CreateStack(AMX* amx, cell* params)
 {
-	int cellsize = params[1];
+	const int cellsize = params[1];
 
 	if (cellsize <= 0)
 	{
@@ -94,7 +96,7 @@ static cell AMX_NATIVE_CALL PushStackArray(AMX* amx, cell* params)
 		return 0;
 	}
 
-	cell *addr = get_amxaddr(amx, params[2]);
+	const cell *addr = get_amxaddr(amx, params[2]);
 	size_t indexes = vec->blocksize();
 
 	if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
@@ -127,7 +129,7 @@ static cell AMX_NATIVE_CALL PopStackCell(AMX* amx, cell* params)
 	size_t index = params[3];
 
 	cell *blk = vec->at(vec->size() - 1);
-	size_t idx = (size_t)params[3];
+	const size_t idx = (size_t)params[3];
 
 	if (params[4] == 0)
 	{
@@ -174,7 +176,7 @@ static cell AMX_NATIVE_CALL PopStackString(AMX* amx, cell* params)
 	const size_t idx = vec->size() - 1;
 	cell *blk = vec->at(idx);
 
-	int numWritten = set_amxstring_utf8(amx, params[2], blk, amxstring_len(blk), params[3]);
+	const int numWritten = set_amxstring_utf8(amx, params[2], blk, amxstring_len(blk), params[3]);
 	*get_amxaddr(amx, params[4]) = numWritten;
 
 	vec->remove(idx);
@@ -199,7 +201,7 @@ static cell AMX_NATIVE_CALL PopStackArray(AMX* amx, cell* params)
 	}
 
 	const size_t idx = vec->size() - 1;
-	cell *blk = vec->at(idx);
+	const cell *blk = vec->at(idx);
 	size_t indexes = vec->blocksize();
 
 	if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
@@ -218,7 +220,7 @@ static cell AMX_NATIVE_CALL PopStackArray(AMX* amx, cell* params)
 // native bool:IsStackEmpty(Stack:handle);
 static cell AMX_NATIVE_CALL IsStackEmpty(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -234,7 +236,7 @@ static cell AMX_NATIVE_CALL DestroyStack(AMX* amx, cell* params)
 {
 	cell *handle = get_amxaddr(amx, params[1]);
 
-	CellArray* vec = ArrayHandles.lookup(*handle);
+	const CellArray* vec = ArrayHandles.lookup(*handle);
 
 	if (!vec)
 	{

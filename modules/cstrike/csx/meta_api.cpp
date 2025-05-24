@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -62,7 +64,7 @@ int gmsgBarTime;
 
 int g_CurrentMsg;
 
-cvar_t init_csstats_maxsize ={"csstats_maxsize","3500", 0 , 3500.0 };
+cvar_t init_csstats_maxsize ={"csstats_maxsize","3500", 0 , 3500.0f };
 cvar_t init_csstats_reset ={"csstats_reset","0"};
 cvar_t init_csstats_rank ={"csstats_rank","1"};
 cvar_t *csstats_maxsize;
@@ -201,7 +203,7 @@ void ServerDeactivate()
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
+BOOL ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 	
@@ -349,7 +351,7 @@ void SetModel_Post(edict_t *e, const char *m){
 		switch(m[9]){
 		case 'h':
 			w_id = CSW_HEGRENADE;
-			g_grenades.put(e, 2.0, 4, pPlayer);
+			g_grenades.put(e, 2.0f, 4, pPlayer);
 			pPlayer->saveShot(CSW_HEGRENADE);
 			break;
 		case 'f':

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -54,7 +56,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		temp = MF_GetAmxString(amx,params[2],0,&len);
 		if (temp[0]==0)
 			return 0;
-		return (*g_engfuncs.pfnPrecacheModel)((char *)STRING(ALLOC_STRING(temp)));
+		return (*g_engfuncs.pfnPrecacheModel)(const_cast<char*>(STRING(ALLOC_STRING(temp))));
 
 
 		// pfnPrecacheSound
@@ -70,8 +72,8 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		temp = MF_GetAmxString(amx,params[3],0,&len);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
-		(*g_engfuncs.pfnSetModel)(TypeConversion.id_to_edict(index),(char*)STRING(ALLOC_STRING(temp)));
+		CHECK_ENTITY(index)
+		(*g_engfuncs.pfnSetModel)(TypeConversion.id_to_edict(index),const_cast<char*>(STRING(ALLOC_STRING(temp))));
 		return 1;
 
 
@@ -92,7 +94,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_SetSize:		// void )				(edict_t *e, const float *rgflMin, const float *rgflMax);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		Vec1[0]=amx_ctof(cRet[0]);
 		Vec1[1]=amx_ctof(cRet[1]);
@@ -152,7 +154,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		fparam1=amx_ctof(cRet[0]);
 		cRet = MF_GetAmxAddr(amx,params[5]);
 		iparam1=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		(*g_engfuncs.pfnMoveToOrigin)(TypeConversion.id_to_edict(index),Vec1,fparam1,iparam1);
 		return 1;
 
@@ -161,7 +163,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case		EngFunc_ChangeYaw:			// void )				(edict_t* ent);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		(*g_engfuncs.pfnChangeYaw)(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -170,7 +172,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case		EngFunc_ChangePitch:			// void )			(edict_t* ent);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		(*g_engfuncs.pfnChangePitch)(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -191,7 +193,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_GetEntityIllum:		// int	)		(edict_t* pEnt);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		return (*g_engfuncs.pfnGetEntityIllum)(TypeConversion.id_to_edict(index));
 
 
@@ -215,7 +217,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_FindClientInPVS:		// edict)		(edict_t *pEdict);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		pRet=(*g_engfuncs.pfnFindClientInPVS)(TypeConversion.id_to_edict(index));
 		return ENTINDEX(pRet);
 
@@ -224,7 +226,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_EntitiesInPVS:		// edict)			(edict_t *pplayer);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		pRet=(*g_engfuncs.pfnEntitiesInPVS)(TypeConversion.id_to_edict(index));
 		return ENTINDEX(pRet);
 
@@ -273,7 +275,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_RemoveEntity:		// void )			(edict_t* e);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		if (index == 0)
 			return 0;
 		(*g_engfuncs.pfnRemoveEntity)(TypeConversion.id_to_edict(index));
@@ -294,7 +296,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_MakeStatic:			// void )			(edict_t *ent);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		(*g_engfuncs.pfnMakeStatic)(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -303,7 +305,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_EntIsOnFloor:		// int  )			(edict_t *e);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		return (*g_engfuncs.pfnEntIsOnFloor)(TypeConversion.id_to_edict(index));
 
 
@@ -311,7 +313,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_DropToFloor:			// int  )			(edict_t* e);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		return (*g_engfuncs.pfnDropToFloor)(TypeConversion.id_to_edict(index));
 
 
@@ -319,7 +321,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_WalkMove:			// int  )				(edict_t *ent, float yaw, float dist, int iMode);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		fparam1 = amx_ctof(cRet[0]);
 		cRet = MF_GetAmxAddr(amx,params[4]);
@@ -333,7 +335,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_SetOrigin:			// void )				(edict_t *e, const float *rgflOrigin);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		Vec1[0]=amx_ctof(cRet[0]);
 		Vec1[1]=amx_ctof(cRet[1]);
@@ -346,7 +348,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_EmitSound:			// void )				(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1=cRet[0];
 		temp = MF_GetAmxString(amx,params[4],0,&len);
@@ -366,7 +368,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_EmitAmbientSound:	// void )		(edict_t *entity, float *pos, const char *samp, float vol, float attenuation, int fFlags, int pitch);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		Vec1[0]=amx_ctof(cRet[0]);
 		Vec1[1]=amx_ctof(cRet[1]);
@@ -418,7 +420,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		index = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1 = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		if (params[0] / sizeof(cell) == 4)
 		{
 			cell *ptr = MF_GetAmxAddr(amx, params[4]);
@@ -437,7 +439,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_TraceMonsterHull:	// int  )		(edict_t *pEdict, const float *v1, const float *v2, int fNoMonsters, edict_t *pentToSkip, TraceResult *ptr);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		Vec1[0]=amx_ctof(cRet[0]);
 		Vec1[1]=amx_ctof(cRet[1]);
@@ -526,7 +528,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case EngFunc_TraceTexture:		// const char *)			(edict_t *pTextureEntity, const float *v1, const float *v2 );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		Vec1[0]=amx_ctof(cRet[0]);
 		Vec1[1]=amx_ctof(cRet[1]);
@@ -535,7 +537,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		Vec2[0]=amx_ctof(cRet[0]);
 		Vec2[1]=amx_ctof(cRet[1]);
 		Vec2[2]=amx_ctof(cRet[2]);
-		temp = (char*)(*g_engfuncs.pfnTraceTexture)(TypeConversion.id_to_edict(index),Vec1,Vec2);
+		temp = const_cast<char*>((*g_engfuncs.pfnTraceTexture)(TypeConversion.id_to_edict(index), Vec1, Vec2));
 		cRet = MF_GetAmxAddr(amx,params[6]);
 		MF_SetAmxString(amx, params[5], temp == nullptr ? "NoTexture" : temp, cRet[0]);
 		return temp != nullptr;
@@ -565,7 +567,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_GetAimVector:		// void )			(edict_t* ent, float speed, float *rgflReturn);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		fparam1 = amx_ctof(cRet[0]);
 		(*g_engfuncs.pfnGetAimVector)(TypeConversion.id_to_edict(index),fparam1,Vec1);
@@ -598,7 +600,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_LightStyle:			// void )			(int style, const char* val);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		iparam1=cRet[0];
-		//different signedness: ‘int’ and ‘unsigned int’ [APG]RoboCop[CL]
+		//TODO: different signedness: ‘int’ and ‘unsigned int’ [APG]RoboCop[CL]
 		if (iparam1 < 0 || iparam1 >= ARRAYSIZE(LightStyleBuffers))
 		{
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid style %d", iparam1);
@@ -628,7 +630,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_FreeEntPrivateData:	// void )	(edict_t *pEdict);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		(*g_engfuncs.pfnFreeEntPrivateData)(TypeConversion.id_to_edict(index));
 		return 1;
 
@@ -637,7 +639,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_SzFromIndex:			// const char * )			(int iString);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		iparam1 = cRet[0];
-		temp = (char*)(*g_engfuncs.pfnSzFromIndex)(iparam1);
+		temp = const_cast<char*>((*g_engfuncs.pfnSzFromIndex)(iparam1));
 		cRet = MF_GetAmxAddr(amx,params[4]);
 		MF_SetAmxString(amx, params[3], temp, cRet[0]);
 		return 1;
@@ -661,7 +663,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_AnimationAutomove:	// void )		(const edict_t* pEdict, float flTime);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		fparam1 = amx_ctof(cRet[0]);
 		(*g_engfuncs.pfnAnimationAutomove)(TypeConversion.id_to_edict(index),fparam1);
@@ -672,7 +674,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_GetBonePosition:		// void )		(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1=cRet[0];
 		(*g_engfuncs.pfnGetBonePosition)(TypeConversion.id_to_edict(index),iparam1,Vec1,Vec2);
@@ -691,7 +693,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_GetAttachment:		// void	)			(const edict_t *pEdict, int iAttachment, float *rgflOrigin, float *rgflAngles );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index=cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1=cRet[0];
 		(*g_engfuncs.pfnGetAttachment)(TypeConversion.id_to_edict(index),iparam1,Vec1,Vec2);
@@ -712,8 +714,8 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam1 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam2 = cRet[0];
-		CHECK_ENTITY(iparam1);
-		CHECK_ENTITY(iparam2);
+		CHECK_ENTITY(iparam1)
+		CHECK_ENTITY(iparam2)
 		(*g_engfuncs.pfnSetView)(TypeConversion.id_to_edict(iparam1),TypeConversion.id_to_edict(iparam2));
 		return 1;
 
@@ -728,7 +730,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_CrosshairAngle:		// void )		(const edict_t *pClient, float pitch, float yaw);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		fparam1 = amx_ctof(cRet[0]);
 		cRet = MF_GetAmxAddr(amx,params[4]);
@@ -741,7 +743,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_FadeClientVolume:	// void )      (const edict_t *pEdict, int fadePercent, int fadeOutSeconds, int holdTime, int fadeInSeconds);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[4]);
@@ -758,7 +760,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_SetClientMaxspeed:	// void )     (const edict_t *pEdict, float fNewMaxspeed);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		fparam1 = amx_ctof(cRet[0]);
 		(*g_engfuncs.pfnSetClientMaxspeed)(TypeConversion.id_to_edict(index),fparam1);
@@ -778,7 +780,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_RunPlayerMove:		// void )			(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		Vec1[0]=amx_ctof(cRet[0]);
 		Vec1[1]=amx_ctof(cRet[1]);
@@ -823,14 +825,14 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		// pfnPrecacheGeneric
 	case	EngFunc_PrecacheGeneric:		// int  )		(char* s);
 		temp = MF_GetAmxString(amx,params[2],0,&len);
-		return (*g_engfuncs.pfnPrecacheGeneric)((char*)STRING(ALLOC_STRING(temp)));
+		return (*g_engfuncs.pfnPrecacheGeneric)(const_cast<char*>(STRING(ALLOC_STRING(temp))));
 
 
 		// pfnBuildSoundMsg
 	case	EngFunc_BuildSoundMsg:		// void )			(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		iparam1 = cRet[0];
 		temp = MF_GetAmxString(amx,params[4],0,&len);
@@ -863,9 +865,9 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_GetPhysicsKeyValue:	// const char* )	( const edict_t *pClient, const char *key );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		temp = MF_GetAmxString(amx,params[3],0,&len);
-		temp2 = (char*)(*g_engfuncs.pfnGetPhysicsKeyValue)(TypeConversion.id_to_edict(index),(const char *)temp);
+		temp2 = const_cast<char*>((*g_engfuncs.pfnGetPhysicsKeyValue)(TypeConversion.id_to_edict(index), (const char*)temp));
 		cRet = MF_GetAmxAddr(amx,params[5]);
 		MF_SetAmxString(amx,params[4],temp2,cRet[0]);
 		return 1;
@@ -875,7 +877,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_SetPhysicsKeyValue:	// void )	( const edict_t *pClient, const char *key, const char *value );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		temp = MF_GetAmxString(amx,params[3],0,&len);
 		temp2 = MF_GetAmxString(amx,params[4],1,&len);
 		(*g_engfuncs.pfnSetPhysicsKeyValue)(TypeConversion.id_to_edict(index),STRING(ALLOC_STRING(temp)),STRING(ALLOC_STRING(temp2)));
@@ -886,8 +888,8 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_GetPhysicsInfoString:	// const char* )	( const edict_t *pClient );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
-		temp = (char*)(*g_engfuncs.pfnGetPhysicsInfoString)(TypeConversion.id_to_edict(index));
+		CHECK_ENTITY(index)
+		temp = const_cast<char*>((*g_engfuncs.pfnGetPhysicsInfoString)(TypeConversion.id_to_edict(index)));
 		cRet = MF_GetAmxAddr(amx,params[4]);
 
 		MF_SetAmxString(amx,params[3],temp,cRet[0]);
@@ -899,7 +901,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		iparam1 = cRet[0];
 		temp = MF_GetAmxString(amx,params[3],0,&len);
-		return (*g_engfuncs.pfnPrecacheEvent)(iparam1,(char*)STRING(ALLOC_STRING(temp)));
+		return (*g_engfuncs.pfnPrecacheEvent)(iparam1,const_cast<char*>(STRING(ALLOC_STRING(temp))));
 
 
 		// pfnPlaybackEvent (grr)
@@ -910,7 +912,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		index = cRet[0];
 		if (index != -1)
 		{
-			CHECK_ENTITY(index);
+			CHECK_ENTITY(index)
 			pRet = TypeConversion.id_to_edict(index);
 		}
 		cRet = MF_GetAmxAddr(amx,params[4]);
@@ -944,7 +946,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_CheckVisibility:			// int )		( const edict_t *entity, unsigned char *pset );
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		cRet = MF_GetAmxAddr(amx, params[3]);
 		pset = (unsigned char *)cRet[0];
 		return (*g_engfuncs.pfnCheckVisibility)(TypeConversion.id_to_edict(index), pset);
@@ -958,7 +960,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_CanSkipPlayer:			// int )			( const edict_t *player );
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 		return (*g_engfuncs.pfnCanSkipPlayer)(TypeConversion.id_to_edict(index));
 
 
@@ -1046,7 +1048,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_SetClientKeyValue:	 // void )		(int clientIndex, char *infobuffer, char *key, char *value);
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 
 		cRet = MF_GetAmxAddr(amx, params[3]);
 		temp = reinterpret_cast<char *>(cRet[0]);
@@ -1075,7 +1077,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 
 		if (index != -1)
 		{
-			CHECK_ENTITY(index);
+			CHECK_ENTITY(index)
 		}
 
 		temp = (*g_engfuncs.pfnGetInfoKeyBuffer)(index == -1 ? nullptr : TypeConversion.id_to_edict(index));
@@ -1090,7 +1092,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case EngFunc_ClientPrintf:			// void )			(edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg);
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		CHECK_ENTITY(index)
 
 		cRet = MF_GetAmxAddr(amx, params[3]);
 		iparam1 = cRet[0];

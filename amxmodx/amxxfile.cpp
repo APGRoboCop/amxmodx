@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -106,7 +108,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 		
 		for (mint8_t i = 0; i < m_Bh.numPlugins; i++)
 		{
-			pe = &(m_Bh.plugins[(unsigned)i]);
+			pe = &(m_Bh.plugins[static_cast<unsigned>(i)]);
 			DATAREAD(&pe->cellsize, sizeof(mint8_t), 1)
 			DATAREAD(&pe->disksize, sizeof(int32_t), 1)
 			DATAREAD(&pe->imagesize, sizeof(int32_t), 1)
@@ -175,7 +177,7 @@ CAmxxReader::CAmxxReader(const char *filename, int cellsize)
 			m_SectionLength = nextEntry.offset - entry.offset;
 		} else {
 			fseek(m_pFile, 0, SEEK_END);
-			m_SectionLength = ftell(m_pFile) - (long)entry.offset;
+			m_SectionLength = ftell(m_pFile) - static_cast<long>(entry.offset);
 		}
 	} else {
 		// check for old file
@@ -224,14 +226,14 @@ CAmxxReader::~CAmxxReader()
 	}
 }
 
-CAmxxReader::Error CAmxxReader::GetStatus()
+CAmxxReader::Error CAmxxReader::GetStatus() const
 {
 	return m_Status;
 }
 
 #undef DATAREAD
 #define DATAREAD(addr, itemsize, itemcount) \
-	if (fread(addr, itemsize, itemcount, m_pFile) != itemcount) \
+	if (fread(addr, itemsize, itemcount, m_pFile) != (itemcount)) \
 	{ \
 		if (feof(m_pFile)) \
 			m_Status = Err_FileInvalid; \
@@ -247,7 +249,7 @@ size_t CAmxxReader::GetBufferSize()
 	if (!m_pFile)
 		return 0;
 
-	long save = ftell(m_pFile);
+	const long save = ftell(m_pFile);
 
 	if (m_OldFile)
 	{
@@ -260,7 +262,7 @@ size_t CAmxxReader::GetBufferSize()
 	}
 	else if (m_AmxxFile)
 	{
-		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
+		const PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		
 		if (pe->imagesize > pe->memsize)
 			return pe->imagesize + 1;
@@ -310,7 +312,7 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 	{
 		// get file size
 		fseek(m_pFile, 0, SEEK_END);
-		long filesize = ftell(m_pFile);
+		const long filesize = ftell(m_pFile);
 		rewind(m_pFile);
 		DATAREAD(buffer, 1, filesize)
 		m_Status = Err_None;
@@ -319,12 +321,12 @@ CAmxxReader::Error CAmxxReader::GetSection(void *buffer)
 	}
 	if (m_AmxxFile)
 	{
-		PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
+		const PluginEntry *pe = &(m_Bh.plugins[m_Entry]);
 		char *tempBuffer = new char[m_SectionLength + 1];
 		fseek(m_pFile, pe->offs, SEEK_SET);
 		DATAREAD_RELEASE((void *)tempBuffer, 1, m_SectionLength)
 		uLongf destLen = GetBufferSize();
-		int result = uncompress(static_cast<Bytef*>(buffer), &destLen, reinterpret_cast<Bytef*>(tempBuffer), m_SectionLength);
+		const int result = uncompress(static_cast<Bytef*>(buffer), &destLen, reinterpret_cast<Bytef*>(tempBuffer), m_SectionLength);
 		delete [] tempBuffer;
 		
 		if (result != Z_OK)

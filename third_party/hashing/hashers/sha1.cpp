@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // //////////////////////////////////////////////////////////
 // sha1.cpp
 // Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
@@ -96,7 +98,7 @@ void SHA1::processBlock(const void* data)
   // first round
   for (int i = 0; i < 4; i++)
   {
-    int offset = 5*i;
+	  const int offset = 5*i;
     e += rotate(a,5) + f1(b,c,d) + words[offset  ] + 0x5a827999; b = rotate(b,30);
     d += rotate(e,5) + f1(a,b,c) + words[offset+1] + 0x5a827999; a = rotate(a,30);
     c += rotate(d,5) + f1(e,a,b) + words[offset+2] + 0x5a827999; e = rotate(e,30);
@@ -107,7 +109,7 @@ void SHA1::processBlock(const void* data)
   // second round
   for (int i = 4; i < 8; i++)
   {
-    int offset = 5*i;
+	  const int offset = 5*i;
     e += rotate(a,5) + f2(b,c,d) + words[offset  ] + 0x6ed9eba1; b = rotate(b,30);
     d += rotate(e,5) + f2(a,b,c) + words[offset+1] + 0x6ed9eba1; a = rotate(a,30);
     c += rotate(d,5) + f2(e,a,b) + words[offset+2] + 0x6ed9eba1; e = rotate(e,30);
@@ -118,7 +120,7 @@ void SHA1::processBlock(const void* data)
   // third round
   for (int i = 8; i < 12; i++)
   {
-    int offset = 5*i;
+	  const int offset = 5*i;
     e += rotate(a,5) + f3(b,c,d) + words[offset  ] + 0x8f1bbcdc; b = rotate(b,30);
     d += rotate(e,5) + f3(a,b,c) + words[offset+1] + 0x8f1bbcdc; a = rotate(a,30);
     c += rotate(d,5) + f3(e,a,b) + words[offset+2] + 0x8f1bbcdc; e = rotate(e,30);
@@ -129,7 +131,7 @@ void SHA1::processBlock(const void* data)
   // fourth round
   for (int i = 12; i < 16; i++)
   {
-    int offset = 5*i;
+	  const int offset = 5*i;
     e += rotate(a,5) + f2(b,c,d) + words[offset  ] + 0xca62c1d6; b = rotate(b,30);
     d += rotate(e,5) + f2(a,b,c) + words[offset+1] + 0xca62c1d6; a = rotate(a,30);
     c += rotate(d,5) + f2(e,a,b) + words[offset+2] + 0xca62c1d6; e = rotate(e,30);
@@ -206,7 +208,7 @@ void SHA1::processBuffer()
   paddedLength++;
 
   // number of bits must be (numBits % 512) = 448
-  size_t lower11Bits = paddedLength & 511;
+  const size_t lower11Bits = paddedLength & 511;
   if (lower11Bits <= 448)
     paddedLength +=       448 - lower11Bits;
   else
@@ -230,7 +232,7 @@ void SHA1::processBuffer()
     extra[i - BlockSize] = 0;
 
   // add message length in bits as 64 bit number
-  uint64_t msgBits = 8 * (m_numBytes + m_bufferSize);
+  const uint64_t msgBits = 8 * (m_numBytes + m_bufferSize);
   // find right position
   unsigned char* addLength;
   if (paddedLength < BlockSize)
@@ -266,11 +268,11 @@ const char* SHA1::getHash()
   // convert to hex string
   static char result[40+1];
   size_t written = 0;
-  for (int i = 0; i < HashBytes; i++)
+  for (const unsigned char i : rawHash)
   {
     static const char dec2hex[16+1] = "0123456789abcdef";
-    result[written++] = dec2hex[(rawHash[i] >> 4) & 15];
-    result[written++] = dec2hex[ rawHash[i]       & 15];
+    result[written++] = dec2hex[(i >> 4) & 15];
+    result[written++] = dec2hex[i & 15];
   }
   result[written] = 0;
   return const_cast<const char *>(result);

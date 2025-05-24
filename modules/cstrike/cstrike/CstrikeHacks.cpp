@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -121,7 +123,7 @@ void (*C_ClientCommand_Actual)(edict_t *) = nullptr;
 
 void ClientCommand_Custom(edict_t *pEdict, const char *command, const char *arg1, IReGameHook_InternalCommand *chain = nullptr)
 {
-	auto client = TypeConversion.edict_to_id(pEdict);
+	const int client = TypeConversion.edict_to_id(pEdict);
 
 	CurrentItemId = CSI_NONE;
 
@@ -134,7 +136,7 @@ void ClientCommand_Custom(edict_t *pEdict, const char *command, const char *arg1
 			// Handling buy via menu.
 			if (!strcmp(command, "menuselect"))
 			{
-				auto slot = atoi(arg1);
+				const auto slot = atoi(arg1);
 
 				if (slot > 0 && slot < 9)
 				{
@@ -160,7 +162,7 @@ void ClientCommand_Custom(edict_t *pEdict, const char *command, const char *arg1
 						/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELD }
 					};
 
-					auto menuId = get_pdata<int>(pEdict, MenuDesc.fieldOffset);
+					const auto menuId = get_pdata<int>(pEdict, MenuDesc.fieldOffset);
 
 					if (menuId >= Menu_Buy && menuId <= Menu_BuyItem)
 					{
@@ -260,23 +262,23 @@ void GiveDefaultItems_RH(IReGameHook_CBasePlayer_GiveDefaultItems *chain, class 
 
 DETOUR_DECL_MEMBER1(CanPlayerBuy, bool, bool, display)  // bool CBasePlayer::CanPlayerBuy(bool display)
 {
-	auto canBuy = DETOUR_MEMBER_CALL(CanPlayerBuy)(display);
+	bool canBuy = DETOUR_MEMBER_CALL(CanPlayerBuy)(display);
 
 	if (!canBuy || !TriggeredFromCommand || !(CurrentItemId == CSI_NVGS || CurrentItemId == CSI_DEFUSER))
 	{
 		return canBuy;
 	}
 
-	auto pPlayer  = TypeConversion.cbase_to_edict(this);
-	auto playerId = TypeConversion.edict_to_id(pPlayer);
+	edict_t* pPlayer = TypeConversion.cbase_to_edict(this);
+	const int playerId = TypeConversion.edict_to_id(pPlayer);
 
 	if (!MF_IsPlayerAlive(playerId))
 	{
 		return canBuy;
 	}
 
-	auto allowedToBuy = false;
-	auto itemPrice = ItemsManager.GetItemPrice(CurrentItemId);
+	bool allowedToBuy = false;
+	const int itemPrice = ItemsManager.GetItemPrice(CurrentItemId);
 
 	switch (CurrentItemId)
 	{
@@ -306,14 +308,14 @@ DETOUR_DECL_MEMBER1(CanPlayerBuy, bool, bool, display)  // bool CBasePlayer::Can
 
 DETOUR_DECL_STATIC2(CanBuyThis, bool, void*, pvPlayer, int, weaponId) // bool CanBuyThis(CBasePlayer *pPlayer, int weaponId)
 {
-	auto canBuy = DETOUR_STATIC_CALL(CanBuyThis)(pvPlayer, weaponId);
+	bool canBuy = DETOUR_STATIC_CALL(CanBuyThis)(pvPlayer, weaponId);
 
 	if (!canBuy || !TriggeredFromCommand || !((1 << CurrentItemId & CSI_ALL_GUNS) || CurrentItemId == CSI_SHIELD))
 	{
 		return canBuy;
 	}
 
-	auto playerId = TypeConversion.cbase_to_id(pvPlayer);
+	const int playerId = TypeConversion.cbase_to_id(pvPlayer);
 
 	if (MF_IsPlayerAlive(playerId) && get_pdata<int>(pvPlayer, MoneyDesc.fieldOffset) >= ItemsManager.GetItemPrice(CurrentItemId))
 	{
@@ -328,7 +330,7 @@ DETOUR_DECL_STATIC2(CanBuyThis, bool, void*, pvPlayer, int, weaponId) // bool Ca
 
 DETOUR_DECL_STATIC3(BuyGunAmmo, bool, void*, player, int, nSlot, bool, bBlinkMoney) // bool BuyGunAmmo(CBasePlayer *player, int nSlot, bool bBlinkMoney)
 {
-	auto result = DETOUR_STATIC_CALL(BuyGunAmmo)(player, nSlot, bBlinkMoney);
+	const bool result = DETOUR_STATIC_CALL(BuyGunAmmo)(player, nSlot, bBlinkMoney);
 
 	if (result && BlockAmmosUpdate)
 	{
@@ -353,7 +355,7 @@ DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlay
 			case CSI_PRIAMMO:
 			case CSI_SECAMMO:
 			{
-				auto playerId = TypeConversion.cbase_to_id(this);
+				const int playerId = TypeConversion.cbase_to_id(this);
 
 				if (MF_IsPlayerAlive(playerId) && MF_ExecuteForward(ForwardOnBuy, playerId, CurrentItemId) > 0)
 				{
@@ -383,7 +385,7 @@ bool CBasePlayer_HasRestrictItem_RH(IReGameHook_CBasePlayer_HasRestrictItem *cha
 {
 	if (type == ITEM_TYPE_BUYING && CurrentItemId != CSI_NONE)
 	{
-		auto player = TypeConversion.cbase_to_id(pPlayer);
+		const int player = TypeConversion.cbase_to_id(pPlayer);
 
 		if (MF_IsPlayerAlive(player) && MF_ExecuteForward(ForwardOnBuy, player, CurrentItemId) > 0)
 		{
@@ -398,7 +400,7 @@ bool BuyGunAmmo_RH(IReGameHook_BuyGunAmmo *chain, class CBasePlayer *pPlayer, cl
 {
 	if (CurrentItemId == CSI_PRIAMMO || CurrentItemId == CSI_SECAMMO)
 	{
-		auto player = TypeConversion.cbase_to_id(pPlayer);
+		const int player = TypeConversion.cbase_to_id(pPlayer);
 
 		if (MF_IsPlayerAlive(player) && MF_ExecuteForward(ForwardOnBuy, player, CurrentItemId) > 0)
 		{
@@ -441,7 +443,7 @@ void CtrlDetours_ClientCommand(bool set)
 		}
 		else
 		{
-			auto base = reinterpret_cast<void *>(MDLL_ClientCommand);
+			const auto base = reinterpret_cast<void *>(MDLL_ClientCommand);
 
 #if defined(KE_WINDOWS)
 
@@ -776,7 +778,7 @@ void InitGlobalVars()
 
 		if (CommonConfig->GetOffset("svs", &typeDesc))
 		{
-			uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
+			const uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
 			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(base - 4);
 		}
 

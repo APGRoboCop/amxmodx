@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -35,14 +37,14 @@ cell op_trans_table[N_Total_FloatOps] =
 
 void OnBrowseRelocate(AMX *amx, cell *oplist, cell *cip)
 {
-	char *codeptr = (char *)amx->base + (long)(((AMX_HEADER *)amx->base)->cod);
+	char *codeptr = (char *)amx->base + static_cast<long>(((AMX_HEADER*)amx->base)->cod);
 
 	//jump to the parameter;
 	codeptr += *cip;
 	
 	int native = -1;
-	cell n_offs = *(cell *)codeptr;
-	optimizer_s *opt = (optimizer_s *)amx->usertags[UT_OPTIMIZER];
+	const cell n_offs = *(cell *)codeptr;
+	const optimizer_s *opt = static_cast<optimizer_s*>(amx->usertags[UT_OPTIMIZER]);
     for (int i=0; i<N_Total_FloatOps; i++)
 	{
 		if (opt->natives[i] == n_offs)
@@ -90,7 +92,7 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 	for (int i=0; i<N_Total_FloatOps; i++)
 		opt->natives[i] = -1;
 
-	amx->usertags[UT_OPTIMIZER] = (void *)opt;
+	amx->usertags[UT_OPTIMIZER] = static_cast<void*>(opt);
 
 	if (g_opt_level & 1)
 	{

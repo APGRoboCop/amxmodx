@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -14,7 +16,6 @@
 memfile_t *memfile_creat(const char *name, size_t init)
 {
 	memfile_t mf;
-	memfile_t *pmf;
 
 	mf.size = init;
 	mf.base = (char *)malloc(init);
@@ -28,7 +29,7 @@ memfile_t *memfile_creat(const char *name, size_t init)
 	mf.offs = 0;
 	mf._static = 0;
 
-	pmf = (memfile_t *)malloc(sizeof(memfile_t));
+	memfile_t* pmf = (memfile_t*)malloc(sizeof(memfile_t));
 	memcpy(pmf, &mf, sizeof(memfile_t));
 
 	#if defined _MSC_VER

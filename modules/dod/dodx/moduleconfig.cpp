@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -211,7 +213,7 @@ void ServerDeactivate()
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  )
+BOOL ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
 {
 	GET_PLAYER_POINTER(pEntity)->Connect(pszName,pszAddress);
 
@@ -348,8 +350,8 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 		{
 			if(strcmp(traceData[i].szName, STRING(e->v.classname)) == 0)
 			{
-				int grenId = (traceData[i].iId == 13 && g_map.detect_allies_country) ? 36 : traceData[i].iId;
-				int rocketId = traceData[i].iId;
+				const int grenId = (traceData[i].iId == 13 && g_map.detect_allies_country) ? 36 : traceData[i].iId;
+				const int rocketId = traceData[i].iId;
 
 				if(traceData[i].iAction&ACT_NADE_SHOT)
 				{
@@ -358,9 +360,9 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 					else
 						pPlayer->saveShot(traceData[i].iId);
 				}
-				
+
 				else if(traceData[i].iAction&ACT_ROCKET_SHOT)
-						pPlayer->saveShot(traceData[i].iId);
+					pPlayer->saveShot(traceData[i].iId);
 
 				cell position[3];
 				position[0] = amx_ftoc(v2[0]);

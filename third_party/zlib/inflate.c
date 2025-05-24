@@ -459,7 +459,7 @@ unsigned copy;
     do { \
         hbuf[0] = (unsigned char)(word); \
         hbuf[1] = (unsigned char)((word) >> 8); \
-        check = crc32(check, hbuf, 2); \
+        (check) = crc32(check, hbuf, 2); \
     } while (0)
 
 #  define CRC4(check, word) \
@@ -468,7 +468,7 @@ unsigned copy;
         hbuf[1] = (unsigned char)((word) >> 8); \
         hbuf[2] = (unsigned char)((word) >> 16); \
         hbuf[3] = (unsigned char)((word) >> 24); \
-        check = crc32(check, hbuf, 4); \
+        (check) = crc32(check, hbuf, 4); \
     } while (0)
 #endif
 

@@ -51,7 +51,7 @@ public:
 	bool Begin();
 	bool End();
 	int Replay(VaultMap *pMap);
-	bool Erase();
+	bool Erase() const;
 public:
 	bool Write_Clear();
 	bool Write_Prune(time_t start, time_t end);

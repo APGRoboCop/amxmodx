@@ -74,7 +74,7 @@ inline REAL amx_ctof2(cell x)
 
 
 
-inline BOOL isValidEntity(int x)
+inline bool isValidEntity(int x)
 {
 	if (x < 0)
 		return FALSE;
@@ -96,8 +96,8 @@ edict_t *UTIL_FindEntityByString(edict_t *Start, const char *Keyword, const char
 
 int UTIL_FindBuildingHive();
 
-BOOL UTIL_CheckForPublic(const char *publicname);
-BOOL UTIL_CheckForNative(const char *NativeName);
+bool UTIL_CheckForPublic(const char* publicname);
+bool UTIL_CheckForNative(const char* NativeName);
 
 char *UTIL_ToLowerCase(const char *str);
 

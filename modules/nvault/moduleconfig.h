@@ -20,7 +20,7 @@
 #define MODULE_NAME "nVault"
 #define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "http://www.amxmodx.org/"
+#define MODULE_URL "www.amxmodx.org"
 #define MODULE_LOGTAG "nVault"
 #define MODULE_LIBRARY "nvault"
 #define MODULE_LIBCLASS ""

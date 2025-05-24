@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -16,7 +18,7 @@
 
 static cell AMX_NATIVE_CALL copy_infokey_buffer(AMX *amx, cell *params)
 {
-	char *infobuffer = reinterpret_cast<char *>(params[1]);
+	const char *infobuffer = reinterpret_cast<char *>(params[1]);
 
 	return MF_SetAmxString(amx, params[2], infobuffer ? infobuffer : "", params[3]);
 }
@@ -24,7 +26,7 @@ static cell AMX_NATIVE_CALL copy_infokey_buffer(AMX *amx, cell *params)
 // lookup_sequence(entid, "sequence name", &Float:framerate = 0.0, &bool:loops = false, &Float:groundspeed = 0.0);
 static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 {
-	int index = params[1];
+	const int index = params[1];
 
 	CHECK_ENTITY(index);
 
@@ -43,7 +45,7 @@ static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 	pseqdesc = reinterpret_cast<mstudioseqdesc_t*>(
 					reinterpret_cast<char*>(pstudiohdr) + pstudiohdr->seqindex);
 
-	char* label = MF_GetAmxString(amx, params[2], 0, nullptr);
+	const char* label = MF_GetAmxString(amx, params[2], 0, nullptr);
 
 	for (int i = 0; i < pstudiohdr->numseq; i++)
 	{
@@ -57,7 +59,7 @@ static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 			pseqdesc = &pseqdesc[i];
 			*FrameRate = 256 * pseqdesc->fps / (pseqdesc->numframes - 1);
 
-			*GroundSpeed = sqrt( pseqdesc->linearmovement[0]*pseqdesc->linearmovement[0]+ pseqdesc->linearmovement[1]*pseqdesc->linearmovement[1]+ pseqdesc->linearmovement[2]*pseqdesc->linearmovement[2] );
+			*GroundSpeed = sqrtf( pseqdesc->linearmovement[0]*pseqdesc->linearmovement[0]+ pseqdesc->linearmovement[1]*pseqdesc->linearmovement[1]+ pseqdesc->linearmovement[2]*pseqdesc->linearmovement[2] );
 			*GroundSpeed = *GroundSpeed * pseqdesc->fps / (pseqdesc->numframes - 1);
 
 			*Loops = pseqdesc->flags & STUDIO_LOOPING;
@@ -73,11 +75,11 @@ static cell AMX_NATIVE_CALL set_controller(AMX* amx, cell* params)
 {
 // From animation.cpp from the HLSDK
 //	SetController( void *pmodel, entvars_t *pev, int iController, float flValue )
-	int entindex = params[1];
+const int entindex = params[1];
 	CHECK_ENTITY(entindex);
 	edict_t* entity = TypeConversion.id_to_edict(entindex);
 
-	int iController = params[2];
+const int iController = params[2];
 
 	if (iController < 0 || iController > 3)
 	{
@@ -118,9 +120,9 @@ static cell AMX_NATIVE_CALL set_controller(AMX* amx, cell* params)
 			flValue = -flValue;
 
 		// does the controller not wrap?
-		if (pbonecontroller->start + 359.0 >= pbonecontroller->end)
+		if (pbonecontroller->start + 359.0f >= pbonecontroller->end)
 		{
-			if (flValue > ((pbonecontroller->start + pbonecontroller->end) / 2.0) + 180)
+			if (flValue > ((pbonecontroller->start + pbonecontroller->end) / 2.0f) + 180)
 				flValue = flValue - 360;
 			if (flValue < ((pbonecontroller->start + pbonecontroller->end) / 2.0) - 180)
 				flValue = flValue + 360;
@@ -128,9 +130,9 @@ static cell AMX_NATIVE_CALL set_controller(AMX* amx, cell* params)
 		else
 		{
 			if (flValue > 360)
-				flValue = flValue - (int)(flValue / 360.0) * 360.0;
+				flValue = flValue - static_cast<int>(flValue / 360.0f) * 360.0f;
 			else if (flValue < 0)
-				flValue = flValue + (int)((flValue / -360.0) + 1) * 360.0;
+				flValue = flValue + static_cast<int>((flValue / -360.0f) + 1) * 360.0f;
 		}
 	}
 
@@ -140,7 +142,7 @@ static cell AMX_NATIVE_CALL set_controller(AMX* amx, cell* params)
 	if (setting > 255) setting = 255;
 	pev->controller[iController] = setting;
 
-	return amx_ftoc(setting * (1.0 / 255.0) * (pbonecontroller->end - pbonecontroller->start) + pbonecontroller->start);
+	return amx_ftoc(setting * (1.0f / 255.0f) * (pbonecontroller->end - pbonecontroller->start) + pbonecontroller->start);
 }
 
 enum
@@ -152,7 +154,7 @@ enum
 // GetModelBoundingBox( index, Float:mins[3], Float:maxs[3], sequence = Model_DefaultSize );
 static cell AMX_NATIVE_CALL GetModelBoundingBox(AMX *amx, cell *params)
 {
-	int entityIndex = params[1];
+	const int entityIndex = params[1];
 
 	CHECK_ENTITY(entityIndex);
 

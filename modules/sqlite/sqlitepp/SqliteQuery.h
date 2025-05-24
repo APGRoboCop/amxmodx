@@ -32,13 +32,13 @@ namespace SourceMod
 		};
 	public:
 		SqliteQuery(SqliteDatabase *db, const char *query);
-		~SqliteQuery();
+		~SqliteQuery() override;
 	public:
-		void FreeHandle();
-		bool Execute(QueryInfo *info, char *error, size_t maxlength);
-		bool ExecuteR(QueryInfo *info, char *error, size_t maxlength);
-		bool Execute2(QueryInfo *info, char *error, size_t maxlength);
-		const char *GetQueryString();
+		void FreeHandle() override;
+		bool Execute(QueryInfo *info, char *error, size_t maxlength) override;
+		bool ExecuteR(QueryInfo *info, char *error, size_t maxlength) override;
+		bool Execute2(QueryInfo *info, char *error, size_t maxlength) override;
+		const char *GetQueryString() override;
 	private:
 		SqliteDatabase *m_pDatabase;
 		SqliteResultSet *m_LastRes;

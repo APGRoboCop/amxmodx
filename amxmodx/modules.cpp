@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -203,7 +205,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 
 			memset(pDbg, 0, sizeof(AMX_DBG));
 
-			int err = dbg_LoadInfo(pDbg, addr);
+			err = dbg_LoadInfo(pDbg, addr);
 
 			if (err != AMX_ERR_NONE)
 			{
@@ -425,7 +427,7 @@ int CheckModules(AMX *amx, char error[128])
 		/* for binary compat */
 		if (!found)
 		{
-			for (auto module : g_modules)
+			for (CModule* module : g_modules)
 			{
 				if (module->getStatusValue() != MODULE_LOADED)
 				{
@@ -499,7 +501,7 @@ int CheckModules(AMX *amx, char error[128])
 
 int set_amxnatives(AMX* amx, char error[128])
 {
-	for (auto module : g_modules)
+	for (CModule* module : g_modules)
 	{
 		for (size_t i = 0; i < module->m_Natives.length(); i++)
 		{
@@ -564,19 +566,19 @@ int unload_amxscript(AMX* amx, void** program)
 	long code_size = amx->code_size;
 #endif
 
-	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
-	if (pDebugger)
-		delete pDebugger;
+	const Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
-	if (pHandler)
-		delete pHandler;
+	delete pDebugger;
 
-	optimizer_s *opt = (optimizer_s *)amx->usertags[UT_OPTIMIZER];
-	if (opt)
-		delete opt;
+	const Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
 
-	for (auto script : g_loadedscripts)
+	delete pHandler;
+
+	const optimizer_s *opt = (optimizer_s *)amx->usertags[UT_OPTIMIZER];
+
+	delete opt;
+
+	for (CScript* script : g_loadedscripts)
 	{
 		if (script->getAMX() == amx)
 		{
@@ -632,7 +634,7 @@ int unload_amxscript(AMX* amx, void** program)
 
 AMX* get_amxscript(int id, void** code, const char** filename)
 {
-	for (auto script : g_loadedscripts)
+	for (CScript* script : g_loadedscripts)
 	{
 		if (id--)
 		{
@@ -659,7 +661,7 @@ const char* GetFileName(AMX *amx)
 	}
 	else
 	{
-		for (auto script : g_loadedscripts)
+		for (CScript* script : g_loadedscripts)
 		{
 			if (script->getAMX() == amx)
 			{
@@ -674,7 +676,7 @@ const char* GetFileName(AMX *amx)
 
 const char* get_amxscriptname(AMX* amx)
 {
-	for (auto script : g_loadedscripts)
+	for (CScript* script : g_loadedscripts)
 	{
 		if (script->getAMX() == amx)
 		{
@@ -692,7 +694,7 @@ void get_modname(char* buffer)
 char *build_pathname(const char *fmt, ...)
 {
 	static char string[PLATFORM_MAX_PATH];
-	auto len = ke::path::Format(string, sizeof(string), "%s/", g_mod_name.chars());
+	const size_t len = ke::path::Format(string, sizeof(string), "%s/", g_mod_name.chars());
 
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -704,7 +706,7 @@ char *build_pathname(const char *fmt, ...)
 
 char *build_pathname_r(char *buffer, size_t maxlen, const char *fmt, ...)
 {
-	auto len = ke::path::Format(buffer, maxlen, "%s/", g_mod_name.chars());
+	const size_t len = ke::path::Format(buffer, maxlen, "%s/", g_mod_name.chars());
 
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -737,7 +739,7 @@ bool ConvertModuleName(const char *pathString, char *path)
 
 	*path = '\0';
 
-	size_t len = strlen(local);
+	const size_t len = strlen(local);
 	if (!len)
 		return false;
 
@@ -759,7 +761,7 @@ bool ConvertModuleName(const char *pathString, char *path)
 			ptr++;
 		if (strncmp(ptr, "_amxx", 5) == 0)
 		{
-			char *p = ptr + 5;
+			const char *p = ptr + 5;
 			if (strncmp(p, ".dll", 4) == 0 || strncmp(p, ".dylib", 6) == 0)
 			{
 				foundAmxx = true;
@@ -844,7 +846,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		fclose(fp);
 	}
 
-	for (auto module : g_modules)
+	for (CModule* module : g_modules)
 	{
 		if (!strcmp(module->getFilename(), path))
 		{
@@ -852,7 +854,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		}
 	}
 
-	auto module = new CModule(path);
+	CModule* module = new CModule(path);
 
 	if (!module)
 	{
@@ -906,7 +908,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 
 	if (module->IsMetamod())
 	{
-		char *mmpathname = build_pathname_addons(
+		const char *mmpathname = build_pathname_addons(
 							"%s/%s",
 							get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 							shortname);
@@ -914,7 +916,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		module->attachMetamod(path, now);
 	}
 
-	bool retVal = module->attachModule();
+	const bool retVal = module->attachModule();
 
 	if (!retVal)
 	{
@@ -992,10 +994,10 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 
 void detachModules()
 {
-	auto moduleIter = g_modules.begin(), end = g_modules.end();
+	ke::InlineList<CModule>::iterator moduleIter = g_modules.begin(), end = g_modules.end();
 	while (moduleIter != end)
 	{
-		auto module = *moduleIter;
+		CModule* module = *moduleIter;
 
 		module->detachModule();
 		moduleIter = g_modules.erase(moduleIter);
@@ -1005,10 +1007,10 @@ void detachModules()
 
 void detachReloadModules()
 {
-	auto moduleIter = g_modules.begin(), end = g_modules.end();
+	ke::InlineList<CModule>::iterator moduleIter = g_modules.begin(), end = g_modules.end();
 	while (moduleIter != end)
 	{
-		auto module = *moduleIter;
+		CModule* module = *moduleIter;
 		if (module->isReloadable() && !module->IsMetamod())
 		{
 			module->detachModule();
@@ -1036,7 +1038,7 @@ int countModules(CountModulesMode mode)
 			}
 			return num;
 		case CountModules_Running:
-			for (auto module : g_modules)
+			for (CModule* module : g_modules)
 			{
 				if (module->getStatusValue() == MODULE_LOADED)
 					++num;
@@ -1044,7 +1046,7 @@ int countModules(CountModulesMode mode)
 
 			return num;
 		case CountModules_Stopped:
-			for (auto module : g_modules)
+			for (CModule* module : g_modules)
 			{
 				if (module->getStatusValue() != MODULE_LOADED)
 					++num;
@@ -1059,7 +1061,7 @@ int countModules(CountModulesMode mode)
 // Call all modules' AMXX_PluginsLoaded functions
 void modules_callPluginsLoaded()
 {
-	for (auto module : g_modules)
+	for (CModule* module : g_modules)
 	{
 		module->CallPluginsLoaded();
 	}
@@ -1068,7 +1070,7 @@ void modules_callPluginsLoaded()
 //same for unloaded
 void modules_callPluginsUnloaded()
 {
-	for (auto module : g_modules)
+	for (CModule* module : g_modules)
 	{
 		module->CallPluginsUnloaded();
 	}
@@ -1076,7 +1078,7 @@ void modules_callPluginsUnloaded()
 
 void modules_callPluginsUnloading()
 {
-	for (auto module : g_modules)
+	for (CModule* module : g_modules)
 	{
 		module->CallPluginsUnloading();
 	}
@@ -1110,7 +1112,7 @@ const char *MNF_GetModname()
 
 AMX *MNF_GetAmxScript(int id)
 {
-	for (auto script : g_loadedscripts)
+	for (CScript* script : g_loadedscripts)
 	{
 		if (id--)
 		{
@@ -1123,7 +1125,7 @@ AMX *MNF_GetAmxScript(int id)
 
 const char *MNF_GetAmxScriptName(int id)
 {
-	for (auto script : g_loadedscripts)
+	for (CScript* script : g_loadedscripts)
 	{
 		if (id--)
 		{
@@ -1139,7 +1141,7 @@ int MNF_FindAmxScriptByName(const char *name)
 	bool found = false;
 	int i = 0;
 
-	for (auto script : g_loadedscripts)
+	for (CScript* script : g_loadedscripts)
 	{
 		if (!stricmp(script->getName(), name))
 		{
@@ -1160,7 +1162,7 @@ int MNF_FindAmxScriptByAmx(const AMX *amx)
 	bool found = false;
 	int i = 0;
 
-	for (auto script : g_loadedscripts)
+	for (CScript* script : g_loadedscripts)
 	{
 		if (script->getAMX() == amx)
 		{
@@ -1235,7 +1237,7 @@ int MNF_GetPlayerFlags(int id)
 	if (id < 1 || id > gpGlobals->maxClients)
 		return 0;
 
-	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	const CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 
 	return (pPlayer->flags[0]);
 }
@@ -1250,7 +1252,7 @@ int MNF_IsPlayerValid(int id)
 	if (id < 1 || id > gpGlobals->maxClients)
 		return 0;
 
-	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
+	const CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 
 	return (pPlayer->initialized) ? 1 : 0;
 }
@@ -1267,7 +1269,7 @@ void MNF_OverrideNatives(AMX_NATIVE_INFO *natives, const char *name)
 {
 	//HACKHACK - we should never have had to do this
 	//find a better solution for SourceMod!!!
-	for (auto module : g_modules)
+	for (CModule* module : g_modules)
 	{
 		if (module->getStatusValue() != MODULE_LOADED)
 			continue;
@@ -1389,7 +1391,7 @@ int MNF_IsPlayerConnecting(int id)
 	if (id < 1 || id > gpGlobals->maxClients)
 		return 0;
 
-	CPlayer * pPlayer = GET_PLAYER_POINTER_I(id);
+	const CPlayer * pPlayer = GET_PLAYER_POINTER_I(id);
 
 	return (!pPlayer->ingame && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) ? 1 : 0;
 }
@@ -1597,7 +1599,7 @@ const char *g_LastRequestedFunc = nullptr;
 #define REGISTER_FUNC(name, func) \
 	{ \
 		auto pFunc = ke::AutoPtr<func_s>(new func_s); \
-		pFunc->pfn = (void *)func; \
+		pFunc->pfn = (void *)(func); \
 		pFunc->desc = name; \
 		g_functions.append(ke::Move(pFunc)); \
 	}
@@ -1609,7 +1611,7 @@ void MNF_RegisterFunction(void *pfn, const char *description)
 
 void *MNF_RegisterFunctionEx(void *pfn, const char *description)
 {
-	for (auto &func : g_functions)
+	for (const ke::AutoPtr<func_s>& func : g_functions)
 	{
 		if (!strcmp(description, func->desc))
 		{
@@ -1667,7 +1669,7 @@ void MNF_MessageBlock(int mode, int msg, int *opt)
 			{
 				return;
 			}
-			int _opt = msgBlocks[msg];
+			const int _opt = msgBlocks[msg];
 			msgBlocks[msg] = *opt;
 			*opt = _opt;
 			break;
@@ -1735,7 +1737,7 @@ void *MNF_PlayerPropAddr(int id, int prop)
 		return nullptr;
 	}
 
-	return nullptr;
+	//return nullptr;
 }
 
 int amx_Execv()
@@ -1860,7 +1862,7 @@ void *Module_ReqFnptr(const char *funcName)
 {
 	g_LastRequestedFunc = funcName;
 
-	for (auto &func : g_functions)
+	for (const ke::AutoPtr<func_s>& func : g_functions)
 	{
 		if (!strcmp(funcName, func->desc))
 			return func->pfn;

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -22,14 +24,14 @@ const char* hashFile(const char* fileName, HashType Type)
 	 * Sanity check of input parameters
 	 */
 	if (!fileName || fileName[0] == 0)
-		return NULL;
+		return nullptr;
 
 	/**
 	 * Opens and checks file
 	 */
 	FILE* pFile = fopen(fileName, "rb");
 	if (!pFile)
-		return NULL;
+		return nullptr;
 
 	/**
 	 * Gets hashers ready.
@@ -52,7 +54,7 @@ const char* hashFile(const char* fileName, HashType Type)
 	case Hash_Keccak_224: Kec.changeBits(Keccak::Keccak224); break;
 	case Hash_Keccak_384: Kec.changeBits(Keccak::Keccak384); break;
 	case Hash_Keccak_512: Kec.changeBits(Keccak::Keccak512); break;
-	};
+	}
 
 	/**
 	 * Retrieves file's content and fills hashers in.
@@ -75,8 +77,8 @@ const char* hashFile(const char* fileName, HashType Type)
 		case Hash_Keccak_256:
 		case Hash_Keccak_384:
 		case Hash_Keccak_512: Kec.add(Bytes, Count);   break;
-		};
-	};
+		}
+	}
 
 	/**
 	 * Closes file
@@ -100,12 +102,12 @@ const char* hashFile(const char* fileName, HashType Type)
 	case Hash_Keccak_256:
 	case Hash_Keccak_384:
 	case Hash_Keccak_512: return Kec.getHash();
-	};
+	}
 
 	/**
 	 * Something went wrong
 	 */
-	return NULL;
+	return nullptr;
 };
 
 /**
@@ -119,7 +121,7 @@ const char* hashString(const char* String, size_t stringLen, HashType Type)
 	 * Sanity check of input parameters
 	 */
 	if (!String)
-		return NULL;
+		return nullptr;
 
 	/**
 	 * Gets hashers ready.
@@ -142,7 +144,7 @@ const char* hashString(const char* String, size_t stringLen, HashType Type)
 	case Hash_Keccak_224: Kec.changeBits(Keccak::Keccak224); break;
 	case Hash_Keccak_384: Kec.changeBits(Keccak::Keccak384); break;
 	case Hash_Keccak_512: Kec.changeBits(Keccak::Keccak512); break;
-	};
+	}
 
 	/**
 	 * Fills hashers in, computes string hash and returns the hash
@@ -161,10 +163,10 @@ const char* hashString(const char* String, size_t stringLen, HashType Type)
 	case Hash_Keccak_256:
 	case Hash_Keccak_384:
 	case Hash_Keccak_512: return Kec(String, stringLen);
-	};
+	}
 
 	/**
 	 * Something went wrong
 	 */
-	return NULL;
+	return nullptr;
 };

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
 	Copyright (C) 2014-2016 Quinten Lansu
 
@@ -162,8 +164,8 @@ uint8_t compose_execute(ComposeState* state)
 					if (state->output->codepoint[cursor_next] >= HANGUL_V_FIRST &&
 						state->output->codepoint[cursor_next] <= HANGUL_V_LAST)
 					{
-						unicode_t l_index = state->output->codepoint[cursor_current] - HANGUL_L_FIRST;
-						unicode_t v_index = state->output->codepoint[cursor_next] - HANGUL_V_FIRST;
+						const unicode_t l_index = state->output->codepoint[cursor_current] - HANGUL_L_FIRST;
+						const unicode_t v_index = state->output->codepoint[cursor_next] - HANGUL_V_FIRST;
 
 						composed = HANGUL_S_FIRST + (((l_index * HANGUL_V_COUNT) + v_index) * HANGUL_T_COUNT);
 					}
@@ -177,7 +179,7 @@ uint8_t compose_execute(ComposeState* state)
 					if (state->output->codepoint[cursor_next] >= HANGUL_T_FIRST &&
 						state->output->codepoint[cursor_next] <= HANGUL_T_LAST)
 					{
-						unicode_t t_index = state->output->codepoint[cursor_next] - HANGUL_T_FIRST;
+						const unicode_t t_index = state->output->codepoint[cursor_next] - HANGUL_T_FIRST;
 
 						composed = state->output->codepoint[cursor_current] + t_index;
 					}

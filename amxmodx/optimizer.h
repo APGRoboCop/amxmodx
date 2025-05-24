@@ -12,7 +12,7 @@
 
 #include "amx.h"
 
-enum
+enum : std::uint8_t
 {
 	N_Float_Mul=0,
 	N_Float_Div,

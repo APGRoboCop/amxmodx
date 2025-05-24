@@ -32,24 +32,24 @@
 
 class ObjectList: public IObjectContainer {
 public:
-	EXT_FUNC void Init();
-	EXT_FUNC bool Add(void *newObject);
-	EXT_FUNC void *GetFirst();
-	EXT_FUNC void *GetNext();
+	EXT_FUNC void Init() override;
+	EXT_FUNC bool Add(void *newObject) override;
+	EXT_FUNC void *GetFirst() override;
+	EXT_FUNC void *GetNext() override;
 
 	ObjectList();
-	virtual ~ObjectList();
+	~ObjectList() override;
 
-	EXT_FUNC void Clear(bool freeElementsMemory = false);
-	EXT_FUNC int CountElements();
+	EXT_FUNC void Clear(bool freeElementsMemory = false) override;
+	EXT_FUNC int CountElements() override;
 	void *RemoveTail();
 	void *RemoveHead();
 
 	bool AddTail(void *newObject);
 	bool AddHead(void *newObject);
-	EXT_FUNC bool Remove(void *object);
-	EXT_FUNC bool Contains(void *object);
-	EXT_FUNC bool IsEmpty();
+	EXT_FUNC bool Remove(void *object) override;
+	EXT_FUNC bool Contains(void *object) override;
+	EXT_FUNC bool IsEmpty() override;
 
 	typedef struct element_s {
 		struct element_s *prev;	// pointer to the last element or NULL

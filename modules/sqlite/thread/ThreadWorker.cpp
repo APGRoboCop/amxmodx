@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -9,31 +11,33 @@
 
 #include "ThreadWorker.h"
 
-ThreadWorker::ThreadWorker() : 
+ThreadWorker::ThreadWorker() :
 	m_Threader(nullptr),
 	m_QueueLock(nullptr),
 	m_StateLock(nullptr),
 	m_PauseSignal(nullptr),
 	m_AddSignal(nullptr),
 	me(nullptr),
-	m_think_time(DEFAULT_THINK_TIME_MS)
+	m_think_time(DEFAULT_THINK_TIME_MS), m_Waiting(false), m_FlushType(false)
 {
 	m_state = Worker_Invalid;
 }
 
-ThreadWorker::ThreadWorker(IThreader *pThreader, unsigned int thinktime) : 
+ThreadWorker::ThreadWorker(IThreader *pThreader, unsigned int thinktime) :
 	m_Threader(pThreader),
 	m_QueueLock(nullptr),
 	m_StateLock(nullptr),
 	m_PauseSignal(nullptr),
 	m_AddSignal(nullptr),
 	me(nullptr),
-	m_think_time(thinktime)
+	m_think_time(thinktime), m_Waiting(false), m_FlushType(false)
 {
 	if (m_Threader)
 	{
 		m_state = Worker_Stopped;
-	} else {
+	}
+	else
+	{
 		m_state = Worker_Invalid;
 	}
 }
@@ -41,10 +45,10 @@ ThreadWorker::ThreadWorker(IThreader *pThreader, unsigned int thinktime) :
 ThreadWorker::~ThreadWorker()
 {
 	if (m_state != Worker_Stopped || m_state != Worker_Invalid)
-		Stop(true);
+		ThreadWorker::Stop(true);
 
 	if (m_ThreadQueue.size())
-		Flush(true);
+		BaseWorker::Flush(true);
 }
 
 void ThreadWorker::OnTerminate(IThreadHandle *pHandle, bool cancel)
@@ -53,21 +57,18 @@ void ThreadWorker::OnTerminate(IThreadHandle *pHandle, bool cancel)
 
 void ThreadWorker::RunThread(IThreadHandle *pHandle)
 {
-	WorkerState this_state = Worker_Running;
-	size_t num;
-    
 	while (true)
 	{
 		/**
 		 * Check number of items in the queue
 		 */
 		m_StateLock->Lock();
-		this_state = m_state;
+		WorkerState this_state = m_state;
 		m_StateLock->Unlock();
 		if (this_state != Worker_Stopped)
 		{
 			m_QueueLock->Lock();
-			num = m_ThreadQueue.size();
+			size_t num = m_ThreadQueue.size();
 			if (!num)
 			{
 				/** 
@@ -129,9 +130,8 @@ SWThreadHandle *ThreadWorker::PopThreadFromQueue()
 	if (m_state <= Worker_Stopped && !m_QueueLock)
 		return nullptr;
 
-	SWThreadHandle *swt;
 	m_QueueLock->Lock();
-	swt = BaseWorker::PopThreadFromQueue();
+	SWThreadHandle* swt = BaseWorker::PopThreadFromQueue();
 	m_QueueLock->Unlock();
 
 	return swt;
@@ -153,10 +153,8 @@ void ThreadWorker::AddThreadToQueue(SWThreadHandle *pHandle)
 
 WorkerState ThreadWorker::GetStatus(unsigned int *threads)
 {
-	WorkerState state;
-
 	m_StateLock->Lock();
-	state = BaseWorker::GetStatus(threads);
+	WorkerState state = BaseWorker::GetStatus(threads);
 	m_StateLock->Unlock();
 
 	return state;
@@ -191,11 +189,9 @@ bool ThreadWorker::Stop(bool flush_cancel)
 	if (m_state == Worker_Invalid || m_state == Worker_Stopped)
 		return false;
 
-	WorkerState oldstate;
-
 	//set new state
 	m_StateLock->Lock();
-	oldstate = m_state;
+	const WorkerState oldstate = m_state;
 	m_state = Worker_Stopped;
 	m_FlushType = flush_cancel;
 	m_StateLock->Unlock();

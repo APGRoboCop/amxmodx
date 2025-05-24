@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // //////////////////////////////////////////////////////////
 // keccak.cpp
 // Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
@@ -113,7 +115,7 @@ void Keccak::processBlock(const void* data)
 
     for (unsigned int i = 0; i < 5; i++)
     {
-      uint64_t one = coefficients[mod5(i + 4)] ^ rotateLeft(coefficients[mod5(i + 1)], 1);
+	    const uint64_t one = coefficients[mod5(i + 4)] ^ rotateLeft(coefficients[mod5(i + 1)], 1);
       m_hash[i     ] ^= one;
       m_hash[i +  5] ^= one;
       m_hash[i + 10] ^= one;
@@ -155,8 +157,8 @@ void Keccak::processBlock(const void* data)
     for (unsigned int j = 0; j < 25; j += 5)
     {
       // temporaries
-      uint64_t one = m_hash[j];
-      uint64_t two = m_hash[j + 1];
+      const uint64_t one = m_hash[j];
+      const uint64_t two = m_hash[j + 1];
 
       m_hash[j]     ^= m_hash[j + 2] & ~two;
       m_hash[j + 1] ^= m_hash[j + 3] & ~m_hash[j + 2];
@@ -218,7 +220,7 @@ void Keccak::add(const void* data, size_t numBytes)
 /// process everything left in the internal buffer
 void Keccak::processBuffer()
 {
-  unsigned int blockSize = 200 - 2 * (m_bits / 8);
+	const unsigned int blockSize = 200 - 2 * (m_bits / 8);
 
   // add padding
   size_t offset = m_bufferSize;
@@ -245,7 +247,7 @@ const char* Keccak::getHash()
   static const char dec2hex[16 + 1] = "0123456789abcdef";
 
   // number of significant elements in hash (uint64_t)
-  unsigned int hashLength = m_bits / 64;
+  const unsigned int hashLength = m_bits / 64;
 
   static char result[128+1];
   size_t written = 0;
@@ -253,18 +255,18 @@ const char* Keccak::getHash()
     for (unsigned int j = 0; j < 8; j++) // 64 bits => 8 bytes
     {
       // convert a byte to hex
-      unsigned char oneByte = (unsigned char) (m_hash[i] >> (8 * j));
+      const unsigned char oneByte = (unsigned char) (m_hash[i] >> (8 * j));
       result[written++] = dec2hex[oneByte >> 4];
       result[written++] = dec2hex[oneByte & 15];
     }
 
   // Keccak224's last entry in m_hash provides only 32 bits instead of 64 bits
-  unsigned int remainder = m_bits - hashLength * 64;
+  const unsigned int remainder = m_bits - hashLength * 64;
   unsigned int processed = 0;
   while (processed < remainder)
   {
     // convert a byte to hex
-    unsigned char oneByte = (unsigned char) (m_hash[hashLength] >> processed);
+    const unsigned char oneByte = (unsigned char) (m_hash[hashLength] >> processed);
     result[written++] = dec2hex[oneByte >> 4];
     result[written++] = dec2hex[oneByte & 15];
 

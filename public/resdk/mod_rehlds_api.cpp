@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include "mod_rehlds_api.h"
 
@@ -25,8 +27,8 @@ bool RehldsApi_Init()
 		return false;
 	}
 
-	const auto majorVersion = RehldsApi->GetMajorVersion();
-	const auto minorVersion = RehldsApi->GetMinorVersion();
+	const int majorVersion = RehldsApi->GetMajorVersion();
+	const int minorVersion = RehldsApi->GetMinorVersion();
 
 	if (majorVersion != REHLDS_API_VERSION_MAJOR || minorVersion < REHLDS_API_VERSION_MINOR)
 	{

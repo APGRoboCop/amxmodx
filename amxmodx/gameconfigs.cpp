@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -29,9 +31,9 @@ static cell AMX_NATIVE_CALL LoadGameConfigFile(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int handle = GameConfigHandle.create();
+	const size_t handle = GameConfigHandle.create();
 
-	auto configHandle = GameConfigHandle.lookup(handle);
+	GameConfigNative* configHandle = GameConfigHandle.lookup(handle);
 
 	if (!configHandle)
 	{
@@ -46,7 +48,7 @@ static cell AMX_NATIVE_CALL LoadGameConfigFile(AMX *amx, cell *params)
 // native GameConfGetOffset(GameConfig:handle, const key[]);
 static cell AMX_NATIVE_CALL GameConfGetOffset(AMX *amx, cell *params)
 {
-	GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
+	const GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
 
 	if (!handle)
 	{
@@ -70,7 +72,7 @@ static cell AMX_NATIVE_CALL GameConfGetOffset(AMX *amx, cell *params)
 // native GameConfGetClassOffset(GameConfig:handle, const classname[], const key[]);
 static cell AMX_NATIVE_CALL GameConfGetClassOffset(AMX *amx, cell *params)
 {
-	GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
+	const GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
 
 	if (!handle)
 	{
@@ -95,7 +97,7 @@ static cell AMX_NATIVE_CALL GameConfGetClassOffset(AMX *amx, cell *params)
 // native bool:GameConfGetKeyValue(GameConfig:handle, const key[], buffer[], maxlen);
 static cell AMX_NATIVE_CALL GameConfGetKeyValue(AMX *amx, cell *params)
 {
-	GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
+	const GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
 
 	if (!handle)
 	{
@@ -120,7 +122,7 @@ static cell AMX_NATIVE_CALL GameConfGetKeyValue(AMX *amx, cell *params)
 // native GameConfGetAddress(GameConfig:handle, const name[]);
 static cell AMX_NATIVE_CALL GameConfGetAddress(AMX *amx, cell *params)
 {
-	GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
+	const GameConfigNative *handle = GameConfigHandle.lookup(params[1]);
 
 	if (!handle)
 	{
@@ -146,7 +148,7 @@ static cell AMX_NATIVE_CALL CloseGameConfigFile(AMX *amx, cell *params)
 {
 	cell *address = get_amxaddr(amx, params[1]);
 
-	GameConfigNative *handle = GameConfigHandle.lookup(*address);
+	const GameConfigNative *handle = GameConfigHandle.lookup(*address);
 
 	if (!handle)
 	{

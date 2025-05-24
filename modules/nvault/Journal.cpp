@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -18,12 +20,12 @@
 #endif
 #include "Journal.h"
 
-Journal::Journal(const char *file)
+Journal::Journal(const char* file)
+	: m_File(file), m_fp(nullptr)
 {
-	m_File = file;
 }
 
-bool Journal::Erase()
+bool Journal::Erase() const
 {
 	return (unlink(m_File.chars()) == 0);
 }
@@ -44,7 +46,6 @@ int Journal::Replay(VaultMap *pMap)
 	char *val = nullptr;
 	ke::AString sKey;
 	ke::AString sVal;
-	time_t stamp;
 	JOp op;
 	int ops = 0;
 	uint8_t temp8;
@@ -63,22 +64,19 @@ int Journal::Replay(VaultMap *pMap)
 		} 
 		else if (op == Journal_Prune) 
 		{
-			time_t start;
-			time_t end;
-			
 			if (!br.ReadUInt32(itemp)) goto fail;
-			start = static_cast<time_t>(itemp);
+			time_t start = itemp;
 
 			if (!br.ReadUInt32(itemp)) goto fail;
-			end = static_cast<time_t>(itemp);
+			time_t end = itemp;
 			
 			for (StringHashMap<ArrayInfo>::iterator iter = pMap->iter(); !iter.empty(); iter.next())
 			{
 				time_t stamp = iter->value.stamp;
-				bool remove = false;
 
 				if (stamp != 0)
 				{
+					bool remove = false;
 					if (start == 0 && end == 0)
 						remove = true;
 					else if (start == 0 && stamp < end)
@@ -98,7 +96,7 @@ int Journal::Replay(VaultMap *pMap)
 		else if (op == Journal_Insert) 
 		{
 			if (!br.ReadUInt32(itemp)) goto fail;
-			stamp = static_cast<time_t>(itemp);
+			time_t stamp = static_cast<time_t>(itemp);
 			
 			if (!br.ReadUInt8(len8)) goto fail;
 			

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -48,7 +50,7 @@ static cell AMX_NATIVE_CALL set_player_stamina(AMX *amx, cell *params){ // id,(r
 
 static cell AMX_NATIVE_CALL nade_set_fuse(AMX *amx, cell *params){ // id,(re)set,time,type
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( params[2] ){ // 0 set , 1 reset

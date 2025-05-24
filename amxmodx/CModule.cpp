@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -29,8 +31,8 @@ typedef void (*PLUGINSUNLOADING_NEW)();
 // *****************************************************
 
 CModule::CModule(const char* fname)
+	: m_Filename(fname)
 {
-	m_Filename = fname;
 	clear(false);
 }
 
@@ -82,7 +84,7 @@ bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
 	else
 		handle = (void **)&m_Handle;
 
-	int res = LoadMetamodPlugin(mmfile, handle, now);
+	const int res = LoadMetamodPlugin(mmfile, handle, now);
 
 	if (!res)
 	{
@@ -96,10 +98,9 @@ bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
 //sigh.  it shouldn't be needed.
 void CModule::rewriteNativeLists(AMX_NATIVE_INFO *list)
 {
-	AMX_NATIVE_INFO *curlist;
 	for (size_t i=0; i<m_Natives.length(); i++)
 	{
-		curlist = m_Natives[i];
+		const AMX_NATIVE_INFO* curlist = m_Natives[i];
 		bool changed = false;
 		bool found = false;
 		ke::Vector<size_t> newlist;
@@ -145,14 +146,14 @@ bool CModule::attachModule()
 	if (m_Status != MODULE_QUERY || !m_Handle)
 		return false;
 
-	ATTACHMOD_NEW AttachFunc_New = (ATTACHMOD_NEW)DLPROC(m_Handle, "AMXX_Attach");
+	const ATTACHMOD_NEW AttachFunc_New = (ATTACHMOD_NEW)DLPROC(m_Handle, "AMXX_Attach");
 
 	if (!AttachFunc_New)
 		return false;
 
 	g_ModuleCallReason = ModuleCall_Attach;
 	g_CurrentlyCalledModule = this;
-	int retVal = (*AttachFunc_New)(Module_ReqFnptr);
+	const int retVal = (*AttachFunc_New)(Module_ReqFnptr);
 	g_CurrentlyCalledModule = nullptr;
 	g_ModuleCallReason = ModuleCall_NotCalled;
 
@@ -205,7 +206,7 @@ bool CModule::queryModule()
 		m_Metamod = true;
 
 	// Try new interface first
-	QUERYMOD_NEW queryFunc_New = (QUERYMOD_NEW)DLPROC(m_Handle, "AMXX_Query");
+	const QUERYMOD_NEW queryFunc_New = (QUERYMOD_NEW)DLPROC(m_Handle, "AMXX_Query");
 
 	if (queryFunc_New)
 	{
@@ -271,12 +272,12 @@ bool CModule::queryModule()
 
 
 		// Lastly, check to see if this module is able to load on this game mod
-		CHECKGAME_NEW checkGame_New = (CHECKGAME_NEW)DLPROC(m_Handle, "AMXX_CheckGame");
+		const CHECKGAME_NEW checkGame_New = (CHECKGAME_NEW)DLPROC(m_Handle, "AMXX_CheckGame");
 
 		if (checkGame_New)
 		{
 			// This is an optional check; do not fail modules that do not have it
-			int ret = checkGame_New(g_mod_name.chars());
+			const int ret = checkGame_New(g_mod_name.chars());
 
 			if (ret != AMXX_GAME_OK)
 			{
@@ -311,7 +312,7 @@ bool CModule::detachModule()
 
 	RemoveLibraries(this);
 
-	DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
+	const DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
 
 	if (detachFunc_New)
 	{
@@ -333,7 +334,7 @@ bool CModule::detachModule()
 	return true;
 }
 
-void CModule::CallPluginsUnloaded()
+void CModule::CallPluginsUnloaded() const
 {
 	if (m_Status != MODULE_LOADED)
 		return;
@@ -341,7 +342,7 @@ void CModule::CallPluginsUnloaded()
 	if (!m_Handle)
 		return;
 
-	PLUGINSUNLOADED_NEW func = (PLUGINSUNLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsUnloaded");
+	const PLUGINSUNLOADED_NEW func = (PLUGINSUNLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsUnloaded");
 
 	if (!func)
 		return;
@@ -349,7 +350,7 @@ void CModule::CallPluginsUnloaded()
 	func();
 }
 
-void CModule::CallPluginsUnloading()
+void CModule::CallPluginsUnloading() const
 {
 	if (m_Status != MODULE_LOADED)
 		return;
@@ -357,7 +358,7 @@ void CModule::CallPluginsUnloading()
 	if (!m_Handle)
 		return;
 
-	PLUGINSUNLOADING_NEW func = (PLUGINSUNLOADING_NEW)DLPROC(m_Handle, "AMXX_PluginsUnloading");
+	const PLUGINSUNLOADING_NEW func = (PLUGINSUNLOADING_NEW)DLPROC(m_Handle, "AMXX_PluginsUnloading");
 
 	if (!func)
 		return;
@@ -365,7 +366,7 @@ void CModule::CallPluginsUnloading()
 	func();
 }
 
-void CModule::CallPluginsLoaded()
+void CModule::CallPluginsLoaded() const
 {
 	if (m_Status != MODULE_LOADED)
 		return;
@@ -373,7 +374,7 @@ void CModule::CallPluginsLoaded()
 	if (!m_Handle)
 		return;
 
-	PLUGINSLOADED_NEW func = (PLUGINSLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsLoaded");
+	const PLUGINSLOADED_NEW func = (PLUGINSLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsLoaded");
 
 	if (!func)
 		return;

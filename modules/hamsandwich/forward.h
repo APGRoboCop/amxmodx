@@ -35,21 +35,23 @@ public:
 	Forward(int id_) : id(id_), state(FSTATE_OK)
 	{
 		/* do nothing */
-	};
+	}
+
 	Forward() : id(-1), state(FSTATE_INVALID)
 	{
 		/* do nothing */
 	}
+
 	~Forward()
 	{
 		MF_UnregisterSPForward(id);
 	}
+
 	inline void Set(int i)
 	{
 		state=FSTATE_OK;
 		id=i;
-	};
-
+	}
 };
 
 #endif

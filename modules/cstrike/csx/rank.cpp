@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -18,9 +20,9 @@
 static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int attacker = params[2];
-	CHECK_PLAYERRANGE(attacker);
+	CHECK_PLAYERRANGE(attacker)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->attackers[attacker].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -45,9 +47,9 @@ static cell AMX_NATIVE_CALL get_user_astats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int victim = params[2];
-	CHECK_PLAYERRANGE(victim);
+	CHECK_PLAYERRANGE(victim)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->victims[victim].hits){
 		cell *cpStats = MF_GetAmxAddr(amx,params[3]);
@@ -72,7 +74,7 @@ static cell AMX_NATIVE_CALL get_user_vstats(AMX *amx, cell *params) /* 6 param *
 static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param */ // DEC-Weapon (round) stats (end)
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int weapon = params[2];
 	if (weapon<0||weapon>=MAX_WEAPONS+MAX_CWEAPONS){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
@@ -100,7 +102,7 @@ static cell AMX_NATIVE_CALL get_user_wrstats(AMX *amx, cell *params) /* 4 param 
 static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	int weapon = params[2];
 	if (weapon<0||weapon>=MAX_WEAPONS+MAX_CWEAPONS){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weapon);
@@ -128,7 +130,7 @@ static cell AMX_NATIVE_CALL get_user_wstats(AMX *amx, cell *params) /* 4 param *
 static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param */
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	GET_PLAYER_POINTER_I(index)->restartStats();
 	return 1;
 }
@@ -136,7 +138,7 @@ static cell AMX_NATIVE_CALL reset_user_wstats(AMX *amx, cell *params) /* 6 param
 static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->rank){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
@@ -158,8 +160,8 @@ static cell AMX_NATIVE_CALL get_user_rstats(AMX *amx, cell *params) /* 3 param *
 static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYERRANGE(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->rank ){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
 		cell *cpBodyHits = MF_GetAmxAddr(amx,params[3]);
@@ -184,8 +186,8 @@ static cell AMX_NATIVE_CALL get_user_stats(AMX *amx, cell *params) /* 3 param */
 static cell AMX_NATIVE_CALL get_user_stats2(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	CHECK_PLAYERRANGE(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYERRANGE(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->rank ){
 		cell *cpStats = MF_GetAmxAddr(amx,params[2]);
 
@@ -259,12 +261,11 @@ static cell AMX_NATIVE_CALL get_statsnum(AMX *amx, cell *params)
 }
 
 static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params){ // name,melee=0,logname 
-	int i,iLen;
-	for ( i=MAX_WEAPONS;i<MAX_WEAPONS+MAX_CWEAPONS;i++){
+	int iLen;
+	for ( int i = MAX_WEAPONS;i<MAX_WEAPONS+MAX_CWEAPONS;i++){
 		if ( !weaponData[i].used ){
-
-			char* szName = MF_GetAmxString(amx, params[1], 0, &iLen);
-			char *szLog = MF_GetAmxString(amx, params[3], 0, &iLen);
+			const char* szName = MF_GetAmxString(amx, params[1], 0, &iLen);
+			const char *szLog = MF_GetAmxString(amx, params[3], 0, &iLen);
 
 			strcpy(weaponData[i].name,szName);
 			strcpy(weaponData[i].logname,szLog);
@@ -287,10 +288,10 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 	}
 
 	int att = params[2];
-	CHECK_PLAYERRANGE(att);
+	CHECK_PLAYERRANGE(att)
 
 	int vic = params[3];
-	CHECK_PLAYERRANGE(vic);
+	CHECK_PLAYERRANGE(vic)
 	
 	int dmg = params[4];
 	if ( dmg<1 ){
@@ -308,7 +309,7 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
 
 	if ( !pAtt ) pAtt = pVic;
-	pVic->pEdict->v.dmg_inflictor = NULL;
+	pVic->pEdict->v.dmg_inflictor = nullptr;
 	pAtt->saveHit( pVic , weapon , dmg, aim );
 
 	int TA = 0;
@@ -330,7 +331,7 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 
 static cell AMX_NATIVE_CALL custom_wpn_shot(AMX *amx, cell *params){ // player,wid
 	int index = params[2];
-	CHECK_PLAYERRANGE(index);
+	CHECK_PLAYERRANGE(index)
 
 	int weapon = params[1];
 	if (  weapon < MAX_WEAPONS  || weapon >= MAX_WEAPONS+MAX_CWEAPONS || !weaponData[weapon].used ){
@@ -393,20 +394,20 @@ static cell AMX_NATIVE_CALL get_map_objectives(AMX *amx, cell *params)
 {
 	int flags = 0;
 
-	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_bomb_target")) || 
-		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "info_bomb_target")))
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "func_bomb_target")) || 
+		!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "info_bomb_target")))
 		flags |= MapObjective_Bomb;
 
-	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_hostage_rescue")) ||
-		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "info_hostage_rescue")) ||
-		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "hostage_entity"))      || // ) there are maps with only this and using team spawn as rescue zone.
-		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "monster_scientist")))     // ) 
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "func_hostage_rescue")) ||
+		!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "info_hostage_rescue")) ||
+		!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "hostage_entity"))      || // ) there are maps with only this and using team spawn as rescue zone.
+		!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "monster_scientist")))     // ) 
 		flags |= MapObjective_Hostage;
 
-	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_vip_safetyzone")))
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "func_vip_safetyzone")))
 		flags |= MapObjective_Vip;
 
-	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_escapezone")))
+	if (!FNullEnt(FIND_ENTITY_BY_STRING(nullptr, "classname", "func_escapezone")))
 		flags |= MapObjective_Escape;
 
 	return flags;

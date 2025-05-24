@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -42,11 +44,11 @@ bool IsBadWritePtr(void *l, size_t size)
 
 static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset);
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[4];
@@ -57,18 +59,18 @@ static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 	else
 		iOffset += params[5];
 #endif
-	int iValue=params[3];
+	const int iValue=params[3];
 	set_pdata<int>(TypeConversion.id_to_edict(index), iOffset * 4, iValue); // *4 because macro is char-based, while native is int-based
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL get_pdata_int(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset);
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[3];
@@ -86,11 +88,11 @@ static cell AMX_NATIVE_CALL get_pdata_int(AMX *amx, cell *params)
 // Float
 static cell AMX_NATIVE_CALL set_pdata_float(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset);
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[4];
@@ -102,17 +104,17 @@ static cell AMX_NATIVE_CALL set_pdata_float(AMX *amx, cell *params)
 		iOffset += params[5];
 #endif
 
-	float fValue=amx_ctof(params[3]);
+	const float fValue=amx_ctof(params[3]);
 	set_pdata<float>(TypeConversion.id_to_edict(index), iOffset * 4, fValue); // *4 because macro is char-based, while native is int-based
 	return 1;
 }
 static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset);
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[3];
@@ -129,11 +131,11 @@ static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset);
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[6];
@@ -166,11 +168,11 @@ static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset);
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[5];
@@ -186,7 +188,7 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 
 	char *szData;
 	int len;
-	char *data = MF_GetAmxString(amx, params[3], 0, &len);
+	const char *data = MF_GetAmxString(amx, params[3], 0, &len);
 	if (params[4] == -1)
 	{
 		szData = get_pdata_direct<char*>(pEdict, iOffset);
@@ -202,7 +204,7 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 			if (params[4] == 1)
 			{
 				free(szData);
-				szData = (char *)malloc(len + 1);
+				szData = static_cast<char*>(malloc(len + 1));
 			}
 			else if (params[4] == 2) {
 				delete[] szData;
@@ -219,11 +221,11 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 {
-	int index=params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index=params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int iOffset=params[2];
-	CHECK_OFFSET(iOffset); 
+	CHECK_OFFSET(iOffset)
 
 #if defined( __linux__ )
 	iOffset += params[3];
@@ -235,15 +237,15 @@ static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 		iOffset += params[4];
 #endif
 
-	edict_t *pEdict = get_pdata<edict_t*>(TypeConversion.id_to_edict(index), iOffset);
+	const edict_t *pEdict = get_pdata<edict_t*>(TypeConversion.id_to_edict(index), iOffset);
 
 	if (pEdict == nullptr)
 	{
 		return -1;
 	}
 
-	edict_t *pWorld = INDEXENT(0);
-	int ent = pEdict - pWorld;
+	const edict_t *pWorld = INDEXENT(0);
+	const int ent = pEdict - pWorld;
 
 	if (ent < 0 || ent > gpGlobals->maxEntities)
 	{
@@ -260,14 +262,14 @@ static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_ent(AMX *amx, cell *params)
 {
-	int index  = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index  = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
-	int entity = params[3];
-	CHECK_ENTITY(entity);
+	const int entity = params[3];
+	CHECK_ENTITY(entity)
 
 #if defined(__linux__)
 	offset += params[4];
@@ -286,11 +288,11 @@ static cell AMX_NATIVE_CALL set_pdata_ent(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_bool(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
 #if defined(__linux__)
 	offset += params[3];
@@ -307,13 +309,13 @@ static cell AMX_NATIVE_CALL get_pdata_bool(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_bool(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
-	bool value = params[3] ? true : false;
+	const bool value = params[3] ? true : false;
 
 #if defined(__linux__)
 	offset += params[4];
@@ -332,11 +334,11 @@ static cell AMX_NATIVE_CALL set_pdata_bool(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_byte(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
 #if defined(__linux__)
 	offset += params[3];
@@ -353,13 +355,13 @@ static cell AMX_NATIVE_CALL get_pdata_byte(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_byte(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
-	byte value = static_cast<byte>(params[3]);
+	const byte value = static_cast<byte>(params[3]);
 
 #if defined(__linux__)
 	offset += params[4];
@@ -378,11 +380,11 @@ static cell AMX_NATIVE_CALL set_pdata_byte(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_short(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
 #if defined(__linux__)
 	offset += params[3];
@@ -399,13 +401,13 @@ static cell AMX_NATIVE_CALL get_pdata_short(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_short(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
-	short value = static_cast<short>(params[3]);
+	const short value = static_cast<short>(params[3]);
 
 #if defined(__linux__)
 	offset += params[4];
@@ -424,11 +426,11 @@ static cell AMX_NATIVE_CALL set_pdata_short(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_vector(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
 #if defined(__linux__)
 	offset += params[4];
@@ -442,7 +444,7 @@ static cell AMX_NATIVE_CALL get_pdata_vector(AMX *amx, cell *params)
 
 	cell *cpvec = MF_GetAmxAddr(amx, params[3]);
 
-	Vector vec = get_pdata<Vector>(TypeConversion.id_to_edict(index), offset);
+	const Vector vec = get_pdata<Vector>(TypeConversion.id_to_edict(index), offset);
 
 	cpvec[0] = amx_ftoc(vec.x);
 	cpvec[1] = amx_ftoc(vec.y);
@@ -453,11 +455,11 @@ static cell AMX_NATIVE_CALL get_pdata_vector(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_vector(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
 #if defined(__linux__)
 	offset += params[4];
@@ -469,9 +471,9 @@ static cell AMX_NATIVE_CALL set_pdata_vector(AMX *amx, cell *params)
 		offset += params[5];
 #endif
 
-	cell *pcvec = MF_GetAmxAddr(amx, params[3]);
+	const cell *pcvec = MF_GetAmxAddr(amx, params[3]);
 
-	Vector vec(amx_ctof(pcvec[0]), amx_ctof(pcvec[1]), amx_ctof(pcvec[2]));
+	const Vector vec(amx_ctof(pcvec[0]), amx_ctof(pcvec[1]), amx_ctof(pcvec[2]));
 
 	set_pdata<Vector>(TypeConversion.id_to_edict(index), offset, vec);
 
@@ -480,11 +482,11 @@ static cell AMX_NATIVE_CALL set_pdata_vector(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 {
-	int index = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
 #if defined(__linux__)
 	offset += params[3];
@@ -496,15 +498,15 @@ static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 		offset += params[4];
 #endif
 
-	edict_t *pEdict = get_pdata<edict_t*>(TypeConversion.id_to_edict(index), offset);
+	const edict_t *pEdict = get_pdata<edict_t*>(TypeConversion.id_to_edict(index), offset);
 
 	if (pEdict == nullptr)
 	{
 		return -1;
 	}
 
-	edict_t *pWorld = INDEXENT(0);
-	int ent = pEdict - pWorld;
+	const edict_t *pWorld = INDEXENT(0);
+	const int ent = pEdict - pWorld;
 
 	if (ent < 0 || ent > gpGlobals->maxEntities)
 	{
@@ -516,7 +518,7 @@ static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 		return -1;
 	}
 
-	int serialnumber = get_pdata<int>(TypeConversion.id_to_edict(index), offset + 4);
+	const int serialnumber = get_pdata<int>(TypeConversion.id_to_edict(index), offset + 4);
 
 	if (pEdict->serialnumber != serialnumber)
 	{
@@ -528,14 +530,14 @@ static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_pdata_ehandle(AMX *amx, cell *params)
 {
-	int index  = params[1];
-	CHECK_ENTITY_PDATA(index);
+	const int index  = params[1];
+	CHECK_ENTITY_PDATA(index)
 
 	int offset = params[2];
-	CHECK_OFFSET(offset);
+	CHECK_OFFSET(offset)
 
-	int entity = params[3];
-	CHECK_ENTITY(entity);
+	const int entity = params[3];
+	CHECK_ENTITY(entity)
 
 #if defined(__linux__)
 	offset += params[4];

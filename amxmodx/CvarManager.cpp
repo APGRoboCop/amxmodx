@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -31,7 +33,7 @@ void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cv
 
 	if (info->bound.hasMin || info->bound.hasMax) // cvar_s doesn't have min/max mechanism, so we check things here.
 	{
-		float fvalue = atof(value);
+		float fvalue = static_cast<float>(atof(value));
 		bool oob = false;
 
 		if (info->bound.hasMin && fvalue < info->bound.minVal)
@@ -65,7 +67,7 @@ void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cv
 	{
 		for (size_t i = 0; i < info->binds.length(); ++i)
 		{
-			CvarBind* bind = info->binds[i];
+			const CvarBind* bind = info->binds[i];
 
 			switch (bind->type)
 			{
@@ -76,7 +78,7 @@ void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cv
 				}
 				case CvarBind::CvarType_Float:
 				{
-					float fvalue = atof(var->string);
+					float fvalue = static_cast<float>(atof(var->string));
 					*bind->varAddress = amx_ftoc(fvalue);
 					break;
 				}
@@ -93,7 +95,7 @@ void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cv
 	{
 		for (size_t i = 0; i < info->hooks.length(); ++i)
 		{
-			CvarHook* hook = info->hooks[i];
+			const CvarHook* hook = info->hooks[i];
 
 			if (hook->forward->state == AutoForward::FSTATE_OK) // Our callback can be enable/disabled by natives.
 			{
@@ -345,7 +347,7 @@ AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, cons
 	int length;
 	*callback = get_amxstring(amx, param, 0, length);
 
-	int forwardId = registerSPForwardByName(amx, *callback, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
+	const int forwardId = registerSPForwardByName(amx, *callback, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
 
 	// Invalid callback, it could be: not a public function, wrongly named, or simply missing.
 	if (forwardId == -1)
@@ -370,13 +372,13 @@ bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, ce
 		return false;
 	}
 
-	int pluginId = g_plugins.findPluginFast(amx)->getId();
-	cell* address = get_amxaddr(amx, varofs);
+	const int pluginId = g_plugins.findPluginFast(amx)->getId();
+	const cell* address = get_amxaddr(amx, varofs);
 
 	// To avoid unexpected behavior, probably better to error such situations.
 	for (size_t i = 0; i < info->binds.length(); ++i)
 	{
-		CvarBind* bind = info->binds[i];
+		const CvarBind* bind = info->binds[i];
 
 		if (bind->pluginId == pluginId)
 		{
@@ -458,7 +460,7 @@ void CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId
 	}
 }
 
-size_t CvarManager::GetRegCvarsCount()
+size_t CvarManager::GetRegCvarsCount() const
 {
 	return m_AmxmodxCvars;
 }
@@ -500,7 +502,7 @@ void CvarManager::OnConsoleCommand()
 	size_t indexToSearch = 0;
 	ke::AString partialName;
 
-	int argcount = CMD_ARGC();
+	const int argcount = CMD_ARGC();
 
 	// amxx cvars [partial plugin name] [index from listing]
 	// E.g.:
@@ -537,7 +539,7 @@ void CvarManager::OnConsoleCommand()
 		CvarInfo* ci = (*iter);
 
 		// List any cvars having a status either created, hooked or bound by a plugin.
-		bool in_list = ci->amxmodx || !ci->binds.empty() || !ci->hooks.empty() || ci->bound.hasMin || ci->bound.hasMax;
+		const bool in_list = ci->amxmodx || !ci->binds.empty() || !ci->hooks.empty() || ci->bound.hasMin || ci->bound.hasMax;
 
 		if (in_list && (!partialName.length() || strncmp(ci->plugin.chars(), partialName.chars(), partialName.length()) == 0))
 		{
@@ -595,7 +597,7 @@ void CvarManager::OnConsoleCommand()
 				{
 					for (size_t i = 0; i < ci->hooks.length(); ++i)
 					{
-						CvarHook* hook = ci->hooks[i];
+						const CvarHook* hook = ci->hooks[i];
 
 						print_srvconsole(" Hooked        %-26.25s %s (%s)\n", g_plugins.findPlugin(hook->pluginId)->getName(),
 										 hook->forward->callback.chars(),

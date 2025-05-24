@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -166,7 +168,7 @@ void WinThreader::WinMutex::DestroyThis()
  ******************/
 
 WinThreader::ThreadHandle::ThreadHandle(IThreader *parent, HANDLE hthread, IThread *run, const ThreadParams *params) : 
-	m_parent(parent), m_thread(hthread), m_run(run), m_params(*params),
+	m_parent(parent), m_thread(hthread), m_params(*params), m_run(run),
 	m_state(Thread_Paused)
 {
 	InitializeCriticalSection(&m_crit);
@@ -235,7 +237,7 @@ bool WinThreader::ThreadHandle::SetPriority(ThreadPriority prio)
 	if (!m_thread)
 		return false;
 
-	BOOL res = FALSE;
+	bool res = false;
 
 	if (prio >= ThreadPrio_Maximum)
 		res = SetThreadPriority(m_thread, THREAD_PRIORITY_HIGHEST);

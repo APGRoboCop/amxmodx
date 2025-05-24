@@ -42,7 +42,7 @@
 			THashNode(const K & k, const V & v) :
 				key(k), val(v)
 				{
-				};
+				}
 			THashNode & operator =(const THashNode &other)
 			{
 				key = other.key;
@@ -54,7 +54,7 @@
 		typedef List<THashNode *> *	NodePtr;
 	public:
 		class const_iterator;
-		THash() : m_Buckets(NULL), m_numBuckets(0), m_percentUsed(0.0f)
+		THash() : m_Buckets(nullptr), m_numBuckets(0), m_percentUsed(0.0f)
 		{
 			_Refactor();
 		}
@@ -124,7 +124,7 @@
 		V & AltFindOrInsert(const U & ukey)
 		{
 			size_t place = HashAlt(ukey) % m_numBuckets;
-			THashNode *pNode = NULL;
+			THashNode *pNode = nullptr;
 			if (!m_Buckets[place])
 			{
 				m_Buckets[place] = new List<THashNode *>;
@@ -151,7 +151,7 @@
 		THashNode *_FindOrInsert(const K & key)
 		{
 			size_t place = HashFunction(key) % m_numBuckets;
-			THashNode *pNode = NULL;
+			THashNode *pNode = nullptr;
 			if (!m_Buckets[place])
 			{
 				m_Buckets[place] = new List<THashNode *>;
@@ -185,11 +185,9 @@
 				for (size_t i=0; i<m_numBuckets; i++)
 					m_Buckets[i] = NULL;
 			} else {
-				size_t oldSize = m_numBuckets;
+				const size_t oldSize = m_numBuckets;
 				m_numBuckets *= 2;
 				typename List<THashNode *>::iterator iter;
-				size_t place;
-				THashNode *pHashNode;
 				NodePtr *temp = new NodePtr[m_numBuckets];
 				for (size_t i=0; i<m_numBuckets; i++)
 					temp[i] = NULL;
@@ -202,9 +200,9 @@
 						//go through the list of items
 						for (iter = m_Buckets[i]->begin(); iter != m_Buckets[i]->end(); ++iter)
 						{
-							pHashNode = (*iter);
+							THashNode* pHashNode = (*iter);
 							//rehash it with the new bucket filter
-							place = HashFunction(pHashNode->key) % m_numBuckets;
+							size_t place = HashFunction(pHashNode->key) % m_numBuckets;
 							//add it to the new hash table
 							if (!temp[place])
 							{
@@ -228,16 +226,16 @@
 		{
 			friend class THash;
 		public:
-			iterator() : curbucket(-1), hash(NULL), end(true)
+			iterator() : curbucket(-1), hash(nullptr), end(true)
 			{
-			};
+			}
 			iterator(THash *h) : curbucket(-1), hash(h), end(false)
 			{
 				if (!h->m_Buckets)
 					end = true;
 				else
 					_Inc();
-			};
+			}
 			//pre increment
 			iterator & operator++()
 			{
@@ -323,7 +321,7 @@
 						++iter;
 					if (iter == hash->m_Buckets[curbucket]->end())
 					{
-						int oldbucket = curbucket;
+						const int oldbucket = curbucket;
 						for (int i=curbucket+1; i<(int)hash->m_numBuckets; i++)
 						{
 							if (hash->m_Buckets[i])
@@ -350,16 +348,16 @@
 		{
 			friend class THash;
 		public:
-			const_iterator() : curbucket(-1), hash(NULL), end(true)
+			const_iterator() : curbucket(-1), hash(nullptr), end(true)
 			{
-			};
+			}
 			const_iterator(const THash *h) : curbucket(-1), hash(h), end(false)
 			{
 				if (!h->m_Buckets)
 					end = true;
 				else
 					_Inc();
-			};
+			}
 			//pre increment
 			const_iterator & operator++()
 			{
@@ -422,7 +420,7 @@
 						++iter;
 					if (iter == hash->m_Buckets[curbucket]->end())
 					{
-						int oldbucket = curbucket;
+						const int oldbucket = curbucket;
 						for (int i=curbucket+1; i<(int)hash->m_numBuckets; i++)
 						{
 							if (hash->m_Buckets[i])
@@ -473,7 +471,7 @@
 		template <typename U>
 		iterator find(const U & u) const
 		{
-			iterator b = begin();
+			const iterator b = begin();
 			iterator e = end();
 			for (iterator iter = b; iter != e; ++iter)
 			{
@@ -485,7 +483,7 @@
 		template <typename U>
 		iterator find(const U & u)
 		{
-			iterator b = begin();
+			const iterator b = begin();
 			iterator e = end();
 			for (iterator iter = b; iter != e; ++iter)
 			{

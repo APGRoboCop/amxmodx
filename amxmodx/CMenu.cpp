@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -30,9 +32,9 @@ MenuMngr::~MenuMngr()
 	MenuIdEle::uniqueid = 0;
 }
 
-int MenuMngr::findMenuId(const char* name, AMX* amx)
+int MenuMngr::findMenuId(const char* name, AMX* amx) const
 {
-	for (MenuIdEle* b = headid; b; b = b->next)
+	for (const MenuIdEle* b = headid; b; b = b->next)
 	{
 		if ((!amx || !b->amx || amx == b->amx) && strstr(name,b->name.chars()))
 			return b->id;
@@ -43,7 +45,7 @@ int MenuMngr::findMenuId(const char* name, AMX* amx)
 
 int MenuMngr::registerMenuId(const char* n, AMX* a)
 {
-	int id = findMenuId(n, a);
+	const int id = findMenuId(n, a);
 	
 	if (id)
 	{
@@ -60,10 +62,9 @@ void MenuMngr::registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, bo
 	MenuCommand **temp = &headcmd;
 	if (from_new_menu)
 	{
-		MenuCommand *ptr;
 		while (*temp)
 		{
-			ptr = *temp;
+			MenuCommand* ptr = *temp;
 			if (ptr->is_new_menu
 				&& ptr->plugin == a
 				&& ptr->menuid == mi)
@@ -103,7 +104,7 @@ void MenuMngr::clear()
 
 MenuMngr::iterator MenuMngr::SetWatchIter(iterator iter)
 {
-	iterator old = m_watch_iter;
+	const iterator old = m_watch_iter;
 
 	m_watch_iter = iter;
 

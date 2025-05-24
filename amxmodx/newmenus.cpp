@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -39,7 +41,7 @@ void validate_menu_text(char *str)
 			if (*str == '\\')
 			{
 				str++;
-				char c = tolower(*str);
+				const char c = tolower(*str);
 				if (c == 'r' || c == 'w'
 					|| c== 'y' || c == 'd')
 				{
@@ -63,7 +65,7 @@ void validate_menu_text(char *str)
 
 Menu *get_menu_by_id(int id)
 {
-	if (id < 0 || size_t(id) >= g_NewMenus.length() || !g_NewMenus[id])
+	if (id < 0 || static_cast<size_t>(id) >= g_NewMenus.length() || !g_NewMenus[id])
 		return nullptr;
 
 	return g_NewMenus[id];
@@ -163,7 +165,7 @@ size_t Menu::GetItemCount()
 
 size_t Menu::GetPageCount()
 {
-	size_t items = GetItemCount();
+	const size_t items = GetItemCount();
 	if (items_per_page == 0)
 	{
 		return 1;
@@ -174,8 +176,8 @@ size_t Menu::GetPageCount()
 
 int Menu::PagekeyToItem(page_t page, item_t key)
 {
-	size_t start = page * items_per_page;
-	size_t num_pages = GetPageCount();
+	const size_t start = page * items_per_page;
+	const size_t num_pages = GetPageCount();
 
 	if (num_pages == 1 || !items_per_page)
 	{
@@ -221,7 +223,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 		} else if (page == num_pages - 1) {
 			//last page
 			item_t item_tracker = 0; //  tracks how many valid items we have passed so far.
-			size_t remaining = m_Items.length() - start;
+			const size_t remaining = m_Items.length() - start;
 			item_t new_key = key;
 			
 			// For every item that takes up a slot (item or padded blank)
@@ -294,7 +296,7 @@ int Menu::PagekeyToItem(page_t page, item_t key)
 			key = new_key;
 			if (key > items_per_page && (key-items_per_page<=3))
 			{
-				unsigned int num = key - items_per_page - 1;
+				const unsigned int num = key - items_per_page - 1;
 				static int map[] = {MENU_BACK, MENU_MORE, MENU_EXIT};
 				return map[num];
 			} else {
@@ -313,21 +315,21 @@ bool Menu::Display(int player, page_t page)
 		return false;
 
 	static char buffer[2048];
-	int len = ke::SafeSprintf(buffer, sizeof(buffer), "%s", str);
+	const size_t len = ke::SafeSprintf(buffer, sizeof(buffer), "%s", str);
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
 	pPlayer->keys = keys;
 	pPlayer->menu = menuId;
 	pPlayer->newmenu = thisId;
-	pPlayer->page = (int)page;
+	pPlayer->page = static_cast<int>(page);
 
 	UTIL_ShowMenu(pPlayer->pEdict, keys, -1, buffer, len);
 
 	return true;
 }
 
-void Menu::Close(int player) 
+void Menu::Close(int player) const
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
@@ -349,8 +351,8 @@ void Menu::Close(int player)
 
 const char *Menu::GetTextString(int player, page_t page, int &keys)
 {
-	page_t pages = GetPageCount();
-	item_t numItems = GetItemCount();
+	const page_t pages = GetPageCount();
+	const item_t numItems = GetItemCount();
 
 	if (page >= pages)
 		return nullptr;
@@ -362,8 +364,8 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 	if (this->useMultilingual)
 	{
-		const auto language = playerlang(player);
-		const auto definition = translate(this->amx, language, title);
+		const char* language = playerlang(player);
+		const char* definition = translate(this->amx, language, title);
 
 		if (definition)
 		{
@@ -387,7 +389,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	
 	m_Text = m_Text + buffer;
 
-	enum
+	enum : std::uint8_t
 	{
 		Display_Back = (1<<0),
 		Display_Next = (1<<1),
@@ -395,7 +397,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 	int flags = Display_Back|Display_Next;
 
-	item_t start = page * items_per_page;
+	const item_t start = page * items_per_page;
 	item_t end = 0;
 	if (items_per_page)
 	{
@@ -477,8 +479,8 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 		if (this->useMultilingual)
 		{
-			const auto language = playerlang(player);
-			const auto definition = translate(this->amx, language, itemName);
+			const char* language = playerlang(player);
+			const char* definition = translate(this->amx, language, itemName);
 
 			if (definition)
 			{
@@ -529,7 +531,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	if (items_per_page)
 	{
 		/* Pad spaces until we reach the end of the max possible items */
-		for (unsigned int i=(unsigned)slots; i<items_per_page; i++)
+		for (unsigned int i=static_cast<unsigned>(slots); i<items_per_page; i++)
 		{
 			m_Text = m_Text + "\n";
 			option++;
@@ -687,12 +689,12 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 // native menu_create(const title[], const handler[], bool:ml = false);
 static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_title, arg_handler, arg_ml };
+	enum args : std::uint8_t { arg_count, arg_title, arg_handler, arg_ml };
 
 	int length;
-	const auto title    = get_amxstring(amx, params[arg_title], 0, length);
-	const auto handler  = get_amxstring(amx, params[arg_handler], 1, length);
-	const auto callback = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	char* title = get_amxstring(amx, params[arg_title], 0, length);
+	char* handler = get_amxstring(amx, params[arg_handler], 1, length);
+	const int callback = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 
 	if (callback == -1)
 	{
@@ -875,11 +877,11 @@ static cell AMX_NATIVE_CALL menu_items(AMX *amx, cell *params)
 //page indices start at 0!
 static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 {
-	auto handle = params[2];
+	const auto handle = params[2];
 	GETMENU(handle)
 
-	int player = params[1];
-	int page = params[3];
+	const int player = params[1];
+	const int page = params[3];
 	
 	if (player < 1 || player > gpGlobals->maxClients)
 	{
@@ -909,8 +911,8 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 
 	if (g_bmod_cstrike)
 	{
-		enum JoinState { Joined = 0 };
-		enum MenuState { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
+		enum JoinState : std::uint8_t { Joined = 0 };
+		enum MenuState : std::uint8_t { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
 
 		GET_OFFSET("CBasePlayer", m_iJoiningState)
 		GET_OFFSET("CBasePlayer", m_iMenu)
@@ -941,8 +943,8 @@ static cell AMX_NATIVE_CALL menu_find_id(AMX *amx, cell *params)
 {
 	GETMENU(params[1])
 
-	page_t page = static_cast<page_t>(params[2]);
-	item_t key = static_cast<item_t>(params[3]);
+	const page_t page = static_cast<page_t>(params[2]);
+	const item_t key = static_cast<item_t>(params[3]);
 
 	return pMenu->PagekeyToItem(page, key);
 }
@@ -953,7 +955,7 @@ static cell AMX_NATIVE_CALL menu_item_getinfo(AMX *amx, cell *params)
 {
 	GETMENU(params[1])
 
-	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+	const menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
 
 	if (!pItem)
 		return 0;
@@ -979,7 +981,7 @@ static cell AMX_NATIVE_CALL menu_makecallback(AMX *amx, cell *params)
 	int len;
 	char *name = get_amxstring(amx, params[1], 0, len);
 
-	int id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	const int id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 
 	if (id == -1)
 	{
@@ -1079,7 +1081,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 				break;
 			}
 
-			int callback = registerSPForwardByName(amx, str, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+			const int callback = registerSPForwardByName(amx, str, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 			if (callback < 0)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Function %s not present", str);
@@ -1105,7 +1107,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_PERPAGE:
 		{
-			cell count = *get_amxaddr(amx, params[3]);
+			const cell count = *get_amxaddr(amx, params[3]);
 			if (count < 0 || count > 7)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Cannot set %d items per page", count);
@@ -1137,13 +1139,13 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_TITLE:
 		{
-			char *str = get_amxstring(amx, params[3], 0, len);
+			const char *str = get_amxstring(amx, params[3], 0, len);
 			pMenu->m_Title = str;
 			break;
 		}
 	case MPROP_EXITALL:
 		{
-			cell ans = *get_amxaddr(amx, params[3]);
+			const cell ans = *get_amxaddr(amx, params[3]);
 			if (ans == 1 || ans == 0)
 			{
 				pMenu->m_NeverExit = false;
@@ -1189,7 +1191,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 {
-	int index = params[1];
+	const int index = params[1];
 
 	if (index < 1 || index > gpGlobals->maxClients)
 	{
@@ -1197,7 +1199,7 @@ static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 		return 0;
 	}
 
-	CPlayer *player = GET_PLAYER_POINTER_I(index);
+	const CPlayer *player = GET_PLAYER_POINTER_I(index);
 	if (!player->ingame)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game", index);
@@ -1247,7 +1249,7 @@ static cell AMX_NATIVE_CALL player_menu_info(AMX *amx, cell *params)
 		return 0;
 	}
 
-	CPlayer *player = GET_PLAYER_POINTER_I(params[1]);
+	const CPlayer *player = GET_PLAYER_POINTER_I(params[1]);
 	if (!player->ingame)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Player %d is not ingame", params[1]);

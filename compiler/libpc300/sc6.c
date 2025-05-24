@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn compiler - Binary code generation (the "assembler")
  *
  *  Copyright (c) ITB CompuPhase, 1997-2005
@@ -291,7 +293,6 @@ static cell do_call(FILE *fbin,char *params,cell opcode)
 {
   char name[sNAMEMAX+1];
   int i;
-  symbol *sym;
   ucell p;
 
   for (i=0; !isspace(*params); i++,params++) {
@@ -310,10 +311,10 @@ static cell do_call(FILE *fbin,char *params,cell opcode)
       p=lbltab[i];
     } /* if */
   } else {
-    /* look up the function address; note that the correct file number must
+	  /* look up the function address; note that the correct file number must
      * already have been set (in order for static globals to be found).
      */
-    sym=findglb(name);
+	  const symbol* sym = findglb(name);
     assert(sym!=NULL);
     assert(sym->ident==iFUNCTN || sym->ident==iREFFUNC);
     assert(sym->vclass==sGLOBAL);
@@ -329,10 +330,9 @@ static cell do_call(FILE *fbin,char *params,cell opcode)
 
 static cell do_jump(FILE *fbin,char *params,cell opcode)
 {
-  int i;
-  ucell p;
+	ucell p;
 
-  i=(int)hex2long(params,NULL);
+	const int i = (int)hex2long(params,NULL);
   assert(i>=0 && i<sc_labnum);
 
   if (fbin!=NULL) {
@@ -346,10 +346,9 @@ static cell do_jump(FILE *fbin,char *params,cell opcode)
 
 static cell do_switch(FILE *fbin,char *params,cell opcode)
 {
-  int i;
-  ucell p;
+	ucell p;
 
-  i=(int)hex2long(params,NULL);
+	const int i = (int)hex2long(params,NULL);
   assert(i>=0 && i<sc_labnum);
 
   if (fbin!=NULL) {
@@ -366,11 +365,10 @@ static cell do_switch(FILE *fbin,char *params,cell opcode)
 #endif
 static cell do_case(FILE *fbin,char *params,cell opcode)
 {
-  int i;
-  ucell p,v;
+	ucell p,v;
 
   v=hex2long(params,&params);
-  i=(int)hex2long(params,NULL);
+	const int i = (int)hex2long(params,NULL);
   assert(i>=0 && i<sc_labnum);
 
   if (fbin!=NULL) {
@@ -533,8 +531,7 @@ static OPCODE opcodelist[] = {
 #define MAX_INSTR_LEN   30
 static int findopcode(char *instr,int maxlen)
 {
-  int low,high,mid,cmp;
-  char str[MAX_INSTR_LEN];
+	char str[MAX_INSTR_LEN];
 
   if (maxlen>=MAX_INSTR_LEN)
     return 0;
@@ -544,12 +541,12 @@ static int findopcode(char *instr,int maxlen)
    * the assembler is case insensitive to instructions (but case sensitive
    * to symbols)
    */
-  low=1;                /* entry 0 is reserved (for "not found") */
-  high=(sizeof opcodelist / sizeof opcodelist[0])-1;
+  int low = 1;                /* entry 0 is reserved (for "not found") */
+  int high = (sizeof opcodelist / sizeof opcodelist[0]) - 1;
   while (low<high) {
-    mid=(low+high)/2;
+	  const int mid = (low + high) / 2;
     assert(opcodelist[mid].name!=NULL);
-    cmp=stricmp(str,opcodelist[mid].name);
+	  const int cmp = stricmp(str, opcodelist[mid].name);
     if (cmp>0)
       low=mid+1;
     else
@@ -576,7 +573,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   char *instr,*params;
   int i,pass,size;
   int16_t count;
-  symbol *sym, **nativelist;
+  symbol *sym;
   constvalue *constptr;
   cell mainaddr;
 
@@ -640,7 +637,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   if (pc_addlibtable) {
     for (constptr=libname_tab.next; constptr!=NULL; constptr=constptr->next) {
       if (constptr->value>0) {
-        assert(strlen(constptr->name)>0);
+      	assert(constptr->name[0] != '\0');
         numlibraries++;
         nametablesize+=strlen(constptr->name)+1;
       } /* if */
@@ -651,7 +648,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   numtags=0;
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {
     if ((constptr->value & PUBLICTAG)!=0) {
-      assert(strlen(constptr->name)>0);
+      assert(constptr->name[0] != '\0');
       numtags++;
       nametablesize+=strlen(constptr->name)+1;
     } /* if */
@@ -731,7 +728,8 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
    * have all native functions in sorted order.
    */
   if (numnatives>0) {
-    nativelist=(symbol **)malloc(numnatives*sizeof(symbol *));
+	  symbol **nativelist;
+	  nativelist=(symbol **)malloc(numnatives*sizeof(symbol *));
     if (nativelist==NULL)
       error(103);               /* insufficient memory */
     #if !defined NDEBUG
@@ -774,7 +772,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
     count=0;
     for (constptr=libname_tab.next; constptr!=NULL; constptr=constptr->next) {
       if (constptr->value>0) {
-        assert(strlen(constptr->name)>0);
+        assert(constptr->name[0] != '\0');
         func.address=0;
         func.nameofs=nameofs;
         #if BYTE_ORDER==BIG_ENDIAN
@@ -817,7 +815,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   count=0;
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {
     if ((constptr->value & PUBLICTAG)!=0) {
-      assert(strlen(constptr->name)>0);
+      assert(constptr->name[0] != '\0');
       func.address=constptr->value & TAGMASK;
       func.nameofs=nameofs;
       #if BYTE_ORDER==BIG_ENDIAN
@@ -1032,21 +1030,21 @@ static void append_dbginfo(FILE *fout)
 
   /* tag table */
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {
-    assert(strlen(constptr->name)>0);
+    assert(constptr->name[0] != '\0');
     dbghdr.tags++;
     dbghdr.size+=sizeof(AMX_DBG_TAG)+strlen(constptr->name);
   } /* for */
 
   /* automaton table */
   for (constptr=sc_automaton_tab.next; constptr!=NULL; constptr=constptr->next) {
-    assert(constptr->index==0 && strlen(constptr->name)==0 || strlen(constptr->name)>0);
+    assert(constptr->index == 0 && constptr->name[0] == '\0' || constptr->name[0] != '\0');
     dbghdr.automatons++;
     dbghdr.size+=sizeof(AMX_DBG_MACHINE)+strlen(constptr->name);
   } /* for */
 
   /* state table */
   for (constptr=sc_state_tab.next; constptr!=NULL; constptr=constptr->next) {
-    assert(strlen(constptr->name)>0);
+    assert(constptr->name[0] != '\0');
     dbghdr.states++;
     dbghdr.size+=sizeof(AMX_DBG_STATE)+strlen(constptr->name);
   } /* for */
@@ -1133,7 +1131,7 @@ static void append_dbginfo(FILE *fout)
 
   /* tag table */
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {
-    assert(strlen(constptr->name)>0);
+    assert(constptr->name[0] != '\0');
     id1=(int16_t)(constptr->value & TAGMASK);
     writeerror |= !pc_writebin(fout,&id1,sizeof id1);
     writeerror |= !pc_writebin(fout,constptr->name,strlen(constptr->name)+1);
@@ -1141,7 +1139,7 @@ static void append_dbginfo(FILE *fout)
 
   /* automaton table */
   for (constptr=sc_automaton_tab.next; constptr!=NULL; constptr=constptr->next) {
-    assert(constptr->index==0 && strlen(constptr->name)==0 || strlen(constptr->name)>0);
+    assert(constptr->index == 0 && constptr->name[0] == '\0' || constptr->name[0] != '\0');
     id1=(int16_t)constptr->index;
     address=(ucell)constptr->value;
     writeerror |= !pc_writebin(fout,&id1,sizeof id1);
@@ -1151,7 +1149,7 @@ static void append_dbginfo(FILE *fout)
 
   /* state table */
   for (constptr=sc_state_tab.next; constptr!=NULL; constptr=constptr->next) {
-    assert(strlen(constptr->name)>0);
+    assert(constptr->name[0] != '\0');
     id1=(int16_t)constptr->value;
     id2=(int16_t)constptr->index;
     address=(ucell)constptr->value;

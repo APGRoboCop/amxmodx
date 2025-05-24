@@ -195,11 +195,11 @@ class AMXXConfig(object):
 
   def configure_gcc(self, cxx):
     cxx.cflags += [
-	  '-mtune=generic',
+      '-mtune=generic',
       '-pipe',
       '-fno-strict-aliasing',
-	  '-msse4.2',
-	  '-mfpmath=sse',
+      '-msse4.2',
+      '-mfpmath=sse',
       '-Wall',
       '-Werror',
       '-Wno-uninitialized',
@@ -309,7 +309,7 @@ class AMXXConfig(object):
       cxx.linkflags += ['legacy_stdio_definitions.lib', 'legacy_stdio_wide_specifiers.lib']
 
     if builder.options.opt == '1': # /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
-      cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GF']
+      cxx.cflags += ['/O2', '/Zo', '/Ob3', '/GF']
       cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
     if builder.options.debug == '1':

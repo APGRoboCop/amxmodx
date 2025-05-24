@@ -13,13 +13,13 @@
 #include <cstring>
 #include "amxmodx.h"
 
-enum LibSource
+enum LibSource : std::uint8_t
 {
 	LibSource_Plugin,
 	LibSource_Module
 };
 
-enum LibType
+enum LibType : std::uint8_t
 {
 	LibType_Library,
 	LibType_Class
@@ -33,7 +33,7 @@ struct Library
 	void *parent;
 };
 
-enum LibCmd
+enum LibCmd : std::uint8_t
 {
 	LibCmd_ReqLib,
 	LibCmd_ReqClass,
@@ -43,7 +43,7 @@ enum LibCmd
 	LibCmd_DefaultLib,
 };
 
-enum LibError
+enum LibError : std::uint8_t
 {
 	LibErr_None = 0,
 	LibErr_NoLibrary,
@@ -53,9 +53,10 @@ enum LibError
 class LibDecoder
 {
 public:
-	LibDecoder() : buffer(nullptr)
+	LibDecoder() : buffer(nullptr), param1(nullptr), param2(nullptr), cmd()
 	{
 	}
+
 	~LibDecoder()
 	{
 		free(buffer);

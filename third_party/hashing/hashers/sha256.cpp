@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // //////////////////////////////////////////////////////////
 // sha256.cpp
 // Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
@@ -57,15 +59,15 @@ namespace
   // mix functions for processBlock()
   inline uint32_t f1(uint32_t e, uint32_t f, uint32_t g)
   {
-    uint32_t term1 = rotate(e, 6) ^ rotate(e, 11) ^ rotate(e, 25);
-    uint32_t term2 = (e & f) ^ (~e & g); //(g ^ (e & (f ^ g)))
+	  const uint32_t term1 = rotate(e, 6) ^ rotate(e, 11) ^ rotate(e, 25);
+	  const uint32_t term2 = (e & f) ^ (~e & g); //(g ^ (e & (f ^ g)))
     return term1 + term2;
   }
 
   inline uint32_t f2(uint32_t a, uint32_t b, uint32_t c)
   {
-    uint32_t term1 = rotate(a, 2) ^ rotate(a, 13) ^ rotate(a, 22);
-    uint32_t term2 = ((a | b) & c) | (a & b); //(a & (b ^ c)) ^ (b & c);
+	  const uint32_t term1 = rotate(a, 2) ^ rotate(a, 13) ^ rotate(a, 22);
+	  const uint32_t term2 = ((a | b) & c) | (a & b); //(a & (b ^ c)) ^ (b & c);
     return term1 + term2;
   }
 }
@@ -235,7 +237,7 @@ void SHA256::processBlock(const void* data)
 /// add arbitrary number of bytes
 void SHA256::add(const void* data, size_t numBytes)
 {
-  const uint8_t* current = (const uint8_t*) data;
+  const uint8_t* current = static_cast<const uint8_t*>(data);
 
   if (m_bufferSize > 0)
   {
@@ -292,7 +294,7 @@ void SHA256::processBuffer()
   paddedLength++;
 
   // number of bits must be (numBits % 512) = 448
-  size_t lower11Bits = paddedLength & 511;
+  const size_t lower11Bits = paddedLength & 511;
   if (lower11Bits <= 448)
     paddedLength +=       448 - lower11Bits;
   else
@@ -316,7 +318,7 @@ void SHA256::processBuffer()
     extra[i - BlockSize] = 0;
 
   // add message length in bits as 64 bit number
-  uint64_t msgBits = 8 * (m_numBytes + m_bufferSize);
+  const uint64_t msgBits = 8 * (m_numBytes + m_bufferSize);
   // find right position
   unsigned char* addLength;
   if (paddedLength < BlockSize)
@@ -325,14 +327,14 @@ void SHA256::processBuffer()
     addLength = extra + paddedLength - BlockSize;
 
   // must be big endian
-  *addLength++ = (unsigned char)((msgBits >> 56) & 0xFF);
-  *addLength++ = (unsigned char)((msgBits >> 48) & 0xFF);
-  *addLength++ = (unsigned char)((msgBits >> 40) & 0xFF);
-  *addLength++ = (unsigned char)((msgBits >> 32) & 0xFF);
-  *addLength++ = (unsigned char)((msgBits >> 24) & 0xFF);
-  *addLength++ = (unsigned char)((msgBits >> 16) & 0xFF);
-  *addLength++ = (unsigned char)((msgBits >>  8) & 0xFF);
-  *addLength   = (unsigned char)( msgBits        & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 56) & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 48) & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 40) & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 32) & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 24) & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 16) & 0xFF);
+  *addLength++ = static_cast<unsigned char>((msgBits >> 8) & 0xFF);
+  *addLength   = static_cast<unsigned char>(msgBits & 0xFF);
 
   // process blocks
   processBlock(m_buffer);
@@ -352,11 +354,11 @@ const char* SHA256::getHash()
   // convert to hex string
   static char result[64+1];
   size_t written = 0;
-  for (int i = 0; i < HashBytes; i++)
+  for (const unsigned char i : rawHash)
   {
     static const char dec2hex[16+1] = "0123456789abcdef";
-    result[written++] = dec2hex[(rawHash[i] >> 4) & 15];
-    result[written++] = dec2hex[ rawHash[i]       & 15];
+    result[written++] = dec2hex[(i >> 4) & 15];
+    result[written++] = dec2hex[i & 15];
   }
   result[written] = 0;
   return const_cast<const char *>(result);

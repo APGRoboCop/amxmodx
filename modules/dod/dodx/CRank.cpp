@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -154,7 +156,7 @@ RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const cha
 	{         // Otherwise the stats file would be essentially reset.
 	
 		// The IP passed does not contain the port any more for unique
-		size_t iplen = strlen(unique);
+		const size_t iplen = strlen(unique);
 		
 		
 		while ( a )
@@ -166,7 +168,7 @@ RankSystem::RankStats* RankSystem::findEntryInRank(const char* unique, const cha
 				// eg: checking 4.2.2.2 would match 4.2.2.24 here.
 				
 				// Get the next character stored in targetUnique
-				char c = targetUnique[iplen];
+				const char c = targetUnique[iplen];
 				
 				// If c is either a colon or end of line, then this
 				// is a valid match.
@@ -287,19 +289,19 @@ void RankSystem::loadRank(const char* filename)
 
 		while(i && !feof(bfp))
 		{
-			TRYREAD(name, i, sizeof(char), bfp);
-			TRYREAD(&i, 1, sizeof(short int), bfp);
-			TRYREAD(unique, i, sizeof(char) , bfp);
-			TRYREAD(&d.tks, 1, sizeof(int), bfp);
-			TRYREAD(&d.damage, 1, sizeof(int), bfp);
-			TRYREAD(&d.deaths, 1, sizeof(int), bfp);
-			TRYREAD(&d.kills, 1, sizeof(int), bfp);
-			TRYREAD(&d.shots, 1, sizeof(int), bfp);
-			TRYREAD(&d.hits, 1, sizeof(int), bfp);
-			TRYREAD(&d.hs, 1, sizeof(int), bfp);
-			TRYREAD(&d.points, 1, sizeof(int), bfp);
-			TRYREAD(d.bodyHits, 1, sizeof(d.bodyHits), bfp);
-			TRYREAD(&i, 1, sizeof(short int), bfp);
+			TRYREAD(name, i, sizeof(char), bfp)
+			TRYREAD(&i, 1, sizeof(short int), bfp)
+			TRYREAD(unique, i, sizeof(char) , bfp)
+			TRYREAD(&d.tks, 1, sizeof(int), bfp)
+			TRYREAD(&d.damage, 1, sizeof(int), bfp)
+			TRYREAD(&d.deaths, 1, sizeof(int), bfp)
+			TRYREAD(&d.kills, 1, sizeof(int), bfp)
+			TRYREAD(&d.shots, 1, sizeof(int), bfp)
+			TRYREAD(&d.hits, 1, sizeof(int), bfp)
+			TRYREAD(&d.hs, 1, sizeof(int), bfp)
+			TRYREAD(&d.points, 1, sizeof(int), bfp)
+			TRYREAD(d.bodyHits, 1, sizeof(d.bodyHits), bfp)
+			TRYREAD(&i, 1, sizeof(short int), bfp)
 
 			RankStats* a = findEntryInRank( unique , name );
 			if ( a ) a->updatePosition( &d );

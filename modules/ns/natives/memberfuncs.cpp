@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -57,7 +59,7 @@ static cell AMX_NATIVE_CALL ns_recycle(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->free || Entity->pvPrivateData==NULL)
+	if (Entity->free || Entity->pvPrivateData== nullptr)
 	{
 		return 0;
 	}
@@ -72,7 +74,7 @@ static cell AMX_NATIVE_CALL ns_recycle(AMX *amx, cell *params)
 	}
 
 	// Make sure it's a marine building, undefined stuff happens on alien structures
-	(reinterpret_cast<GenericClass *>(Entity->pvPrivateData)->*(MFP_Recycle))();
+	(static_cast<GenericClass *>(Entity->pvPrivateData)->*(MFP_Recycle))();
 	
 
 	return 1;
@@ -81,7 +83,7 @@ static cell AMX_NATIVE_CALL ns_finish_weldable(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->free || Entity->pvPrivateData==NULL)
+	if (Entity->free || Entity->pvPrivateData== nullptr)
 	{
 		return 0;
 	}
@@ -97,7 +99,7 @@ static cell AMX_NATIVE_CALL ns_finish_weldable(AMX *amx, cell *params)
 	// Now make NS think the weldable has been welded again
 	// This has to call AvHWeldable::AddBuildTime(float)
 	// because AvHWeldable::TriggerFinished() does not work properly
-	(reinterpret_cast<GenericClass *>(Entity->pvPrivateData)->*(MFP_WeldFinished))(100.0);
+	(static_cast<GenericClass *>(Entity->pvPrivateData)->*(MFP_WeldFinished))(100.0);
 	
 
 	return 1;
@@ -121,11 +123,11 @@ static cell AMX_NATIVE_CALL ns_get_teamres(AMX *amx, cell *params)
 	{
 	case 1:
 		{
-			return amx_ftoc2(*(REAL *)((char *)GameRules+GAMERULES_TEAMA_RESOURCES));
+			return amx_ftoc2(*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMA_RESOURCES));
 		}
 	case 2:
 		{
-			return amx_ftoc2(*(REAL *)((char *)GameRules+GAMERULES_TEAMB_RESOURCES));
+			return amx_ftoc2(*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMB_RESOURCES));
 		}
 	default:
 		{
@@ -133,7 +135,7 @@ static cell AMX_NATIVE_CALL ns_get_teamres(AMX *amx, cell *params)
 			return 0;
 		}
 	}
-	return 0;
+	//return 0;
 }
 static cell AMX_NATIVE_CALL ns_set_teamres(AMX *amx, cell *params)
 {
@@ -153,12 +155,12 @@ static cell AMX_NATIVE_CALL ns_set_teamres(AMX *amx, cell *params)
 	{
 	case 1:
 		{
-			*(REAL *)((char *)GameRules+GAMERULES_TEAMA_RESOURCES)=amx_ctof2(params[2]);
+			*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMA_RESOURCES)=amx_ctof2(params[2]);
 			return 1;
 		}
 	case 2:
 		{
-			*(REAL *)((char *)GameRules+GAMERULES_TEAMB_RESOURCES)=amx_ctof2(params[2]);
+			*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMB_RESOURCES)=amx_ctof2(params[2]);
 			return 1;
 		}
 	default:
@@ -167,7 +169,7 @@ static cell AMX_NATIVE_CALL ns_set_teamres(AMX *amx, cell *params)
 			return 0;
 		}
 	}
-	return 0;
+	//return 0;
 }
 static cell AMX_NATIVE_CALL ns_add_teamres(AMX *amx, cell *params)
 {
@@ -187,11 +189,11 @@ static cell AMX_NATIVE_CALL ns_add_teamres(AMX *amx, cell *params)
 	{
 	case 1:
 		{
-			return amx_ftoc2(*(REAL *)((char *)GameRules+GAMERULES_TEAMA_RESOURCES)+=amx_ctof2(params[2]));
+			return amx_ftoc2(*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMA_RESOURCES)+=amx_ctof2(params[2]));
 		}
 	case 2:
 		{
-			return amx_ftoc2(*(REAL *)((char *)GameRules+GAMERULES_TEAMB_RESOURCES)+=amx_ctof2(params[2]));
+			return amx_ftoc2(*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMB_RESOURCES)+=amx_ctof2(params[2]));
 		}
 	default:
 		{
@@ -199,7 +201,7 @@ static cell AMX_NATIVE_CALL ns_add_teamres(AMX *amx, cell *params)
 			return 0;
 		}
 	}
-	return 0;
+	//return 0;
 }
 
 #ifdef DEVELOPER_BUILD

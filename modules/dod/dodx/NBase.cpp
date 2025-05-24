@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -14,6 +16,7 @@
 
 #include "amxxmodule.h"
 #include "dodx.h"
+#include "HLTypeConversion.h"
 
 #define WEAPONLIST 71
 
@@ -82,7 +85,7 @@ static cell AMX_NATIVE_CALL get_weapon_name(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL wpnlog_to_name(AMX *amx, cell *params)
 { 
 	int iLen;
-	char *log = MF_GetAmxString(amx,params[1],0,&iLen);
+	const char *log = MF_GetAmxString(amx,params[1],0,&iLen);
 
 	for(int i = 0; i < DODMAX_WEAPONS; i++)
 	{
@@ -96,7 +99,7 @@ static cell AMX_NATIVE_CALL wpnlog_to_name(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL wpnlog_to_id(AMX *amx, cell *params)
 { 
 	int iLen;
-	char *log = MF_GetAmxString(amx, params[1], 0, &iLen);
+	const char *log = MF_GetAmxString(amx, params[1], 0, &iLen);
 
 	for(int i = 0; i < DODMAX_WEAPONS; i++)
 	{
@@ -135,17 +138,17 @@ static cell AMX_NATIVE_CALL is_melee(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_team_score(AMX *amx, cell *params)
 {
-	int index = params[1];
+	const int index = params[1];
 
 	switch ( index )
 	{
 	case 1:
 		return AlliesScore;
-		break;
+		//break;
 
 	case 2:
 		return AxisScore;
-		break;
+		//break;
 	}
 	return 0;
 }
@@ -153,7 +156,7 @@ static cell AMX_NATIVE_CALL get_team_score(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_user_score(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame)
@@ -165,8 +168,8 @@ static cell AMX_NATIVE_CALL get_user_score(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_user_class(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame)
 		return pPlayer->pEdict->v.playerclass;
@@ -177,7 +180,7 @@ static cell AMX_NATIVE_CALL get_user_class(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL user_kill(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if(pPlayer->ingame && pPlayer->IsAlive())
@@ -195,15 +198,15 @@ static cell AMX_NATIVE_CALL get_map_info(AMX *amx, cell *params)
 	{
 	case 0:
 		return g_map.detect_allies_country;
-		break;
+		//break;
 
 	case 1:
 		return g_map.detect_allies_paras;
-		break;
+		//break;
 
 	case 2:
 		return g_map.detect_axis_paras;
-		break;
+		//break;
 
 	default:
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid map info id %d", params[1]);
@@ -215,8 +218,8 @@ static cell AMX_NATIVE_CALL get_map_info(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_user_pronestate(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame)
 			return pPlayer->pEdict->v.iuser3;
@@ -227,7 +230,7 @@ static cell AMX_NATIVE_CALL get_user_pronestate(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame)
@@ -249,7 +252,7 @@ static cell AMX_NATIVE_CALL dod_weapon_type(AMX *amx, cell *params) /* 2 params 
 	int index = params[1];
 	int type = params[2];
 
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	if(type < DODWT_PRIMARY || type > DODWT_OTHER)
 	{
@@ -257,7 +260,7 @@ static cell AMX_NATIVE_CALL dod_weapon_type(AMX *amx, cell *params) /* 2 params 
 		return 0;
 	}
 
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if(pPlayer->ingame)
 	{
@@ -340,8 +343,8 @@ static cell AMX_NATIVE_CALL register_cwpn(AMX *amx, cell *params)
 		return 0;
 
 	int iLen;
-	char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
-	char *szLogName = MF_GetAmxString(amx, params[3], 0, &iLen);
+	const char *szName = MF_GetAmxString(amx, params[1], 0, &iLen);
+	const char *szLogName = MF_GetAmxString(amx, params[3], 0, &iLen);
 
 	strcpy(weaponData[i].name,szName);
 	strcpy(weaponData[i].logname,szLogName);
@@ -363,10 +366,10 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params)
 	}
 
 	int att = params[2];
-	CHECK_PLAYER(params[2]);
+	CHECK_PLAYER(params[2])
 
 	int vic = params[3];
-	CHECK_PLAYER(params[3]);
+	CHECK_PLAYER(params[3])
 	
 	int dmg = params[4];
 	if(dmg<1)
@@ -385,7 +388,7 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params)
 	CPlayer* pAtt = GET_PLAYER_POINTER_I(att);
 	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
 
-	pVic->pEdict->v.dmg_inflictor = NULL;
+	pVic->pEdict->v.dmg_inflictor = nullptr;
 
 	if(!pAtt) 
 		pAtt = pVic;
@@ -415,7 +418,7 @@ static cell AMX_NATIVE_CALL cwpn_shot(AMX *amx, cell *params)
 { 
 	int index = params[2];
 
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	int weapon = params[1];
 	if(weapon < DODMAX_WEAPONS-DODMAX_CUSTOMWPNS)
@@ -455,9 +458,9 @@ static cell AMX_NATIVE_CALL is_custom(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params)
 { 
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	return pPlayer->pEdict->v.team;
 
 }
@@ -466,9 +469,9 @@ static cell AMX_NATIVE_CALL dod_get_user_team(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params)
 { 
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	int iTeam = pPlayer->pEdict->v.team; 
 
 	if ( params[3] )
@@ -493,7 +496,7 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL dod_set_model(AMX *amx, cell *params) // player,model
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if(!pPlayer->ingame)
@@ -511,7 +514,7 @@ static cell AMX_NATIVE_CALL dod_set_model(AMX *amx, cell *params) // player,mode
 static cell AMX_NATIVE_CALL dod_set_body(AMX *amx, cell *params) // player,bodynumber
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if(!pPlayer->ingame)
@@ -528,7 +531,7 @@ static cell AMX_NATIVE_CALL dod_set_body(AMX *amx, cell *params) // player,bodyn
 static cell AMX_NATIVE_CALL dod_clear_model(AMX *amx, cell *params) // player
 {
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if(!pPlayer->ingame)
@@ -563,12 +566,12 @@ static cell AMX_NATIVE_CALL dod_weaponlist(AMX *amx, cell *params) // player
 	int id = params[1];
 	int wpnID = params[2];
 	int slot = params[3];
-	int position = params[4];
-	int totalrds = params[5];
+	const int position = params[4];
+	const int totalrds = params[5];
 
 	UTIL_LogPrintf("ID (%d) WpnID (%d) Slot (%d) Pos (%d) Rounds (%d)", id, wpnID, slot, position, totalrds);
 
-	CHECK_PLAYER(id);
+	CHECK_PLAYER(id)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(id);
 	if(!pPlayer->ingame)
@@ -577,7 +580,7 @@ static cell AMX_NATIVE_CALL dod_weaponlist(AMX *amx, cell *params) // player
 		return 0;
 	}
 	
-	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "WeaponList", NULL), NULL, pPlayer->pEdict);
+	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "WeaponList", nullptr), nullptr, pPlayer->pEdict);
 	WRITE_BYTE(weaponlist[wpnID].grp);
 		WRITE_BYTE(totalrds);
 		WRITE_BYTE(-1);

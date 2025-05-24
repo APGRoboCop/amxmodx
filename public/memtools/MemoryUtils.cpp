@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /**
  * vim: set ts=4 sw=4 tw=99 noet :
  * =============================================================================
@@ -28,8 +30,8 @@
  */
 
 #include "MemoryUtils.h"
-#include <stdio.h> // sscanf
-#include <stdarg.h> // va_start, etc.
+#include <cstdio> // sscanf
+#include <cstdarg> // va_start, etc.
 
 #if defined(__linux__)
 	#include <fcntl.h>
@@ -105,35 +107,33 @@ MemoryUtils::~MemoryUtils()
 void *MemoryUtils::DecodeAndFindPattern(const void *libPtr, const char *pattern)
 {
 	unsigned char real_sig[511];
-	size_t real_bytes = DecodeHexString(real_sig, sizeof(real_sig), pattern);
+	const size_t real_bytes = DecodeHexString(real_sig, sizeof(real_sig), pattern);
 
 	if (real_bytes >= 1)
 	{
 		return FindPattern(libPtr, (char*)real_sig, real_bytes);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void *MemoryUtils::FindPattern(const void *libPtr, const char *pattern, size_t len)
 {
 	DynLibInfo lib;
-	bool found;
-	char *ptr, *end;
 
 	memset(&lib, 0, sizeof(DynLibInfo));
 
 	if (!GetLibraryInfo(libPtr, lib))
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	ptr = reinterpret_cast<char *>(lib.baseAddress);
-	end = ptr + lib.memorySize - len;
+	char* ptr = static_cast<char*>(lib.baseAddress);
+	const char* end = ptr + lib.memorySize - len;
 
 	while (ptr < end)
 	{
-		found = true;
+		bool found = true;
 		for (size_t i = 0; i < len; i++)
 		{
 			if (pattern[i] != '\x2A' && pattern[i] != ptr[i])
@@ -149,7 +149,7 @@ void *MemoryUtils::FindPattern(const void *libPtr, const char *pattern, size_t l
 		ptr++;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void *MemoryUtils::ResolveSymbol(void *handle, const char *symbol)
@@ -453,7 +453,7 @@ bool MemoryUtils::GetLibraryInfo(const void *libPtr, DynLibInfo &lib)
 {
 	uintptr_t baseAddr;
 
-	if (libPtr == NULL)
+	if (libPtr == nullptr)
 	{
 		return false;
 	}
@@ -658,11 +658,11 @@ bool MemoryUtils::GetLibraryOfAddress(const void *libPtr, char *buffer, size_t m
 	{
 		return false;
 	}
-	if (mem.AllocationBase == NULL)
+	if (mem.AllocationBase == nullptr)
 	{
 		return false;
 	}
-	HMODULE dll = (HMODULE)mem.AllocationBase;
+	const HMODULE dll = (HMODULE)mem.AllocationBase;
 	GetModuleFileName(dll, (LPTSTR)buffer, maxlength);
 	if (base)
 	{
@@ -677,7 +677,7 @@ bool MemoryUtils::GetLibraryOfAddress(const void *libPtr, char *buffer, size_t m
 size_t MemoryUtils::DecodeHexString(unsigned char *buffer, size_t maxlength, const char *hexstr)
 {
 	size_t written = 0;
-	size_t length = strlen(hexstr);
+	const size_t length = strlen(hexstr);
 
 	for (size_t i = 0; i < length; i++)
 	{
@@ -692,13 +692,13 @@ size_t MemoryUtils::DecodeHexString(unsigned char *buffer, size_t maxlength, con
 
 			/* Get the hex part. */
 			char s_byte[3];
-			int r_byte;
+			unsigned char r_byte;
 			s_byte[0] = hexstr[i + 2];
 			s_byte[1] = hexstr[i + 3];
 			s_byte[2] = '\0';
 
 			/* Read it as an integer */
-			sscanf(s_byte, "%x", &r_byte);
+			sscanf(s_byte, "%2hhx", &r_byte);
 
 			/* Save the value */
 			buffer[written - 1] = r_byte;
@@ -715,7 +715,7 @@ size_t MemoryUtils::Format(char *buffer, size_t maxlength, const char *fmt, ...)
 {
 	va_list ap;
 	va_start(ap, fmt);
-	size_t len = vsnprintf(buffer, maxlength, fmt, ap);
+	const size_t len = vsnprintf(buffer, maxlength, fmt, ap);
 	va_end(ap);
 
 	if (len >= maxlength)

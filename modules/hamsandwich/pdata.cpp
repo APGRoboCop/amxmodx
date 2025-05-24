@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -48,7 +50,7 @@
 static cell AMX_NATIVE_CALL get_pdata_cbase_safe(AMX *amx, cell *params)
 {
 	int index=params[1];
-	FM_CHECK_ENTITY(index);
+	FM_CHECK_ENTITY(index)
 	int iOffset=params[2];
 #ifdef __linux__
 	iOffset += params[3];
@@ -85,7 +87,7 @@ static cell AMX_NATIVE_CALL get_pdata_cbase_safe(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_cbase(AMX *amx, cell *params)
 {
 	int index=params[1];
-	FM_CHECK_ENTITY(index);
+	FM_CHECK_ENTITY(index)
 	int iOffset=params[2];
 #ifdef __linux__
 	iOffset += params[3];
@@ -110,12 +112,12 @@ static cell AMX_NATIVE_CALL get_pdata_cbase(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_cbase(AMX *amx, cell *params)
 {
 	int index=params[1];
-	FM_CHECK_ENTITY(index);
+	FM_CHECK_ENTITY(index)
 	int target=params[3];
 
 	if (target != -1)
 	{
-		FM_CHECK_ENTITY(target);
+		FM_CHECK_ENTITY(target)
 	}
 	int iOffset=params[2];
 #ifdef __linux__

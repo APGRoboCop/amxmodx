@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -175,7 +177,7 @@ static cell AMX_NATIVE_CALL ns_user_slap(AMX *amx, cell *params) /* 2 param */
 				fang[0] = vang.x;
 				fang[1] = vang.y;
 				fang[2] = vang.z;
-				ANGLEVECTORS( fang, v_forward, v_right, NULL );
+				ANGLEVECTORS( fang, v_forward, v_right, nullptr);
 				player->GetPev()->velocity = player->GetPev()->velocity + v_forward * 220 + Vector(0,0,200);
 			}
 			player->GetPev()->punchangle.x = RANDOM_LONG(-10,10);
@@ -302,7 +304,7 @@ static cell AMX_NATIVE_CALL ns_popup(AMX *amx, cell *params)
 			return 0;
 		}
 
-		MESSAGE_BEGIN(MSG_ONE,GameMan.GetHudText2(),NULL,player->GetEdict());
+		MESSAGE_BEGIN(MSG_ONE,GameMan.GetHudText2(), nullptr,player->GetEdict());
 	}
 	else
 	{
@@ -371,7 +373,7 @@ inline int GetPlayerHullSize(CPlayer *Player, int PlayerClass)
 		return -1;
 
 	}
-	return -1;
+	//return -1;
 }
 static cell AMX_NATIVE_CALL ns_unstick_player(AMX *amx, cell *params)
 {
@@ -410,12 +412,11 @@ static cell AMX_NATIVE_CALL ns_unstick_player(AMX *amx, cell *params)
 
 	Vector NewOrigin;
 	int Distance=params[2];
-	int Attempts;
 	TraceResult Result;
 
 	while (Distance < 1000)
 	{
-		Attempts=params[3];
+		int Attempts = params[3];
 
 		while (Attempts--)
 		{
@@ -445,23 +446,23 @@ static cell AMX_NATIVE_CALL ns_takedamage(AMX *amx, cell *params)
 	// NASTY
 	// Reinterprets pvPrivateData as CBaseEntity, then calls TakeDamage with the entvar of Inflictor, and Attacker, with the float value and damage type
 	// The NS offset of TakeDamage hasn't changed from the HLSDK fortunately, so no offset digging is necessary
-	return (reinterpret_cast<CBaseEntity *>(INDEXENT_NEW(params[1])->pvPrivateData))->TakeDamage(&(INDEXENT_NEW(params[2])->v),&(INDEXENT_NEW(params[3])->v),amx_ctof2(params[4]),static_cast<int>(params[5]));
+	return (static_cast<CBaseEntity *>(INDEXENT_NEW(params[1])->pvPrivateData))->TakeDamage(&(INDEXENT_NEW(params[2])->v),&(INDEXENT_NEW(params[3])->v),amx_ctof2(params[4]),static_cast<int>(params[5]));
 }
 
 static cell AMX_NATIVE_CALL ns_get_gameplay(AMX* amx, cell* params)
 {
 	if (avhgameplay == nullptr)
 	{
-		avhgameplay = FIND_ENTITY_BY_CLASSNAME(NULL, "avhgameplay");
+		avhgameplay = FIND_ENTITY_BY_CLASSNAME(nullptr, "avhgameplay");
 	}
 	if (avhgameplay == nullptr ||
-		avhgameplay->pvPrivateData == NULL) // Still null? Get out of here
+		avhgameplay->pvPrivateData == nullptr) // Still null? Get out of here
 	{
 		return NSGame_CantTell;
 	}
 
-	int ATeam /* i pity da foo */ = *reinterpret_cast<int*>(reinterpret_cast<char*>(avhgameplay->pvPrivateData) + MAKE_OFFSET(GAMEPLAY_TEAMA));
-	int BTeam = *reinterpret_cast<int*>(reinterpret_cast<char*>(avhgameplay->pvPrivateData) + MAKE_OFFSET(GAMEPLAY_TEAMB));
+	int ATeam /* i pity da foo */ = *reinterpret_cast<int*>(static_cast<char*>(avhgameplay->pvPrivateData) + MAKE_OFFSET(GAMEPLAY_TEAMA));
+	int BTeam = *reinterpret_cast<int*>(static_cast<char*>(avhgameplay->pvPrivateData) + MAKE_OFFSET(GAMEPLAY_TEAMB));
 
 	if (ATeam == 2 &&	// alien
 		BTeam == 2)		// alien

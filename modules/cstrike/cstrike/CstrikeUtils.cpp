@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -52,7 +54,7 @@ bool UTIL_CheckForPublic(const char *publicname)
 
 void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength)
 {
-	auto length = ke::Min(strlen(str), maxlength - 1);
+	const unsigned length = ke::Min(strlen(str), maxlength - 1);
 
 	for (size_t i = 0; i < length; ++i)
 	{

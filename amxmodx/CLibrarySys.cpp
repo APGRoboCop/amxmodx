@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -64,7 +66,7 @@ CDirectory::~CDirectory()
 	}
 }
 
-DirHandle CDirectory::GetHandle()
+DirHandle CDirectory::GetHandle() const
 {
 	return m_dir;
 }
@@ -94,7 +96,7 @@ bool CDirectory::IsEntryValid()
 	return IsValid();
 }
 
-bool CDirectory::IsEntryDirectory()
+bool CDirectory::IsEntryDirectory() const
 {
 #if defined PLATFORM_WINDOWS
 
@@ -110,7 +112,7 @@ bool CDirectory::IsEntryDirectory()
 #endif
 }
 
-bool CDirectory::IsEntryFile()
+bool CDirectory::IsEntryFile() const
 {
 #if defined PLATFORM_WINDOWS
 
@@ -126,7 +128,7 @@ bool CDirectory::IsEntryFile()
 #endif
 }
 
-const char* CDirectory::GetEntryName()
+const char* CDirectory::GetEntryName() const
 {
 #if defined PLATFORM_WINDOWS
 
@@ -144,7 +146,7 @@ bool CDirectory::MoreFiles()
 	return IsValid();
 }
 
-bool CDirectory::IsValid()
+bool CDirectory::IsValid() const
 {
 #if defined PLATFORM_WINDOWS
 
@@ -161,15 +163,15 @@ bool CDirectory::IsValid()
 /* Library Code */
 /****************/
 
-CLibrary::CLibrary(ke::RefPtr<ke::SharedLib> lib) : lib_(lib)
+CLibrary::CLibrary(const ke::RefPtr<ke::SharedLib>& lib) : lib_(lib)
 {}
 
-void CLibrary::CloseLibrary()
+void CLibrary::CloseLibrary() const
 {
 	delete this;
 }
 
-void *CLibrary::GetSymbolAddress(const char* symname)
+void *CLibrary::GetSymbolAddress(const char* symname) const
 {
 	return lib_->lookup(symname);
 }
@@ -209,7 +211,7 @@ CDirectory *LibrarySystem::OpenDirectory(const char* path)
 
 CLibrary* LibrarySystem::OpenLibrary(const char* path, char* error, size_t maxlength)
 {
-	ke::RefPtr<ke::SharedLib> lib = ke::SharedLib::Open(path, error, maxlength);
+	const ke::RefPtr<ke::SharedLib> lib = ke::SharedLib::Open(path, error, maxlength);
 
 	if (!lib)
 	{
@@ -253,7 +255,7 @@ size_t LibrarySystem::PathFormat(char* buffer, size_t len, const char* fmt, ...)
 {
 	va_list ap;
 	va_start(ap, fmt);
-	size_t mylen = ke::path::FormatVa(buffer, len, fmt, ap);
+	const size_t mylen = ke::path::FormatVa(buffer, len, fmt, ap);
 	va_end(ap);
 
 	return mylen;
@@ -273,9 +275,7 @@ char* LibrarySystem::PathFormat(const char* fmt, ...)
 
 const char* LibrarySystem::GetFileExtension(const char* filename)
 {
-	size_t len, end;
-
-	len = strlen(filename);
+	const size_t len = strlen(filename);
 
 	/* Minimum string length for filename with ext would be 3; example: a.a */
 	if (len < 3)
@@ -283,7 +283,7 @@ const char* LibrarySystem::GetFileExtension(const char* filename)
 		return nullptr;
 	}
 
-	end = len - 1;
+	const size_t end = len - 1;
 
 	for (size_t i = end; i <= end; i--)
 	{
@@ -308,7 +308,7 @@ bool LibrarySystem::CreateFolder(const char* path)
 
 size_t LibrarySystem::GetFileFromPath(char* buffer, size_t maxlength, const char* path)
 {
-	size_t length = strlen(path);
+	const size_t length = strlen(path);
 
 	for (size_t i = length - 1; i <= length - 1; i--)
 	{

@@ -26,7 +26,7 @@
 #define RELOAD_MODULE 0
 #define STATIC_MODULE 1
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	Player_Name,		//String
 	Player_Ip,			//String

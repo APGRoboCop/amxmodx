@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -16,19 +18,19 @@
 #include "tfcx.h"
 
 traceVault traceData[] = {
-	{ "timer","ti", TFC_WPN_TIMER,ACT_NADE_NONE, 2.0 , 0 , 2 },
-	{ "caltrop","ca", TFC_WPN_CALTROP, ACT_NADE_SHOT,0.0 , 0 , 2 },
-	{ "tf_rpg_rocket","roc", TFC_WPN_RPG,ACT_NADE_PUT, 2.0 , 7 , 3 },
-	{ "tf_gl_grenade","gl_g", TFC_WPN_GL, ACT_NADE_PUT, 2.0 , 3 , 4 },
-	{ "tf_gl_pipebomb","gl_p", TFC_WPN_PL, ACT_NADE_PUT, 2.0 , 3 , 4 }, 
-	{ "tf_weapon_gasgrenade","ga", TFC_WPN_GASGRENADE, ACT_NADE_SHOT, 0.0 , 10 , 2 },
-	{ "tf_weapon_empgrenade","em", TFC_WPN_EMPGRENADE, ACT_NADE_SHOT, 0.0 , 10 , 2 },
-	{ "tf_weapon_mirvbomblet","mirvb", TFC_WPN_MIRVGRENADE,ACT_NADE_PUT, 2.0 , 10 , 5 },
-	{ "tf_weapon_nailgrenade","nai", TFC_WPN_NAILGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 , 10 , 3 },
-	{ "tf_weapon_mirvgrenade","mirvg", TFC_WPN_MIRVGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 , 10 , 5 },
-	{ "tf_weapon_napalmgrenade","nap", TFC_WPN_NAPALMGRENADE, ACT_NADE_SHOT, 0.0 , 10 , 3 },
-	{ "tf_weapon_normalgrenade","no", TFC_WPN_NORMALGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0 , 10 , 2 },
-	{ "tf_weapon_concussiongrenade","co", TFC_WPN_CONCUSSIONGRENADE, ACT_NADE_NONE, 0.0 , 10 , 2 },
+	{ "timer","ti", TFC_WPN_TIMER,ACT_NADE_NONE, 2.0f , 0 , 2 },
+	{ "caltrop","ca", TFC_WPN_CALTROP, ACT_NADE_SHOT,0.0f , 0 , 2 },
+	{ "tf_rpg_rocket","roc", TFC_WPN_RPG,ACT_NADE_PUT, 2.0f , 7 , 3 },
+	{ "tf_gl_grenade","gl_g", TFC_WPN_GL, ACT_NADE_PUT, 2.0f , 3 , 4 },
+	{ "tf_gl_pipebomb","gl_p", TFC_WPN_PL, ACT_NADE_PUT, 2.0f , 3 , 4 }, 
+	{ "tf_weapon_gasgrenade","ga", TFC_WPN_GASGRENADE, ACT_NADE_SHOT, 0.0f , 10 , 2 },
+	{ "tf_weapon_empgrenade","em", TFC_WPN_EMPGRENADE, ACT_NADE_SHOT, 0.0f , 10 , 2 },
+	{ "tf_weapon_mirvbomblet","mirvb", TFC_WPN_MIRVGRENADE,ACT_NADE_PUT, 2.0f , 10 , 5 },
+	{ "tf_weapon_nailgrenade","nai", TFC_WPN_NAILGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0f , 10 , 3 },
+	{ "tf_weapon_mirvgrenade","mirvg", TFC_WPN_MIRVGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0f , 10 , 5 },
+	{ "tf_weapon_napalmgrenade","nap", TFC_WPN_NAPALMGRENADE, ACT_NADE_SHOT, 0.0f , 10 , 3 },
+	{ "tf_weapon_normalgrenade","no", TFC_WPN_NORMALGRENADE, ACT_NADE_SHOT|ACT_NADE_PUT, 2.0f , 10 , 2 },
+	{ "tf_weapon_concussiongrenade","co", TFC_WPN_CONCUSSIONGRENADE, ACT_NADE_NONE, 0.0f , 10 , 2 },
 };
 
 bool ignoreBots (edict_t *pEnt, edict_t *pOther)

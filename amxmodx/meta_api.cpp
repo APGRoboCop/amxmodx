@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -39,10 +41,10 @@ plugin_info_t Plugin_info =
 {
 	META_INTERFACE_VERSION,		// ifvers
 	"AMX Mod X",				// name
-	AMXX_VERSION,			// version
+	AMXX_VERSION,				// version
 	__DATE__,					// date
 	"AMX Mod X Dev Team",		// author
-	"http://www.amxmodx.org",	// url
+	"www.amxmodx.org",			// url
 	"AMXX",						// logtag
 	PT_STARTUP,					// (when) loadable
 	PT_ANYTIME,					// (when) unloadable
@@ -472,7 +474,7 @@ int	C_Spawn(edict_t *pent)
 	// Set some info about amx version and modules
 	CVAR_SET_STRING(init_amxmodx_version.name, AMXX_VERSION);
 	char buffer[32];
-	sprintf(buffer, "%d", loaded);
+	snprintf(buffer, sizeof(buffer), "%d", loaded);
 	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
 	// ###### Load Vault
@@ -594,7 +596,7 @@ int	C_RegUserMsg_Post(const char *pszName, int iSize)
 	{
 		if (strcmp(g_user_msg[i].name, pszName) == 0)
 		{
-			int id = META_RESULT_ORIG_RET(int);
+			const int id = META_RESULT_ORIG_RET(int);
 			*g_user_msg[i].id =	id;
 
 			if (!g_user_msg[i].cstrike || g_bmod_cstrike)
@@ -716,7 +718,7 @@ void C_ServerDeactivate()
 
 		if (pPlayer->ingame)
 		{
-			auto wasDisconnecting = pPlayer->disconnecting;
+			const auto wasDisconnecting = pPlayer->disconnecting;
 
 			pPlayer->Disconnect();
 			--g_players_num;
@@ -829,7 +831,11 @@ void C_ServerDeactivate_Post()
 			while (true)
 			{
 				char buffer[256];
-				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
+				snprintf(buffer, sizeof(buffer), "%s/memreports/D%02d%02d%03d",
+					get_localinfo("amxx_basedir", "addons/amxmodx"),
+					curTime->tm_mon + 1,
+					curTime->tm_mday,
+					i);
 #if defined(__linux__) || defined(__APPLE__)
 				mkdir(build_pathname("%s", g_log_dir.chars()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
@@ -873,7 +879,7 @@ void C_ServerDeactivate_Post()
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
+BOOL C_ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
 {
 	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
 	if (!pPlayer->IsBot())
@@ -906,9 +912,9 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
-BOOL C_ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
+BOOL C_ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
 {
-	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
 
 	if(executeForwards(FF_ClientConnectEx, pPlayer->index, pszName, pszAddress, prepareCharArray(szRejectReason, 128, true)))
 		RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
@@ -936,7 +942,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 		--g_players_num;
 	}
 
-	auto wasDisconnecting = pPlayer->disconnecting;
+	const auto wasDisconnecting = pPlayer->disconnecting;
 
 	pPlayer->Disconnect();
 
@@ -995,7 +1001,7 @@ void SV_DropClient_RH(IRehldsHook_SV_DropClient *chain, IGameClient *cl, bool cr
 	char buffer[1024];
 	ke::SafeStrcpy(buffer, sizeof(buffer), format);
 
-	auto pPlayer = SV_DropClient_PreHook(cl->GetEdict(), crash, buffer, ARRAY_LENGTH(buffer));
+	const auto pPlayer = SV_DropClient_PreHook(cl->GetEdict(), crash, buffer, ARRAY_LENGTH(buffer));
 
 	chain->callNext(cl, crash, buffer);
 
@@ -1070,16 +1076,16 @@ void C_ClientCommand(edict_t *pEntity)
 		{
 			// Print version
 			static char buf[1024];
-			size_t len = 0;
+			size_t len;
 
-			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
+			snprintf(buf, sizeof(buf), "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);
 			len = sprintf(buf, "Authors: \n         David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
 			len += sprintf(&buf[len], "         Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
 			CLIENT_PRINT(pEntity, print_console, buf);
 			len = sprintf(buf, "         Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
 			len += sprintf(&buf[len], "         Scott \"DS\" Ehlert\n");
-			len += sprintf(&buf[len], "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
+			len += sprintf(&buf[len], "Compiled: %s\nURL:www.amxmodx.org\n", __DATE__ ", " __TIME__);
 			CLIENT_PRINT(pEntity, print_console, buf);
 #ifdef JIT
 			sprintf(buf, "Core mode: JIT\n");
@@ -1121,14 +1127,14 @@ void C_ClientCommand(edict_t *pEntity)
 
 	if (!strcmp(cmd, "menuselect"))
 	{
-		int	pressed_key	= atoi(arg) - 1;
-		int	bit_key	= (1<<pressed_key);
+		const int	pressed_key	= atoi(arg) - 1;
+		const int	bit_key	= (1<<pressed_key);
 
 		if (pPlayer->keys &	bit_key)
 		{
 			if (gpGlobals->time > pPlayer->menuexpire)
 			{
-				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+				if (const Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
 				{
 					pMenu->Close(pPlayer->index);
 
@@ -1224,7 +1230,7 @@ void C_StartFrame_Post()
 		size_t i = 0;
 		while (i < g_auth.length())
 		{
-			auto player = g_auth[i].get();
+			const auto player = g_auth[i].get();
 			const char*	auth = GETPLAYERAUTHID((*player)->pEdict);
 
 			if ((auth == nullptr) || (*auth == 0))
@@ -1654,7 +1660,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	g_coloredmenus = ColoredMenus(g_mod_name.chars()); // whether or not to use colored menus
 
 	// ###### Print short GPL
-	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2015 AMX Mod X Development Team \n"
+	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2024 AMX Mod X Development Team \n"
 					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMXX_VERSION);
 	print_srvconsole("   This is free software and you are welcome to redistribute it under \n"
 					 "   certain conditions; type 'amxx gpl' for details.\n  \n");

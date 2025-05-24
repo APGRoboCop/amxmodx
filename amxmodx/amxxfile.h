@@ -38,7 +38,7 @@ struct BinHeader
 class CAmxxReader
 {
 public:
-	enum Error
+	enum Error : std::uint8_t
 	{
 		Err_None=0,
 		Err_InvalidParam,
@@ -67,7 +67,7 @@ public:
 	CAmxxReader(const char *filename, int cellsize);
 	~CAmxxReader();
 
-	Error GetStatus();						// Get the current status
+	Error GetStatus() const;						// Get the current status
 	size_t GetBufferSize();					// Get the size for the buffer
 	Error GetSection(void *buffer);			// Copy the currently selected section to the buffer
 	inline bool IsOldFile() const { return m_OldFile; }

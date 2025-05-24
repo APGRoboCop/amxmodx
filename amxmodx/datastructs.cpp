@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -18,7 +20,7 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 {
 	// params[1] (cellsize) is how big in cells each element is.
 	// this MUST be greater than 0!
-	int cellsize = params[1];
+	const int cellsize = params[1];
 
 	// params[2] (reserved) is how many elements to allocate
 	// immediately when the list is created.
@@ -57,7 +59,7 @@ static cell AMX_NATIVE_CALL ArrayClear(AMX* amx, cell* params)
 // native ArraySize(Array:which);
 static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -99,7 +101,7 @@ static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
 		return 0;
 	}
 
-	auto data = vec->clone();
+	const auto data = vec->clone();
 
 	if (!data)
 	{
@@ -113,7 +115,7 @@ static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
 // native ArrayGetArray(Array:which, item, any:output[], size = -1);
 static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -121,7 +123,7 @@ static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	const size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -129,12 +131,12 @@ static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 		return 0;
 	}
 
-	cell *blk = vec->at(idx);
+	const cell *blk = vec->at(idx);
 	size_t indexes = vec->blocksize();
 
 	if (*params / sizeof(cell) == 4)
 	{
-		if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+		if (params[4] != -1 && static_cast<size_t>(params[4]) <= vec->blocksize())
 		{
 			indexes = params[4];
 		}
@@ -150,7 +152,7 @@ static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 // native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
 static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -158,7 +160,7 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -173,7 +175,7 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 		return *blk;
 	}
 
-	idx = (size_t)params[3];
+	idx = static_cast<size_t>(params[3]);
 
 	if (!params[4])
 	{
@@ -196,13 +198,13 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 		return *((char *)blk + idx);
 	}
 
-	return 0;
+	//return 0;
 }
 
 // native ArrayGetString(Array:which, item, output[], size);
 static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -210,7 +212,7 @@ static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	const size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -225,7 +227,7 @@ static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
 // native ArraySetArray(Array:which, item, const any:input[], size =-1);
 static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -233,7 +235,7 @@ static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	const size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -246,13 +248,13 @@ static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 
 	if (*params / sizeof(cell) == 4)
 	{
-		if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+		if (params[4] != -1 && static_cast<size_t>(params[4]) <= vec->blocksize())
 		{
 			indexes = params[4];
 		}
 	}
 
-	cell *addr = get_amxaddr(amx, params[3]);
+	const cell *addr = get_amxaddr(amx, params[3]);
 
 	memcpy(blk, addr, sizeof(cell) * indexes);
 
@@ -262,7 +264,7 @@ static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 // native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false);
 static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -270,7 +272,7 @@ static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -279,7 +281,7 @@ static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 	}
 
 	cell *blk = vec->at(idx);
-	idx = (size_t)params[4];
+	idx = static_cast<size_t>(params[4]);
 
 	if (*params / sizeof(cell) <= 3)
 	{
@@ -303,7 +305,7 @@ static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 			LogError(amx, AMX_ERR_NATIVE, "Invalid byte %d (blocksize: %d bytes)", idx, vec->blocksize() * 4);
 			return 0;
 		}
-		*((char *)blk + idx) = (char)params[3];
+		*((char *)blk + idx) = static_cast<char>(params[3]);
 	}
 
 	return 1;
@@ -312,7 +314,7 @@ static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 // native ArraySetString(Array:which, item, const input[]);
 static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -320,7 +322,7 @@ static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	const size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -331,9 +333,9 @@ static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
 	cell *blk = vec->at(idx);
 
 	int len;
-	char *str = get_amxstring(amx, params[3], 0, len);
+	const char *str = get_amxstring(amx, params[3], 0, len);
 
-	return strncopy(blk, str, ke::Min((size_t)len + 1, vec->blocksize()));
+	return strncopy(blk, str, ke::Min(static_cast<size_t>(len) + 1, vec->blocksize()));
 }
 
 // native ArrayPushArray(Array:which, const any:input[], size = -1);
@@ -355,12 +357,12 @@ static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
 		return 0;
 	}
 
-	cell *addr = get_amxaddr(amx, params[2]);
+	const cell *addr = get_amxaddr(amx, params[2]);
 	size_t indexes = vec->blocksize();
 
 	if (*params / sizeof(cell) == 3)
 	{
-		if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
+		if (params[3] != -1 && static_cast<size_t>(params[3]) <= vec->blocksize())
 		{
 			indexes = params[3];
 		}
@@ -421,7 +423,7 @@ static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
 // native DoNotUse : ArrayGetStringHandle(Array : which, item);
 static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -429,7 +431,7 @@ static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	const size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -458,7 +460,7 @@ static cell AMX_NATIVE_CALL ArrayInsertArrayAfter(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = params[2] + 1;
+	const size_t idx = params[2] + 1;
 
 	if (idx > vec->size())
 	{
@@ -466,7 +468,7 @@ static cell AMX_NATIVE_CALL ArrayInsertArrayAfter(AMX* amx, cell* params)
 		return 0;
 	}
 
-	cell *addr = get_amxaddr(amx, params[3]);
+	const cell *addr = get_amxaddr(amx, params[3]);
 
 	memcpy(vec->insert_at(idx), addr, sizeof(cell) * vec->blocksize());
 
@@ -484,7 +486,7 @@ static cell AMX_NATIVE_CALL ArrayInsertCellAfter(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = params[2] + 1;
+	const size_t idx = params[2] + 1;
 
 	if (idx > vec->size())
 	{
@@ -508,7 +510,7 @@ static cell AMX_NATIVE_CALL ArrayInsertStringAfter(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = params[2] + 1;
+	const size_t idx = params[2] + 1;
 
 	if (idx > vec->size())
 	{
@@ -519,7 +521,7 @@ static cell AMX_NATIVE_CALL ArrayInsertStringAfter(AMX* amx, cell* params)
 	int len;
 	const char *str = get_amxstring(amx, params[3], 0, len);
 
-	return strncopy(vec->insert_at(idx), str, ke::Min((size_t)len + 1, vec->blocksize()));
+	return strncopy(vec->insert_at(idx), str, ke::Min(static_cast<size_t>(len) + 1, vec->blocksize()));
 }
 
 // native ArrayInsertArrayBefore(Array:which, item, const any:input[]);
@@ -533,7 +535,7 @@ static cell AMX_NATIVE_CALL ArrayInsertArrayBefore(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = params[2];
+	const size_t idx = params[2];
 
 	if (idx >= vec->size())
 	{
@@ -541,7 +543,7 @@ static cell AMX_NATIVE_CALL ArrayInsertArrayBefore(AMX* amx, cell* params)
 		return 0;
 	}
 
-	cell *addr = get_amxaddr(amx, params[3]);
+	const cell *addr = get_amxaddr(amx, params[3]);
 
 	memcpy(vec->insert_at(idx), addr, vec->blocksize() * sizeof(cell));
 
@@ -559,7 +561,7 @@ static cell AMX_NATIVE_CALL ArrayInsertCellBefore(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = params[2];
+	const size_t idx = params[2];
 
 	if (idx >= vec->size())
 	{
@@ -582,7 +584,7 @@ static cell AMX_NATIVE_CALL ArrayInsertStringBefore(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = params[2];
+	const size_t idx = params[2];
 
 	if (idx >= vec->size())
 	{
@@ -593,7 +595,7 @@ static cell AMX_NATIVE_CALL ArrayInsertStringBefore(AMX* amx, cell* params)
 	int len;
 	const char *str = get_amxstring(amx, params[3], 0, len);
 
-	return strncopy(vec->insert_at(idx), str, ke::Min((size_t)len + 1, vec->blocksize()));
+	return strncopy(vec->insert_at(idx), str, ke::Min(static_cast<size_t>(len) + 1, vec->blocksize()));
 }
 
 // native ArraySwap(Array:which, item1, item2);
@@ -607,8 +609,8 @@ static cell AMX_NATIVE_CALL ArraySwap(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx1 = (size_t)params[2];
-	size_t idx2 = (size_t)params[3];
+	const size_t idx1 = static_cast<size_t>(params[2]);
+	const size_t idx2 = static_cast<size_t>(params[3]);
 
 	if (idx1 >= vec->size())
 	{
@@ -638,7 +640,7 @@ static cell AMX_NATIVE_CALL ArrayDeleteItem(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t idx = (size_t)params[2];
+	const size_t idx = static_cast<size_t>(params[2]);
 
 	if (idx >= vec->size())
 	{
@@ -656,7 +658,7 @@ static cell AMX_NATIVE_CALL ArrayDestroy(AMX* amx, cell* params)
 {
 	cell *handle = get_amxaddr(amx, params[1]);
 
-	CellArray* vec = ArrayHandles.lookup(*handle);
+	const CellArray* vec = ArrayHandles.lookup(*handle);
 
 	if (!vec)
 	{
@@ -703,7 +705,7 @@ int SortArrayList(const void *elem1, const void *elem2)
 // native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
 static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 {
-	cell handle = params[1];
+	const cell handle = params[1];
 	CellArray* vec = ArrayHandles.lookup(handle);
 
 	if (!vec)
@@ -716,18 +718,18 @@ static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 	char* funcName = get_amxstring(amx, params[2], 0, len);
 	
 	// MySortFunc(Array:array, item1, item2, const data[], data_size)
-	int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	const int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	if (func < 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "The public function \"%s\" was not found.", funcName);
 		return 0;
 	}
 
-	size_t arraysize = vec->size();
-	size_t blocksize = vec->blocksize();
+	const size_t arraysize = vec->size();
+	const size_t blocksize = vec->blocksize();
 	cell *array = vec->base();
 
-	ArraySort_s oldinfo = SortInfo;
+	const ArraySort_s oldinfo = SortInfo;
 
 	SortInfo.func        = func;
 	SortInfo.array_base  = array;
@@ -748,8 +750,8 @@ static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 
 int SortArrayListExCell(const void *elem1, const void *elem2)
 {
-	size_t index1 = ((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize;
-	size_t index2 = ((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize;
+	const size_t index1 = ((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize;
+	const size_t index2 = ((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize;
 
 	return executeForwards(
 		SortInfo.func,
@@ -763,8 +765,8 @@ int SortArrayListExCell(const void *elem1, const void *elem2)
 
 int SortArrayListExArray(const void *elem1, const void *elem2)
 {
-	size_t index1 = ((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize;
-	size_t index2 = ((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize;
+	const size_t index1 = ((cell)((cell *)elem1 - SortInfo.array_base)) / SortInfo.array_bsize;
+	const size_t index2 = ((cell)((cell *)elem2 - SortInfo.array_base)) / SortInfo.array_bsize;
 
 	cell *addr1 = get_amxaddr(SortInfo.amx, SortInfo.addr1);
 	cell *addr2 = get_amxaddr(SortInfo.amx, SortInfo.addr2);
@@ -796,7 +798,7 @@ static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 	int len;
 	char* funcName = get_amxstring(amx, params[2], 0, len);
 
-	int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	const int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 
 	if (!func)
 	{
@@ -804,8 +806,8 @@ static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 		return 0;
 	}
 
-	size_t arraysize = vec->size();
-	size_t blocksize = vec->blocksize();
+	const size_t arraysize = vec->size();
+	const size_t blocksize = vec->blocksize();
 	cell *array = vec->base();
 	cell amx_addr1 = 0, amx_addr2 = 0, *phys_addr = nullptr;
 
@@ -820,7 +822,7 @@ static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 		}
 	}
 
-	ArraySort_s oldinfo = SortInfo;
+	const ArraySort_s oldinfo = SortInfo;
 
 	SortInfo.func        = func;
 	SortInfo.array_base  = array;
@@ -853,7 +855,7 @@ extern int amxstring_len(cell* a);
 // native ArrayFindString(Array:which, const item[]);
 static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{
@@ -861,14 +863,14 @@ static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 		return -1;
 	}
 
-	cell *b, *a = get_amxaddr(amx, params[2]);
-	size_t cellcount = vec->blocksize();
-	size_t a_len = ke::Max(1, amxstring_len(a));
-	size_t len = a_len > cellcount ? cellcount : a_len;
+	cell*a = get_amxaddr(amx, params[2]);
+	const size_t cellcount = vec->blocksize();
+	const size_t a_len = ke::Max(1, amxstring_len(a));
+	const size_t len = a_len > cellcount ? cellcount : a_len;
 
 	for (size_t i = 0; i < vec->size(); i++)
 	{	
-		b = vec->at(i);
+		cell* b = vec->at(i);
 
 		if (fastcellcmp(a, b, len))
 		{
@@ -882,7 +884,7 @@ static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 // native ArrayFindValue(Array:which, any:item); 
 static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
 {
-	CellArray* vec = ArrayHandles.lookup(params[1]);
+	const CellArray* vec = ArrayHandles.lookup(params[1]);
 
 	if (!vec)
 	{

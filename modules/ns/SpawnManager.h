@@ -31,7 +31,7 @@ public:
 	SpawnManager()
 	{
 		this->Clear();
-	};
+	}
 
 	inline void Clear()
 	{
@@ -46,7 +46,7 @@ public:
 		TeamSpawns[0].ensure(32);
 		TeamSpawns[1].ensure(16);
 		TeamSpawns[2].ensure(48);
-	};
+	}
 
 	inline void Insert(const edict_t *Entity)
 	{
@@ -62,7 +62,8 @@ public:
 		Entity->v.angles.CopyToArray(TemporaryData.Angle);
 
 		TeamSpawns[Entity->v.team].append(TemporaryData);
-	};
+	}
+
 	inline void InsertReadyRoom(const edict_t *Entity)
 	{
 		SpawnData TemporaryData;
@@ -71,7 +72,7 @@ public:
 		Entity->v.angles.CopyToArray(TemporaryData.Angle);
 
 		TeamSpawns[0].append(TemporaryData);
-	};
+	}
 
 	// ns_get_spawn(team,number=0,Float:ret[3]);
 	inline cell Lookup(AMX *amx, cell *params)
@@ -100,7 +101,7 @@ public:
 
 		return 1;
 
-	};
+	}
 };
 
 extern SpawnManager SpawnMan;

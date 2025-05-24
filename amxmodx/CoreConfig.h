@@ -23,7 +23,7 @@ class CoreConfig
 
 		void Clear();
 
-		void ExecuteMainConfig();
+		void ExecuteMainConfig() const;
 		void ExecuteAutoConfigs();
 		bool ExecuteAutoConfig(CPluginMngr::CPlugin *plugin, AutoConfig *config, bool can_create);
 		void ExecuteMapConfig();

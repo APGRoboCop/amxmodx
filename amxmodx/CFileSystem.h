@@ -22,7 +22,7 @@ class FileObject
 {
 	public:
 
-		virtual ~FileObject() {};
+		virtual ~FileObject() = default;
 
 		virtual size_t Read(void* pOut, size_t size) = 0;
 		virtual char* ReadLine(char* pOut, size_t size) = 0;
@@ -54,9 +54,9 @@ class ValveFile : public FileObject
 
 		ValveFile(FileHandle_t handle) : handle_(handle) {}
 
-		~ValveFile()
+		~ValveFile() override
 		{
-			Close();
+			ValveFile::Close();
 		}
 
 		static bool Exists(const char* file)
@@ -66,7 +66,7 @@ class ValveFile : public FileObject
 
 		static ValveFile* Open(const char* filename, const char* mode, const char* pathID)
 		{
-			FileHandle_t handle = g_FileSystem->OpenFromCacheForRead(filename, mode, pathID);
+			const FileHandle_t handle = g_FileSystem->OpenFromCacheForRead(filename, mode, pathID);
 
 			if (!handle)
 			{
@@ -144,7 +144,7 @@ class ValveFile : public FileObject
 			}
 		}
 
-		virtual ValveFile* AsValveFile()
+		ValveFile* AsValveFile() override
 		{
 			return this;
 		}
@@ -166,9 +166,9 @@ class SystemFile : public FileObject
 
 		SystemFile(FILE* fp) : fp_(fp) {}
 
-		~SystemFile()
+		~SystemFile() override
 		{
-			Close();
+			SystemFile::Close();
 		}
 
 		static SystemFile* Open(const char* path, const char* mode)
@@ -237,7 +237,7 @@ class SystemFile : public FileObject
 			}
 		}
 
-		virtual SystemFile* AsSystemFile()
+		SystemFile* AsSystemFile() override
 		{
 			return this;
 		}

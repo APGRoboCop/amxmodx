@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -139,7 +141,7 @@ void ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 {
 	Initialize_MessageHandler();
 
-	g_pFunctionTable_Post->pfnServerActivate=NULL;
+	g_pFunctionTable_Post->pfnServerActivate= nullptr;
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -179,7 +181,7 @@ void ServerDeactivate()
 		GET_PLAYER_I(i)->Disconnect();
 	}
 	GameRules = nullptr;
-	avhgameplay = NULL;
+	avhgameplay = nullptr;
 	RETURN_META(MRES_IGNORED);
 }
 

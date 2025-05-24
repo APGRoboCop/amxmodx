@@ -75,38 +75,39 @@ private:
 	int			*m_index;
 	int			 m_type;
 
-	bool IsSet()
+	bool IsSet() const
 	{
 		return (m_type != RET_VOID &&
 				m_data != nullptr);
-	};
-	bool IsType(const int type)
+	}
+
+	bool IsType(const int type) const
 	{
 		return (m_type == type);
-	};
+	}
 
 public:
 	Data() : m_data(nullptr), m_index(nullptr), m_type(RET_VOID)
-	{ /* nothing */	};
+	{ /* nothing */	}
 
 	Data(int type, void *ptr) : m_data(ptr), m_index(nullptr), m_type(type)
-	{ /* nothing */ };
+	{ /* nothing */ }
 
 	Data(int type, void *ptr, int *cptr) : m_data(ptr), m_index(cptr), m_type(type)
-	{ /* nothing */ };
+	{ /* nothing */ }
 
 	~Data()
-	{ /* nothing */	};
+	{ /* nothing */	}
 
-	int GetType()
+	int GetType() const
 	{
 		return m_type;
-	};
+	}
 
 	// All Get/Set value natives return < 0 on failure.
 	// -1: Wrong type
 	// -2: Bad data pointer (void, etc).
-	int SetInt(cell *data)
+	int SetInt(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -139,9 +140,9 @@ public:
 		}
 
 		return -1;
-	};
+	}
 
-	int SetFloat(cell *data)
+	int SetFloat(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -154,8 +155,9 @@ public:
 		*(static_cast<REAL *>(m_data))=amx_ctof(*data);
 
 		return 0;
-	};
-	int SetVector(cell *data)
+	}
+
+	int SetVector(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -172,8 +174,9 @@ public:
 		vec->z=amx_ctof(data[2]);
 
 		return 0;
-	};
-	int SetString(cell *data)
+	}
+
+	int SetString(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -208,9 +211,9 @@ public:
 		delete[] temp;
 
 		return 0;
-	};
+	}
 
-	int SetEntity(cell *data, bool updateIndex = false)
+	int SetEntity(cell *data, bool updateIndex = false) const
 	{
 		if (!IsSet())
 		{
@@ -247,9 +250,9 @@ public:
 			return 0;
 		}
 		return -1;
-	};
+	}
 
-	int GetInt(cell *data)
+	int GetInt(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -288,8 +291,9 @@ public:
 		}
 
 		return -1;
-	};
-	int GetFloat(cell *data)
+	}
+
+	int GetFloat(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -302,8 +306,9 @@ public:
 		*data=amx_ftoc(*(static_cast<REAL *>(m_data)));
 
 		return 0;
-	};
-	int GetVector(cell *data)
+	}
+
+	int GetVector(cell *data) const
 	{
 		if (!IsSet())
 		{
@@ -319,8 +324,9 @@ public:
 		data[2]=amx_ftoc(vec->z);
 
 		return 0;
-	};
-	int GetString(cell *data, int len)
+	}
+
+	int GetString(cell *data, int len) const
 	{
 		if (!IsSet())
 		{
@@ -338,8 +344,9 @@ public:
 			/* nothing */
 		}
 		return 0;
-	};
-	int GetEntity(cell *data)
+	}
+
+	int GetEntity(cell *data) const
 	{
 		if (!IsSet())
 		{

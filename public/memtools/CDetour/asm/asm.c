@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 #include "asm.h"
 
 #ifndef WIN32
@@ -144,7 +146,7 @@ int copy_bytes(unsigned char *func, unsigned char* dest, int required_len) {
 		bytecount++;
 
 		// mod R/M byte
-		modRM = 0xFF;
+		//modRM = 0xFF;
 		if(FPU)
 		{
 			if((opcode & 0xC0) != 0xC0)

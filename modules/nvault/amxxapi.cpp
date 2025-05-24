@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -46,7 +48,7 @@ static cell nvault_open(AMX *amx, cell *params)
 	char *name = MF_GetAmxString(amx, params[1], 0, &len);
 	char path[255], file[255];
 	MF_BuildPathnameR(path, sizeof(path), "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
-	sprintf(file, "%s/%s.vault", path, name);
+	snprintf(file, sizeof(file), "%s/%s.vault", path, name);
 	for (size_t i=0; i<g_Vaults.length(); i++)
 	{
 		if (!g_Vaults[i])

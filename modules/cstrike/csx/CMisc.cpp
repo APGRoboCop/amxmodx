@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -34,7 +36,7 @@ void Grenades::put( edict_t* grenade, float time, int type, CPlayer* player  )
 bool Grenades::find( edict_t* enemy, CPlayer** p, int* type )
 {
   bool found = false;
-  Obj* a = head;
+  const Obj* a = head;
   while ( a ){
     if ( a->time > gpGlobals->time && !found ) {
       if ( a->grenade == enemy ) {
@@ -97,9 +99,9 @@ void CPlayer::PutInServer(){
 	const char* name = STRING(pEdict->v.netname);
 	const char* unique = name;
 	bool isip = false;
-	switch((int)csstats_rank->value) {
+	switch(static_cast<int>(csstats_rank->value)) {
 	case 1: 
-		if ( (unique = GETPLAYERAUTHID(pEdict)) == 0 )
+		if ( (unique = GETPLAYERAUTHID(pEdict)) == nullptr )
 			unique = name; // failed to get authid
 		break;
 	case 2:
@@ -172,8 +174,8 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk)
 	
 	pVictim->weaponsRnd[pVictim->current].deaths++; // DEC-Weapon (round) stats
 	pVictim->weaponsRnd[0].deaths++;                   // DEC-Weapon (round) stats
-	
-	int vi = pVictim->index;
+
+	const int vi = pVictim->index;
 	victims[vi].name = weaponData[wweapon].name;
 	victims[vi].deaths++;
 	victims[vi].hs += hhs;
@@ -218,7 +220,7 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody)
 	pVictim->attackers[0].bodyHits[bbody]++;
 
 
-	int vi = pVictim->index;
+	const int vi = pVictim->index;
 	victims[vi].hits++;
 	victims[vi].damage += ddamage;
 	victims[vi].bodyHits[bbody]++;

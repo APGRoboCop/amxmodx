@@ -74,7 +74,7 @@ public:
 
 class IRehldsServerStatic {
 public:
-	virtual ~IRehldsServerStatic() { }
+	virtual ~IRehldsServerStatic() = default;
 
 	virtual int GetMaxClients() = 0;
 	virtual bool IsLogActive() = 0;
@@ -86,7 +86,7 @@ public:
 
 class IRehldsServerData {
 public:
-	virtual ~IRehldsServerData() { }
+	virtual ~IRehldsServerData() = default;
 
 	virtual const char* GetModelName() = 0;
 	virtual const char* GetName() = 0;

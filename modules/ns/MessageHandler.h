@@ -35,52 +35,51 @@ public:
 	virtual int Begin(int Target, int Msg, const float *Origin, edict_t *Entity) 
 	{ 
 		return 0; 
-	};
+	}
 
 	virtual void End()
 	{
-	};
+	}
 
 	virtual void WriteByte(int Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteChar(int Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteShort(int Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteLong(int Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteAngle(REAL Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteCoord(REAL Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteString(const char *Data)
 	{
 		++m_Count;
-	};
+	}
 
 	virtual void WriteEntity(int Data)
 	{
 		++m_Count;
-	};
-
+	}
 };
 
 
@@ -89,13 +88,13 @@ class MessageCountDown : public MessageHandler
 public:
 	int			m_CountDownTime;
 
-	virtual int Begin(int Target, int Msg, const float *Origin, edict_t *Entity)
+	int Begin(int Target, int Msg, const float *Origin, edict_t *Entity) override
 	{
 		m_Count=0;
 		return 1;
-	};
+	}
 
-	virtual void End()
+	void End() override
 	{
 		if (m_Count!=1) // invalid message?
 		{
@@ -104,13 +103,13 @@ public:
 		}
 
 		GameMan.HandleCountdown(m_CountDownTime);
-	};
+	}
 
-	virtual void WriteByte(int Data)
+	void WriteByte(int Data) override
 	{
 		++m_Count;
 		m_CountDownTime=Data;
-	};
+	}
 };
 
 class MessageGameStatus : public MessageHandler
@@ -118,25 +117,25 @@ class MessageGameStatus : public MessageHandler
 public:
 	int			FirstByte;
 
-	virtual int Begin(int Target, int Msg, const float *Origin, edict_t *Entity)
+	int Begin(int Target, int Msg, const float *Origin, edict_t *Entity) override
 	{
 		m_Count=0;
 		return 1;
-	};
+	}
 
-	virtual void End()
+	void End() override
 	{
 		GameMan.HandleGameStatus(FirstByte);
-	};
+	}
 
-	virtual void WriteByte(int iValue)
+	void WriteByte(int iValue) override
 	{
 		if (m_Count==0)
 		{
 			FirstByte=iValue;
 		}
 		++m_Count;
-	};
+	}
 };
 
 

@@ -15,7 +15,7 @@
 #include <ITextParsers.h>
 
 #define LANG_SERVER 0
-#define LANG_PLAYER -1
+#define LANG_PLAYER (-1)
 
 #define ERR_BADKEY	1	// Lang key not found
 #define ERR_BADLANG 2	// Invalid lang
@@ -30,7 +30,8 @@ struct lang_err
 {
 	lang_err() : last(0.0f)
 	{
-	};
+	}
+
 	float last;
 };
 
@@ -39,14 +40,14 @@ class defentry
 public:
 	defentry() : definition(nullptr)
 	{
-	};
+	}
+
 	defentry(const defentry &src)
 	{
 		definition = src.definition;
 	}
-	~defentry()
-	{
-	}
+
+	~defentry()	= default;
 	ke::AString *definition;
 };
 
@@ -54,7 +55,8 @@ struct keytbl_val
 {
 	keytbl_val() : index(-1)
 	{
-	};
+	}
+
 	int index;
 };
 
@@ -80,14 +82,14 @@ class CLangMngr : public ITextListener_INI
 		// compare this language to a language name
 		friend bool operator == (const CLang &left, const char *right)
 		{
-			return strcmp(left.m_LanguageName, right) == 0 ? true : false;
+			return strcmp(left.m_LanguageName, right) == 0;
 		}
 		
 		// Get language name
-		const char *GetName() { return m_LanguageName; }
+		const char *GetName() const { return m_LanguageName; }
 		void SetMngr(CLangMngr *l) { m_LMan = l; }
 		// Get number of entries
-		int Entries();
+		int Entries() const;
 	protected:
 		typedef THash<int, defentry> LookUpVec;
 		typedef LookUpVec::iterator	 LookUpVecIter;
@@ -106,10 +108,10 @@ public:
 	void MergeDefinitions(const char *lang, ke::Vector <sKeyDef> &tmpVec);
 
 public: // ITextListener_INI
-	void ReadINI_ParseStart();
-	void ReadINI_ParseEnd(bool halted);
-	bool ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok);
-	bool ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok);
+	void ReadINI_ParseStart() override;
+	void ReadINI_ParseEnd(bool halted) override;
+	bool ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok) override;
+	bool ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok) override;
 
 private:
 	// strip lowercase; make lower if needed
@@ -148,7 +150,7 @@ public:
 	int AddKeyEntry(const char *key);
 
 	// Get the number of languages
-	int GetLangsNum();
+	int GetLangsNum() const;
 	// Get the name of a language
 	const char *GetLangName(int langId);
 	// Check if a language exists

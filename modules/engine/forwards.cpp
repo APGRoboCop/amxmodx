@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -38,8 +40,8 @@ bool g_precachedStuff = false;
 int fstrcmp(const char *s1, const char *s2)
 {
 	int i=0;
-	int len1 = strlen(s1);
-	int len2 = strlen(s2);
+	const int len1 = strlen(s1);
+	const int len2 = strlen(s2);
 	if (len1 != len2)
 		return 0;
 	for (i=0; i<len1; i++)
@@ -59,7 +61,7 @@ int Spawn(edict_t *pEntity)
 	}
 	if (SpawnForward != -1)
 	{
-		int id = TypeConversion.edict_to_id(pEntity);
+		const int id = TypeConversion.edict_to_id(pEntity);
 
 		if (MF_ExecuteForward(SpawnForward, (cell)id))
 		{
@@ -77,16 +79,16 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 		int retVal = 0;
 		static cell cOrigin[3];
 		static cell cAngles[3];
-		Vector vOrigin = (Vector)origin;
-		Vector vAngles = (Vector)angles;
+		const Vector vOrigin = origin;
+		const Vector vAngles = angles;
 		cOrigin[0] = amx_ftoc(vOrigin.x);
 		cOrigin[1] = amx_ftoc(vOrigin.y);
 		cOrigin[2] = amx_ftoc(vOrigin.z);
 		cAngles[0] = amx_ftoc(vAngles.x);
 		cAngles[1] = amx_ftoc(vAngles.y);
 		cAngles[2] = amx_ftoc(vAngles.z);
-		cell CellOrigin = MF_PrepareCellArray(cOrigin, 3);
-		cell CellAngles = MF_PrepareCellArray(cAngles, 3);
+		const cell CellOrigin = MF_PrepareCellArray(cOrigin, 3);
+		const cell CellAngles = MF_PrepareCellArray(cAngles, 3);
 		if (!FNullEnt(e))
 			invoker = TypeConversion.edict_to_id(e);
 		retVal = MF_ExecuteForward(PlaybackForward, (cell)flags, (cell)invoker, (cell)eventindex, delay, CellOrigin, CellAngles, fparam1, fparam2, (cell)iparam1, (cell)iparam2, (cell)bparam1, (cell)bparam2);
@@ -99,11 +101,10 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 
 void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 {
-	int retVal = 0;
 	g_inKeyValue=true;
 	g_pkvd=pkvd;
 	if (DispatchKeyForward != -1) {
-		retVal = MF_ExecuteForward(DispatchKeyForward, (cell)TypeConversion.edict_to_id(pEntity));
+		const int retVal = MF_ExecuteForward(DispatchKeyForward, TypeConversion.edict_to_id(pEntity));
 		g_inKeyValue=false;
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
@@ -128,9 +129,9 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	int retVal = 0;
 	edict_t *pEntity = (edict_t *)player;
 	g_cmd = (struct usercmd_s *)_cmd;
-	int origImpulse = g_cmd->impulse; // incase a plugin alters it
+	const int origImpulse = g_cmd->impulse; // incase a plugin alters it
 
-	auto index = TypeConversion.edict_to_id(pEntity);
+	const auto index = TypeConversion.edict_to_id(pEntity);
 
 	for (i=0; i<Impulses.length(); i++)
 	{
@@ -193,14 +194,14 @@ void PlayerPreThink(edict_t *pEntity)
 
 void PlayerPostThink_Post(edict_t *pEntity)
 {
-	auto index = TypeConversion.edict_to_id(pEntity);
+	const auto index = TypeConversion.edict_to_id(pEntity);
 
 	if(plinfo[index].pViewEnt) {
 		edict_t *pCamEnt = plinfo[index].pViewEnt;
 
 		MAKE_VECTORS(pEntity->v.v_angle + pEntity->v.punchangle);
 		Vector vecSrc	 = pEntity->v.origin + pEntity->v.view_ofs;
-		Vector vecAiming = gpGlobals->v_forward;
+		const Vector vecAiming = gpGlobals->v_forward;
 		TraceResult tr;
 
 		switch(plinfo[index].iViewType) {
@@ -227,7 +228,7 @@ void PlayerPostThink_Post(edict_t *pEntity)
 				SET_VIEW(pEntity, pEntity);
 				REMOVE_ENTITY(plinfo[index].pViewEnt);
 				plinfo[index].iViewType = CAMERA_NONE;
-				plinfo[index].pViewEnt = NULL;
+				plinfo[index].pViewEnt = nullptr;
 				break;
 		}
 	}
@@ -247,8 +248,8 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	int retVal = 0;
 	const char *ptrClass = STRING(pToucher->v.classname);
 	const char *ptdClass = STRING(pTouched->v.classname);
-	int ptrIndex = TypeConversion.edict_to_id(pToucher);
-	int ptdIndex = TypeConversion.edict_to_id(pTouched);
+	const int ptrIndex = TypeConversion.edict_to_id(pToucher);
+	const int ptdIndex = TypeConversion.edict_to_id(pTouched);
 	META_RES res=MRES_IGNORED;
 	for (i=0; i<Touches.length(); i++)
 	{

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -48,7 +50,7 @@ void CPlayer::PutInServer()
 	bool isip = false;
 	switch(static_cast<int>(tsstats_rank->value)) {
 	case 1: 
-		if ( (unique = GETPLAYERAUTHID(pEdict)) == 0 )
+		if ( (unique = GETPLAYERAUTHID(pEdict)) == nullptr )
 			unique = name; // failed to get authid
 		break;
 	case 2: 
@@ -222,9 +224,9 @@ float CPlayer::GetTime()
 	return GetOffsetF(TSX_TIME_OFFSET);
 }
 
-void CPlayer::SetMoney(int money)
+void CPlayer::SetMoney(int newMoney)
 {
-	SetOffset(TSX_MONEY_OFFSET, money);
+	SetOffset(TSX_MONEY_OFFSET, newMoney);
 }
 
 void CPlayer::SetSlots(int slots)

@@ -177,7 +177,7 @@ class HLTypeConversion
 
 		void search_pev()
 		{
-			entvars_t* pev = VARS(m_FirstEdict);
+			const entvars_t* pev = VARS(m_FirstEdict);
 			byte* privateData = static_cast<byte*>(m_FirstEdict->pvPrivateData);
 
 			for (size_t i = 0; i < 0xFFF; ++i)
@@ -220,7 +220,7 @@ class EHANDLE
 			}
 
 			return nullptr;
-		};
+		}
 
 		edict_t* Set(edict_t *pent)
 		{
@@ -236,7 +236,7 @@ class EHANDLE
 			}
 
 			return pent;
-		};
+		}
 };
 
 #endif // _HL_CONVERSION_TYPE_H_

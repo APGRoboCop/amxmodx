@@ -86,7 +86,7 @@ class CPlayer
 
 			if (strcmp(GETCLIENTKEYVALUE(infobuffer, "model"), m_Model) != 0)
 			{
-				int index = TypeConversion.edict_to_id(pPlayer);
+				const int index = TypeConversion.edict_to_id(pPlayer);
 
 				SETCLIENTKEYVALUE(index, infobuffer, "model", m_Model);
 

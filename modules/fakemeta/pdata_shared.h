@@ -213,7 +213,7 @@ public:
 
 	static void GetVector(void *pObject, TypeDescription &data, cell *pVector, int element)
 	{
-		auto vector = get_pdata<Vector>(pObject, data.fieldOffset, element);
+		const Vector vector = get_pdata<Vector>(pObject, data.fieldOffset, element);
 
 		pVector[0] = amx_ftoc(vector.x);
 		pVector[1] = amx_ftoc(vector.y);
@@ -228,7 +228,7 @@ public:
 
 	static void SetVector(void *pObject, TypeDescription &data, cell *pVector, int element)
 	{
-		Vector vector(amx_ctof(pVector[0]), amx_ctof(pVector[1]), amx_ctof(pVector[2]));
+		const Vector vector(amx_ctof(pVector[0]), amx_ctof(pVector[1]), amx_ctof(pVector[2]));
 
 		set_pdata<Vector>(pObject, data.fieldOffset, vector, element);
 	}
@@ -332,12 +332,12 @@ public:
 		{
 			case FieldType::FIELD_STRING:
 			{
-				auto buffer = get_pdata_direct<char*>(pObject, data.fieldOffset);
+				char* buffer = get_pdata_direct<char*>(pObject, data.fieldOffset);
 				return strncopy(buffer, value, ke::Min<int>(maxlen + 1, data.fieldSize));
 			}
 			case FieldType::FIELD_STRINGPTR:
 			{
-				auto buffer = get_pdata<char*>(pObject, data.fieldOffset, element);
+				char* buffer = get_pdata<char*>(pObject, data.fieldOffset, element);
 
 				if (!buffer || maxlen > static_cast<int>(strlen(buffer)))
 				{
@@ -346,7 +346,7 @@ public:
 						free(buffer);
 					}
 
-					buffer = reinterpret_cast<char*>(malloc(maxlen + 1));
+					buffer = static_cast<char*>(malloc(maxlen + 1));
 					set_pdata<char*>(pObject, data.fieldOffset, buffer, element);
 				}
 

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -376,8 +378,8 @@ static cell AMX_NATIVE_CALL ns_remove_upgrade(AMX *amx, cell *params)
 	};
 
 
-	upgradevector *bought = reinterpret_cast<upgradevector *>(reinterpret_cast<char *>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(UPGRADES_BOUGHT));
-	upgradevector *active = reinterpret_cast<upgradevector *>(reinterpret_cast<char *>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(UPGRADES_ACTIVE));
+	upgradevector *bought = reinterpret_cast<upgradevector *>(static_cast<char *>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(UPGRADES_BOUGHT));
+	upgradevector *active = reinterpret_cast<upgradevector *>(static_cast<char *>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(UPGRADES_ACTIVE));
 
 
 	//bought->print();
@@ -388,7 +390,7 @@ static cell AMX_NATIVE_CALL ns_remove_upgrade(AMX *amx, cell *params)
 
 	if (bfound)
 	{
-		void *pTechTree = reinterpret_cast<char*>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(COMBAT_TECHTREE);
+		void *pTechTree = static_cast<char*>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(COMBAT_TECHTREE);
 		(static_cast<GenericClass *>(pTechTree)->*(MFP_SetResearchDone))(params[2], false);
 
 		if (afound)

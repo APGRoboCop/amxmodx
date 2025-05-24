@@ -27,18 +27,18 @@ public:
 public:
 	//NOTE: We don't support this by default.
 	//It's specific usage that'd require many mutexes
-	virtual bool WaitForThread();
+	bool WaitForThread() override;
 public:
-	virtual void DestroyThis();
-	virtual IThreadCreator *Parent();
-	virtual void GetParams(ThreadParams *ptparams);
+	void DestroyThis() override;
+	IThreadCreator *Parent() override;
+	void GetParams(ThreadParams *ptparams) override;
 public:
 	//Priorities not supported by default.
-	virtual ThreadPriority GetPriority();
-	virtual bool SetPriority(ThreadPriority prio);
+	ThreadPriority GetPriority() override;
+	bool SetPriority(ThreadPriority prio) override;
 public:
-	virtual ThreadState GetState();
-	virtual bool Unpause();
+	ThreadState GetState() override;
+	bool Unpause() override;
 private:
 	ThreadState m_state;
 	ThreadParams m_params;
@@ -50,23 +50,23 @@ class BaseWorker : public IWorker
 {
 public:
 	BaseWorker();
-	virtual ~BaseWorker();
+	~BaseWorker() override;
 public:	//IWorker
-	virtual unsigned int RunFrame();
+	unsigned int RunFrame() override;
 	//Controls the worker
-	virtual bool Pause();
-	virtual bool Unpause();
-	virtual bool Start();
-	virtual bool Stop(bool flush_cancel);
+	bool Pause() override;
+	bool Unpause() override;
+	bool Start() override;
+	bool Stop(bool flush_cancel) override;
 	//Flushes out any remaining threads
-	virtual unsigned int Flush(bool flush_cancel);
+	unsigned int Flush(bool flush_cancel) override;
 	//returns status and number of threads in queue
-	virtual WorkerState GetStatus(unsigned int *numThreads);
+	WorkerState GetStatus(unsigned int *numThreads) override;
 public:	//IThreadCreator
-	virtual void MakeThread(IThread *pThread);
-	virtual IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags);
-	virtual IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params);
-	virtual void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min);
+	void MakeThread(IThread *pThread) override;
+	IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags) override;
+	IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params) override;
+	void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min) override;
 public:	//BaseWorker
 	virtual void AddThreadToQueue(SWThreadHandle *pHandle);
 	virtual SWThreadHandle *PopThreadFromQueue();

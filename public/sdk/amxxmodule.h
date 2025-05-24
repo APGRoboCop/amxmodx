@@ -730,7 +730,7 @@ void FN_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax);
 #endif // FN_ServerActivate_Post
 
 #ifdef FN_ServerDeactivate_Post
-void FN_ServerDeactivate_Post(void);
+void FN_ServerDeactivate_Post();
 #endif // FN_ServerDeactivate_Post
 
 #ifdef FN_PlayerPreThink_Post
@@ -742,7 +742,7 @@ void FN_PlayerPostThink_Post(edict_t *pEntity);
 #endif // FN_PlayerPostThink_Post
 
 #ifdef FN_StartFrame_Post
-void FN_StartFrame_Post(void);
+void FN_StartFrame_Post();
 #endif // FN_StartFrame_Post
 
 #ifdef FN_ParmsNewLevel_Post

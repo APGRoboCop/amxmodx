@@ -32,6 +32,10 @@
 #ifndef _INCLUDE_SOURCEMOD_TEXTPARSERS_INTERFACE_H_
 #define _INCLUDE_SOURCEMOD_TEXTPARSERS_INTERFACE_H_
 
+#ifdef _WIN32
+#pragma warning(disable: 4100)
+#endif
+
 #include <string.h> // size_t
 
 /**

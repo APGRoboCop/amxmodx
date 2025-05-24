@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -18,7 +20,7 @@ KeyValueData *g_fm_keyValueData;
 
 static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 {
-	int type = params[1];
+	const int type = params[1];
 
 	if (*params / sizeof(cell) < 2)
 	{
@@ -26,7 +28,7 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		return 0;
 	}
 
-	cell *ptr = MF_GetAmxAddr(amx, params[2]);
+	const cell *ptr = MF_GetAmxAddr(amx, params[2]);
 
 	switch (type)
 	{
@@ -99,7 +101,7 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 {
-	int type = params[1];
+	const int type = params[1];
 	cell *ptr = nullptr;
 
 	switch (type)

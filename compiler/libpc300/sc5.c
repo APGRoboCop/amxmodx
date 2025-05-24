@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn compiler - Error message system
  *  In fact a very simple system, using only 'panic mode'.
  *
@@ -74,9 +76,8 @@ static int lastline,errorcount;
 static short lastfile;
   char *msg,*pre,*filename;
   va_list argptr;
-  int is_warning;
 
-  is_warning = (number >= 200 && !sc_warnings_are_errors);
+const int is_warning = (number >= 200 && !sc_warnings_are_errors);
 
   /* errflag is reset on each semicolon.
    * In a two-pass compiler, an error should not be reported twice. Therefore
@@ -88,8 +89,8 @@ static short lastfile;
 
   /* also check for disabled warnings */
   if (number>=200) {
-    int index=(number-200)/8;
-    int mask=1 << ((number-200)%8);
+	  const int index=(number-200)/8;
+	  const int mask=1 << ((number-200)%8);
     if ((warndisable[index] & mask)!=0)
       return 0;
   } /* if */
@@ -127,8 +128,8 @@ static short lastfile;
   assert(filename!=NULL);
 
   va_start(argptr,number);
-  if (strlen(errfname)==0) {
-    int start= (errstart==errline) ? -1 : errstart;
+  if (errfname[0] == '\0') {
+	  const int start= (errstart==errline) ? -1 : errstart;
     if (pc_error((int)number,msg,filename,start,errline,argptr)) {
       if (outf!=NULL) {
         pc_closeasm(outf,TRUE);
@@ -150,7 +151,7 @@ static short lastfile;
   va_end(argptr);
 
   if ((number>=100 && number<200) || errnum>25){
-    if (strlen(errfname)==0) {
+  	if (errfname[0] == '\0') {
       va_start(argptr,number);
       pc_error(0,"\nCompilation aborted.",NULL,0,0,argptr);
       va_end(argptr);
@@ -216,17 +217,14 @@ SC_FUNC void errorset(int code,int line)
  */
 int pc_enablewarning(int number,int enable)
 {
-  int index;
-  unsigned char mask;
-
-  if (number<200)
+	if (number<200)
     return FALSE;       /* errors and fatal errors cannot be disabled */
   number -= 200;
   if (number>=NUM_WARNINGS)
     return FALSE;
 
-  index=number/8;
-  mask=(unsigned char)(1 << (number%8));
+	const int index = number / 8;
+	const unsigned char mask = (unsigned char)(1 << (number % 8));
   switch (enable) {
   case 0:
     warndisable[index] |= mask;

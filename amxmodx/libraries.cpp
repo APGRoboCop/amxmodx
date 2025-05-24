@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -94,18 +96,17 @@ bool DecodeLibCmdString(const char *str, LibDecoder *dec)
 size_t AddLibrariesFromString(const char *name, LibType type, LibSource src, void *parent)
 {
 	char buffer[255];
-	char *ptr, *p, s;
 	size_t count = 0;
 
 	ke::SafeSprintf(buffer, sizeof(buffer), "%s", name);
 
-	ptr = buffer;
-	p = buffer;
+	const char* ptr = buffer;
+	char* p = buffer;
 	while (*p)
 	{
 		while (*p && (*p != ','))
 			p++;
-		s = *p;
+		const char s = *p;
 		*p = '\0';
 		if (AddLibrary(ptr, type, src, parent))
 			count++;
@@ -122,10 +123,9 @@ size_t AddLibrariesFromString(const char *name, LibType type, LibSource src, voi
 
 size_t ClearLibraries(LibSource src)
 {
-	List<Library *>::iterator iter;
 	size_t count = 0;
 
-	iter = g_libraries.begin();
+	List<Library*>::iterator iter = g_libraries.begin();
 	while (iter != g_libraries.end())
 	{
 		if ( (*iter)->src == src )
@@ -143,21 +143,19 @@ size_t ClearLibraries(LibSource src)
 
 size_t RemoveLibraries(void *parent)
 {
-	List<Library *>::iterator iter;
-	Library *lib;
 	size_t count = 0;
 
-	iter = g_libraries.begin();
+	List<Library*>::iterator iter = g_libraries.begin();
 	while (iter != g_libraries.end())
 	{
-		lib = (*iter);
+		const Library* lib = (*iter);
 		if (lib->parent == parent)
 		{
 			delete (*iter);
 			iter = g_libraries.erase(iter);
 			count++;
 		} else {
-			iter++;
+			++iter;
 		}
 	}
 
@@ -167,11 +165,10 @@ size_t RemoveLibraries(void *parent)
 bool FindLibrary(const char *name, LibType type)
 {
 	List<Library *>::iterator iter;
-	Library *lib;
 
-	for (iter = g_libraries.begin(); iter != g_libraries.end(); iter++)
+	for (iter = g_libraries.begin(); iter != g_libraries.end(); ++iter)
 	{
-		lib = (*iter);
+		const Library* lib = (*iter);
 		if (lib->type != type)
 			continue;
 		if (strcasecmp(lib->name.chars(), name) == 0)
@@ -185,11 +182,10 @@ bool FindLibrary(const char *name, LibType type)
 
 LibError RunLibCommand(const LibDecoder *enc)
 {
-	List<Library *>::iterator iter,end;
 	Library *lib;
 	
-	iter = g_libraries.begin();
-	end = g_libraries.end();
+	List<Library*>::iterator iter = g_libraries.begin();
+	const List<Library*>::iterator end = g_libraries.end();
 
 	if ( (enc->cmd == LibCmd_ReqLib) || (enc->cmd == LibCmd_ReqClass) )
 	{
@@ -201,7 +197,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 			expect = LibType_Class;
 
 		/** see if it exists */
-		for (; iter != end; iter++)
+		for (; iter != end; ++iter)
 		{
 			lib = (*iter);
 			if (lib->type != expect)
@@ -231,7 +227,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 			expect = LibType_Class;
 
 		/** see if it exists */
-		for (; iter != end; iter++)
+		for (; iter != end; ++iter)
 		{
 			lib = (*iter);
 			if (lib->type != expect)

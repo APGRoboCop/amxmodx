@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn debugger interface
  *
  *  Support functions for debugger applications
@@ -56,7 +58,7 @@ int AMXAPI dbg_FreeInfo(AMX_DBG *amxdbg)
 
 void memread(void *dest, char **src, size_t size)
 {
-	void *ptr = *src;
+	const void *ptr = *src;
 	memcpy(dest, ptr, size);
 	*src += size;
 }
@@ -64,7 +66,7 @@ void memread(void *dest, char **src, size_t size)
 const char *ClipFileName(const char *inp)
 {
 	static char buffer[256];
-	size_t len = strlen(inp);
+	const size_t len = strlen(inp);
 	const char *ptr = inp;
 
 	for (size_t i=0; i<len; i++)
@@ -88,7 +90,7 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
 
   assert(amxdbg != NULL);
 
-  char *addr = (char *)(dbg_addr);
+  char *addr = static_cast<char*>(dbg_addr);
 
   memset(&dbghdr, 0, sizeof(AMX_DBG_HDR));
   memread(&dbghdr, &addr, sizeof(AMX_DBG_HDR));
@@ -111,17 +113,17 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
 
   /* allocate all memory */
   memset(amxdbg, 0, sizeof(AMX_DBG));
-  amxdbg->hdr = (AMX_DBG_HDR *)malloc((size_t)dbghdr.size);
+  amxdbg->hdr = static_cast<AMX_DBG_HDR*>(malloc(static_cast<size_t>(dbghdr.size)));
   if (dbghdr.files > 0)
-    amxdbg->filetbl = (AMX_DBG_FILE **)malloc(dbghdr.files * sizeof(AMX_DBG_FILE *));
+    amxdbg->filetbl = static_cast<AMX_DBG_FILE**>(malloc(dbghdr.files * sizeof(AMX_DBG_FILE*)));
   if (dbghdr.symbols > 0)
-    amxdbg->symboltbl = (AMX_DBG_SYMBOL **)malloc(dbghdr.symbols * sizeof(AMX_DBG_SYMBOL *));
+    amxdbg->symboltbl = static_cast<AMX_DBG_SYMBOL**>(malloc(dbghdr.symbols * sizeof(AMX_DBG_SYMBOL*)));
   if (dbghdr.tags > 0)
-    amxdbg->tagtbl = (AMX_DBG_TAG **)malloc(dbghdr.tags * sizeof(AMX_DBG_TAG *));
+    amxdbg->tagtbl = static_cast<AMX_DBG_TAG**>(malloc(dbghdr.tags * sizeof(AMX_DBG_TAG*)));
   if (dbghdr.automatons > 0)
-    amxdbg->automatontbl = (AMX_DBG_MACHINE **)malloc(dbghdr.automatons * sizeof(AMX_DBG_MACHINE *));
+    amxdbg->automatontbl = static_cast<AMX_DBG_MACHINE**>(malloc(dbghdr.automatons * sizeof(AMX_DBG_MACHINE*)));
   if (dbghdr.states > 0)
-    amxdbg->statetbl = (AMX_DBG_STATE **)malloc(dbghdr.states * sizeof(AMX_DBG_STATE *));
+    amxdbg->statetbl = static_cast<AMX_DBG_STATE**>(malloc(dbghdr.states * sizeof(AMX_DBG_STATE*)));
   if (amxdbg->hdr == nullptr
 	  || (dbghdr.files > 0 && amxdbg->filetbl == nullptr)
       || (dbghdr.symbols > 0 && amxdbg->symboltbl == nullptr)
@@ -262,7 +264,7 @@ int AMXAPI dbg_LookupLine(AMX_DBG *amxdbg, ucell address, long *line)
   if (--index < 0)
     return AMX_ERR_NOTFOUND;
 
-  *line = (long)amxdbg->linetbl[index].line;
+  *line = static_cast<long>(amxdbg->linetbl[index].line);
   return AMX_ERR_NONE;
 }
 
@@ -364,7 +366,7 @@ int AMXAPI dbg_GetLineAddress(AMX_DBG *amxdbg, long line, const char *filename, 
       continue;
     /* get address range for the current file */
     bottomaddr = amxdbg->filetbl[file]->address;
-    topaddr = (file + 1 < amxdbg->hdr->files) ? amxdbg->filetbl[file+1]->address : (ucell)(cell)-1;
+    topaddr = (file + 1 < amxdbg->hdr->files) ? amxdbg->filetbl[file+1]->address : static_cast<ucell>((cell)-1);
     /* go to the starting address in the line table */
     while (index < amxdbg->hdr->lines && amxdbg->linetbl[index].address < bottomaddr)
       index++;

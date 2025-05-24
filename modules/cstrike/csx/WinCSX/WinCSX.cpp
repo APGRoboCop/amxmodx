@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -20,9 +22,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 {
  	// TODO: Place code here.
 	MSG msg;
-	HACCEL hAccelTable;
 
-	// Initialize global strings
+    // Initialize global strings
 	LoadString(hInstance, IDS_APP_TITLE, g_szTitle, MAX_LOADSTRING);
 
 	LoadString(hInstance, IDC_WINCSX, g_szWindowClass, MAX_LOADSTRING);
@@ -36,7 +37,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	InitCommonControls();
 
-	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_WINCSX);
+    const HACCEL hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_WINCSX);
 
 	// Show the dialog box now.
 	DialogBox(hInst, (LPCTSTR)IDD_WINCSXBOX, g_hWnd, (DLGPROC)WinCSXBox);
@@ -51,7 +52,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		}
 	}
 
-	return (int) msg.wParam;
+	return static_cast<int>(msg.wParam);
 }
 
 
@@ -99,7 +100,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+bool InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Store instance handle in our global variable
 
@@ -172,10 +173,10 @@ void UpdateListBox(HWND hDlg) {
 		return;
 	}
 	// This part copies the occurring authids into the lefthand listbox.
-	int index = 10, len = 0;
-	char tempbuffer[1024];
+	//int index = 10, len = 0; //Unused? [APG]RoboCop[CL]
 
 	for (RankSystem::iterator b = g_rank.front(); b; --b) {
+		char tempbuffer[1024];
 		//if ((*b).getPosition() < 1) // umm... naaah!
 			//continue;
 
@@ -254,7 +255,7 @@ void ListboxItemSelected(HWND hDlg) {
 
 void SaveChanges(HWND hDlg) {
 	BOOL success;
-	int position = GetDlgItemInt(hDlg, IDC_EDIT_POSITION, &success, false);
+	/*int position =*/ GetDlgItemInt(hDlg, IDC_EDIT_POSITION, &success, false);
 	if (!success)
 		goto BadEnd;
 	
@@ -362,7 +363,7 @@ void DeleteRecord(HWND hDlg) {
 		return;
 
 	BOOL success;
-	int position = GetDlgItemInt(hDlg, IDC_EDIT_POSITION, &success, false);
+	/*int position =*/ GetDlgItemInt(hDlg, IDC_EDIT_POSITION, &success, false);
 	if (!success)
 		goto BadEnd;
 	

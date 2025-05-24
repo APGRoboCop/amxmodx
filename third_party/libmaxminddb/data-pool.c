@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 #include "data-pool.h"
 #include "maxminddb.h"
 
@@ -5,7 +7,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-static bool can_multiply(size_t const, size_t const, size_t const);
+static bool can_multiply(size_t, size_t, size_t);
 
 // Allocate an MMDB_data_pool_s. It initially has space for size
 // MMDB_entry_data_list_s structs.

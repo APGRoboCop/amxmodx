@@ -49,9 +49,9 @@ private:
 		MenuCommand* next;
 		MenuCommand(CPluginMngr::CPlugin *a, int mi, int k, int f, bool new_menu=false);
 	public:
-		inline int getFunction() { return function; }
-		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
-		inline bool matchCommand(int m, int k)
+		inline int getFunction() const { return function; }
+		inline CPluginMngr::CPlugin* getPlugin() const { return plugin; }
+		inline bool matchCommand(int m, int k) const
 		{
 			return ((m == menuid) && (keys & k));
 		}
@@ -64,7 +64,7 @@ public:
 
 	// Interface
 
-	int findMenuId(const char* name, AMX* a = nullptr);
+	int findMenuId(const char* name, AMX* a = nullptr) const;
 	int registerMenuId(const char* n, AMX* a);
 	void registerMenuCmd(CPluginMngr::CPlugin *a, int mi, int k, int f, bool from_new_menu=false);
 	void clear();
@@ -79,14 +79,14 @@ public:
 		bool operator==(const iterator& b) const { return a == b.a; }
 		bool operator!=(const iterator& b) const { return !operator==(b); }
 		operator bool () const { return a ? true : false; }
-		MenuCommand& operator*() { return *a; }
+		MenuCommand& operator*() const { return *a; }
 	};
 	
 	inline iterator begin() const { return iterator(headcmd); }
 	inline iterator end() const { return iterator(nullptr); }
 
 	iterator SetWatchIter(iterator iter);
-	inline iterator GetWatchIter() { return m_watch_iter; }
+	inline iterator GetWatchIter() const { return m_watch_iter; }
 private:
 	iterator m_watch_iter;
 };

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -99,7 +101,7 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 	size_t i = 0;
 	size_t pos = 0;
 	int flag = 0;
-	size_t strln = strlen(str);
+	const size_t strln = strlen(str);
 
 	for (i = strln - 1; i < strln; i--)
 	{
@@ -111,7 +113,7 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 		}
 	}
 
-	char *ptr = str;
+	const char *ptr = str;
 	while (*ptr)
 	{
 		if (!flag)
@@ -135,13 +137,13 @@ size_t CLangMngr::strip(char *str, char *newstr, bool makelower)
 
 /******** CLangMngr::CLang *********/
 
-CLangMngr::CLang::CLang()
+CLangMngr::CLang::CLang(): m_LanguageName{}, m_LMan(nullptr)
 {
 	m_LookUpTable.clear();
 	m_entries = 0;
 }
 
-CLangMngr::CLang::CLang(const char *lang)
+CLangMngr::CLang::CLang(const char *lang): m_LMan(nullptr)
 {
 	m_LookUpTable.clear();
 	m_entries = 0;
@@ -170,8 +172,7 @@ CLangMngr::CLang::~CLang()
 
 void CLangMngr::CLang::Clear()
 {
-	THash<int, defentry>::iterator iter;
-	for (iter=m_LookUpTable.begin(); iter!=m_LookUpTable.end(); iter++)
+	for (THash<int, defentry>::iterator iter = m_LookUpTable.begin(); iter!=m_LookUpTable.end(); ++iter)
 	{
 		if (iter->val.definition)
 		{
@@ -187,10 +188,10 @@ void CLangMngr::CLang::MergeDefinitions(ke::Vector<sKeyDef> &vec)
 {
 	while (!vec.empty())
 	{
-		auto keydef = vec.popCopy();
+		const auto keydef = vec.popCopy();
 
-		int key = keydef.key;
-		ke::AutoString* pDef = keydef.definition;
+		const int key = keydef.key;
+		const ke::AutoString* pDef = keydef.definition;
 
 		AddEntry(key, pDef->ptr());
 
@@ -200,7 +201,7 @@ void CLangMngr::CLang::MergeDefinitions(ke::Vector<sKeyDef> &vec)
 
 const char * CLangMngr::CLang::GetDef(int key, int &status)
 {
-	defentry &def = m_LookUpTable[key];
+	const defentry &def = m_LookUpTable[key];
 
 	if (!def.definition)
 	{
@@ -212,7 +213,7 @@ const char * CLangMngr::CLang::GetDef(int key, int &status)
 	return def.definition->chars();
 }
 
-int CLangMngr::CLang::Entries()
+int CLangMngr::CLang::Entries() const
 {
 	return m_entries;
 }
@@ -234,7 +235,7 @@ const char * CLangMngr::GetKey(int key)
 
 int CLangMngr::GetKeyEntry(const char *key)
 {
-	keytbl_val &val = KeyTable[ke::AString(key)];
+	const keytbl_val &val = KeyTable[ke::AString(key)];
 
 	return val.index;
 }
@@ -258,7 +259,7 @@ int CLangMngr::AddKeyEntry(ke::AString &key)
 
 int CLangMngr::GetKeyEntry(ke::AString &key)
 {
-	keytbl_val &val = KeyTable[key];
+	const keytbl_val &val = KeyTable[key];
 
 	return val.index;
 }
@@ -267,7 +268,7 @@ char * CLangMngr::FormatAmxString(AMX *amx, cell *params, int parm, int &len)
 {
 	//do an initial run through all this 
 	static char outbuf[4096];
-	cell *addr = get_amxaddr(amx, params[parm++]);
+	const cell *addr = get_amxaddr(amx, params[parm++]);
 
 	len = atcprintf(outbuf, sizeof(outbuf)-1, addr, amx, params, &parm);
 
@@ -283,16 +284,15 @@ void CLangMngr::MergeDefinitions(const char *lang, ke::Vector<sKeyDef> &tmpVec)
 
 void reparse_newlines_and_color(char* def)
 {
-	size_t len = strlen(def);
+	const size_t len = strlen(def);
 	int offs = 0;
-	int c;
 
 	if (!len)
 		return;
 
 	for (size_t i = 0; i < len; i++)
 	{
-		c = def[i]; 
+		char c = def[i]; 
 
 		if (c == '^' && (i != len - 1))
 		{
@@ -384,7 +384,7 @@ bool CLangMngr::ReadINI_NewSection(const char *section, bool invalid_tokens, boo
 
 bool CLangMngr::ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok)
 {
-	bool colons_token = (key[strlen(key) - 1] == ':');
+	const bool colons_token = (key[strlen(key) - 1] == ':');
 
 	if (!Data.multiLine)
 	{
@@ -490,7 +490,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	Data.currentFile = file;
 
 	unsigned int line, col;
-	bool result = textparsers->ParseFile_INI(file, this, &line, &col, false);
+	const bool result = textparsers->ParseFile_INI(file, this, &line, &col, false);
 
 	if (!result)
 	{
@@ -533,7 +533,7 @@ const char *CLangMngr::GetDef(const char *langName, const char *key, int &status
 {
 	CLang *lang = GetLangR(langName);
 
-	keytbl_val &val = KeyTable.AltFindOrInsert(ke::AString(key)); //KeyTable[make_string(key)];
+	const keytbl_val &val = KeyTable.AltFindOrInsert(ke::AString(key)); //KeyTable[make_string(key)];
 	if (lang == nullptr)
 	{
 		status = ERR_BADLANG;
@@ -580,7 +580,7 @@ void CLangMngr::Clear()
 	FileList.clear();
 }
 
-int CLangMngr::GetLangsNum()
+int CLangMngr::GetLangsNum() const
 {
 	return m_Languages.length();
 }
@@ -589,7 +589,7 @@ const char *CLangMngr::GetLangName(int langId)
 {
 	for (size_t iter = 0; iter < m_Languages.length(); ++iter)
 	{
-		if ((int)iter == langId)
+		if (static_cast<int>(iter) == langId)
 		{
 			return m_Languages[iter]->GetName();
 		}
@@ -600,7 +600,7 @@ const char *CLangMngr::GetLangName(int langId)
 
 bool CLangMngr::LangExists(const char *langName)
 {
-	char buf[3] = {0};
+	char buf[3] = {};
 	int i = 0;
 	
 	while ((buf[i] = tolower(*langName++)))

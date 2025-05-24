@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /* This file implements two native functions. It is provided as
  * an example to show how to add native functions. See the manual
  * for more information.

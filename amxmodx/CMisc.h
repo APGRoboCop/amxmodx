@@ -81,7 +81,7 @@ public:
 	
 	bool Connect(const char* connectname, const char* ipaddress);
 
-	inline bool IsBot()
+	inline bool IsBot() const
 	{
 		if ((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)
 		{
@@ -97,14 +97,14 @@ public:
 		return false;
 	}
 
-	inline bool IsAlive()
+	inline bool IsAlive() const
 	{
 		return ((pEdict->v.deadflag == DEAD_NO) && (pEdict->v.health > 0));
 	}
 
 	inline void Authorize() { authorized = true; }
 
-	int NextHUDChannel();
+	int NextHUDChannel() const;
 
 };
 
@@ -146,13 +146,13 @@ class ForceObject
 public:
 	ForceObject(const char* n, FORCE_TYPE c, Vector& mi, Vector& ma, AMX* a) : filename(n), type(c), mins(mi), maxs(ma), amx(a) {}
 
-	inline const char* getFilename() { return filename.chars(); }
-	inline AMX* getAMX() { return amx; }
+	inline const char* getFilename() const { return filename.chars(); }
+	inline AMX* getAMX() const { return amx; }
 	
 	Vector& getMin() { return mins; }
 	Vector& getMax() { return maxs; }
 	
-	inline FORCE_TYPE getForceType() { return type; }
+	inline FORCE_TYPE getForceType() const { return type; }
 };
 
 // *****************************************************
@@ -180,12 +180,12 @@ public:
 	void clear();
 	int put(AMX* a, cell* v);
 	
-	inline cell getValue(int a)
+	inline cell getValue(int a) const
 	{
 		return (a >= 0 && a < num) ? *(head[a].value) : 0;
 	}
 
-	inline int setValue(int a, cell v)
+	inline int setValue(int a, cell v) const
 	{ 
 		if (a >= 0 && a < num)
 		{
@@ -209,9 +209,9 @@ class CScript : public ke::InlineListNode<CScript>
 public:
 	CScript(AMX* aa, void* cc, const char* ff) : filename(ff), amx(aa), code(cc) {}
 	
-	inline AMX* getAMX() { return amx; }
-	inline const char* getName() { return filename.chars(); }
-	inline void* getCode() { return code; }
+	inline AMX* getAMX() const { return amx; }
+	inline const char* getName() const { return filename.chars(); }
+	inline void* getCode() const { return code; }
 };
 
 // *****************************************************
@@ -243,9 +243,9 @@ public:
 	~TeamIds();
 	
 	void registerTeam(const char* n, int s);
-	int findTeamId(const char* n);
-	int findTeamIdCase(const char* n);
-	inline bool isNewTeam() { return newTeam ? true : false; }
+	int findTeamId(const char* n) const;
+	int findTeamIdCase(const char* n) const;
+	inline bool isNewTeam() const { return newTeam ? true : false; }
 };
 
 class CAdminData
@@ -263,25 +263,27 @@ public:
 		m_Password[0]=0;
 		m_Flags=0;
 		m_Access=0;
-	};
+	}
 
 	void SetAccess(cell Access)
 	{
 		m_Access=Access;
-	};
+	}
+
 	cell GetAccess() const
 	{
 		return m_Access;
-	};
+	}
 
 	void SetFlags(cell Flags)
 	{
 		m_Flags=Flags;
-	};
+	}
+
 	cell GetFlags() const
 	{
 		return m_Flags;
-	};
+	}
 
 	void SetAuthID(const cell *Input)
 	{
@@ -296,11 +298,12 @@ public:
 
 		m_AuthData[arraysize(m_AuthData)-1]=0;
 
-	};
+	}
+
 	const cell *GetAuthID() const
 	{
 		return &m_AuthData[0];
-	};
+	}
 
 	void SetPass(const cell *Input)
 	{
@@ -315,11 +318,12 @@ public:
 
 		m_Password[arraysize(m_Password)-1]=0;
 
-	};
+	}
+
 	const cell *GetPass() const
 	{
 		return &m_Password[0];
-	};
+	}
 
 	CAdminData & operator = (const CAdminData &src)
 	{

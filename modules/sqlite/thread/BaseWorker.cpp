@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -18,10 +20,10 @@ BaseWorker::BaseWorker() :
 BaseWorker::~BaseWorker()
 {
 	if (m_state != Worker_Stopped || m_state != Worker_Invalid)
-		Stop(true);
+		BaseWorker::Stop(true);
 
 	if (m_ThreadQueue.size())
-		Flush(true);
+		BaseWorker::Flush(true);
 }
 
 void BaseWorker::MakeThread(IThread *pThread)
@@ -119,13 +121,12 @@ unsigned int BaseWorker::RunFrame()
 	unsigned int done = 0;
 	unsigned int max = GetMaxThreadsPerFrame();
 	SWThreadHandle *swt = nullptr;
-	IThread *pThread = nullptr;
 
 	while (done < max)
 	{
 		if ((swt=PopThreadFromQueue()) == nullptr)
 			break;
-		pThread = swt->pThread;
+		IThread* pThread = swt->pThread;
 		swt->m_state = Thread_Running;
 		pThread->RunThread(swt);
 		swt->m_state = Thread_Done;

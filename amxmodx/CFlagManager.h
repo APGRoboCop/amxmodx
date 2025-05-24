@@ -36,42 +36,43 @@ public:
 		m_iNeedWritten=0;
 		m_iFlags=0;
 		m_iHidden=0;
-	};
+	}
 
 	int NeedWritten() const
 	{
 		return m_iNeedWritten;
-	};
+	}
 
 	void SetNeedWritten(const int i=1)
 	{
 		m_iNeedWritten=i;
-	};
+	}
 
 	const ke::AString *GetName() const
 	{
 		return &m_strName;
-	};
+	}
 
 	const ke::AString *GetFlags() const
 	{
 		return &m_strFlags;
-	};
+	}
 
 	const ke::AString *GetComment() const
 	{
 		return &m_strComment;
-	};
+	}
 
 	int Flags() const
 	{
 		return m_iFlags;
-	};
+	}
 
 	void SetName(const char *data)
 	{
 		m_strName = data;
-	};
+	}
+
 	void SetFlags(const char *flags)
 	{
 		// If this is a "!" entry then stop
@@ -83,7 +84,8 @@ public:
 
 		m_strFlags = flags;
 		m_iFlags=UTIL_ReadFlags(flags);
-	};
+	}
+
 	void SetFlags(const int flags)
 	{
 		m_iFlags=flags;
@@ -92,19 +94,23 @@ public:
 		UTIL_GetFlags(FlagsString, flags);
 
 		m_strFlags = FlagsString;
-	};
+	}
+
 	void SetComment(const char *comment)
 	{
 		m_strComment = comment;
-	};
+	}
+
 	void SetHidden(int i=1)
 	{
 		m_iHidden=i;
-	};
+	}
+
 	int IsHidden() const
 	{
 		return m_iHidden;
-	};
+	}
+
 };
 class CFlagManager
 {
@@ -118,9 +124,7 @@ private:
 
 	void CreateIfNotExist() const
 	{
-		FILE *fp;
-		
-		fp = fopen(GetFile(), "r");
+		FILE* fp = fopen(GetFile(), "r");
 
 		if (!fp)
 		{
@@ -148,7 +152,8 @@ private:
 		{
 			fclose(fp);
 		}
-	};
+	}
+
 	/**
 	 * Returns 1 if the timestamp for the file is different than the one we have loaded
 	 * 0 otherwise
@@ -171,7 +176,8 @@ private:
 
 		return 0;
 
-	};
+	}
+
 public:
 
 	CFlagManager()
@@ -179,17 +185,15 @@ public:
 		memset(&m_Stat,0x0,sizeof(struct stat));
 		m_iDisabled=0;
 		m_iForceRead=0;
-	};
-	~CFlagManager()
-	{
-	};
+	}
+	~CFlagManager()	= default;
 
 	/**
 	 * Sets the filename in relation to amxmodx/configs
 	 */
 	void SetFile(const char *Filename="cmdaccess.ini");
 
-	const char *GetFile() const	{ return m_strConfigFile.chars(); };
+	const char *GetFile() const	{ return m_strConfigFile.chars(); }
 	
 	/**
 	 * Parse the file, and load all entries

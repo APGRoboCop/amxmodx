@@ -86,8 +86,7 @@ protected:
 	inline int GetBucket(int hash)
 	{
 		return (*reinterpret_cast<unsigned int*>(&hash)) % B;
-	};
-
+	}
 
 public:
 
@@ -169,7 +168,7 @@ public:
 		}
 
 		return nullptr;
-	};
+	}
 };
 
 #endif

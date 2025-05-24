@@ -142,7 +142,7 @@ extern CPlayer* mPlayer;
 extern CMapInfo g_map;
 
 int get_weaponid(CPlayer* player);
-bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );
+bool ignoreBots (edict_t *pEnt, edict_t *pOther = nullptr);
 bool isModuleActive();
 edict_t *FindEntityByString(edict_t *pentStart, const char *szKeyword, const char *szValue);
 edict_t *FindEntityByClassname(edict_t *pentStart, const char *szName);

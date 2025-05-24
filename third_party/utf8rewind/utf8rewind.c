@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
 	Copyright (C) 2014-2016 Quinten Lansu
 
@@ -522,7 +524,7 @@ const char* utf8seek(const char* text, size_t textSize, const char* textStart, o
 				return seeking_rewind(textStart, text, textSize, offset);
 			}
 
-		} break;
+		} //break;
 
 	case SEEK_SET:
 		{
@@ -533,7 +535,7 @@ const char* utf8seek(const char* text, size_t textSize, const char* textStart, o
 
 			return seeking_forward(textStart, text_end, textSize, offset);
 
-		} break;
+		} //break;
 
 	case SEEK_END:
 		return seeking_rewind(textStart, text_end, textSize, -offset);
@@ -558,7 +560,7 @@ UTF8_API size_t utf8envlocale()
 
 #if WIN32 || _WINDOWS
 	#define UTF8_LOCALE_CHECK(_name, _ansiCodepage, _oemCodepage) \
-		(codepage == _ansiCodepage || codepage == _oemCodepage)
+		(codepage == (_ansiCodepage) || codepage == (_oemCodepage))
 
 	unsigned int codepage;
 	_locale_t locale = _get_current_locale();
@@ -590,7 +592,7 @@ UTF8_API size_t utf8envlocale()
 	{
 		return UTF8_LOCALE_LITHUANIAN;
 	}
-	else if (
+	if (
 		UTF8_LOCALE_CHECK("tr_tr", 1254, 857) ||
 		UTF8_LOCALE_CHECK("az_az", 1254, 857))
 	{

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -16,7 +18,7 @@ CPlayer PlayersArray[33];
 
 void CPlayer::UpdateHUD()
 {
-	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("WeaponInfo"), 0, this->PlayerEdict);
+	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("WeaponInfo"), nullptr, this->PlayerEdict);
 		WRITE_BYTE(this->CurrentWeapon);
 		WRITE_BYTE(this->Weapons[this->CurrentWeapon].clip);
 		WRITE_SHORT(this->Weapons[this->CurrentWeapon].ammo);
@@ -43,10 +45,10 @@ uint16_t CPlayer::GetPowerup()
 	return (uint16_t)this->GetPDataInt(453);
 }
 
-edict_t *CPlayer::GetWeaponEdict()
+edict_t *CPlayer::GetWeaponEdict() const
 {
 	edict_t *weapon = nullptr;
-	while ((weapon = g_engfuncs.pfnFindEntityByString(weapon, "classname", "weapon_tsgun")) != 0)
+	while ((weapon = g_engfuncs.pfnFindEntityByString(weapon, "classname", "weapon_tsgun")) != nullptr)
 		if (weapon->v.owner == this->PlayerEdict)
 			return weapon;
 	return nullptr;
@@ -59,28 +61,28 @@ edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcm
 	KeyValueData params;
 	char buffer[24];
 
-	params.szClassName = (char *)STRING(ent->v.classname);
+	params.szClassName = const_cast<char*>(STRING(ent->v.classname));
 	params.szKeyName = "tsweaponid";
 	sprintf(buffer, "%d", id);
 	params.szValue = buffer;
 	params.fHandled = false;
 	MDLL_KeyValue(ent, &params);
 
-	params.szClassName = (char *)STRING(ent->v.classname);
+	params.szClassName = const_cast<char*>(STRING(ent->v.classname));
 	params.szKeyName = "wduration";
 	sprintf(buffer, "%d", ttl);
 	params.szValue = buffer;
 	params.fHandled = false;
 	MDLL_KeyValue(ent, &params);
 
-	params.szClassName = (char *)STRING(ent->v.classname);
+	params.szClassName = const_cast<char*>(STRING(ent->v.classname));
 	params.szKeyName = "wextraclip";
 	sprintf(buffer, "%d", clips);
 	params.szValue = buffer;
 	params.fHandled = false;
 	MDLL_KeyValue(ent, &params);
 
-	params.szClassName = (char *)STRING(ent->v.classname);
+	params.szClassName = const_cast<char*>(STRING(ent->v.classname));
 	params.szKeyName = "spawnflags";
 	sprintf(buffer, "%d", atcments);
 	params.szValue = buffer;
@@ -99,14 +101,14 @@ edict_t *CreatePowerup(uint16_t type, Vector coord, short ttl) {
 	KeyValueData params;
 	char buffer[24];
 
-	params.szClassName = (char *)STRING(ent->v.classname);
+	params.szClassName = const_cast<char*>(STRING(ent->v.classname));
 	params.szKeyName = "pwuptype";
 	sprintf(buffer, "%d", type);
 	params.szValue = buffer;
 	params.fHandled = false;
 	MDLL_KeyValue(ent, &params);
 
-	params.szClassName = (char *)STRING(ent->v.classname);
+	params.szClassName = const_cast<char*>(STRING(ent->v.classname));
 	params.szKeyName = "pwupduration";
 	sprintf(buffer, "%d", ttl);
 	params.szValue = buffer;

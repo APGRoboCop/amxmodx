@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /**
 * vim: set ts=4 :
 * =============================================================================
@@ -49,13 +51,13 @@ CDetour *CDetourManager::CreateDetour(void *callbackfunction, void **trampoline,
 		if (!detour->Init(/*spengine, gameconf*/))
 		{
 			delete detour;
-			return NULL;
+			return nullptr;
 		}
 
 		return detour;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CDetour *CDetourManager::CreateDetour(void *callbackfunction, void **trampoline, void *address)
@@ -66,37 +68,37 @@ CDetour *CDetourManager::CreateDetour(void *callbackfunction, void **trampoline,
 		if (!detour->Init(/*spengine, gameconf*/))
 		{
 			delete detour;
-			return NULL;
+			return nullptr;
 		}
 
 		return detour;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
-CDetour::CDetour(void *callbackfunction, void **trampoline, const char *signame)
+CDetour::CDetour(void *callbackfunction, void **trampoline, const char *signame): detour_trampolineSize(0)
 {
 	enabled = false;
 	detoured = false;
-	detour_address = NULL;
-	detour_trampoline = NULL;
+	detour_address = nullptr;
+	detour_trampoline = nullptr;
 	this->signame = signame;
 	this->detour_callback = callbackfunction;
-	this->address = NULL;
+	this->address = nullptr;
 	//spengine = NULL;
 	//gameconf = NULL;
 	this->trampoline = trampoline;
 }
 
-CDetour::CDetour(void *callbackfunction, void **trampoline, void *address)
+CDetour::CDetour(void *callbackfunction, void **trampoline, void *address): detour_trampolineSize(0)
 {
 	enabled = false;
 	detoured = false;
 	detour_address = address;
-	detour_trampoline = NULL;
-	this->signame = NULL;
+	detour_trampoline = nullptr;
+	this->signame = nullptr;
 	this->detour_callback = callbackfunction;
 	this->address = address;
 	//spengine = NULL;
@@ -140,7 +142,7 @@ bool CDetour::CreateDetour()
 		return false;
 	}*/
 
-	if (address != NULL)
+	if (address != nullptr)
 	{
 		detour_address = address;
 	}
@@ -151,37 +153,36 @@ bool CDetour::CreateDetour()
 		return false;
 	}
 
-	detour_restore.bytes = copy_bytes((unsigned char *)detour_address, NULL, OP_JMP_SIZE+1);
+	detour_restore.bytes = copy_bytes(static_cast<unsigned char*>(detour_address), nullptr, OP_JMP_SIZE+1);
 
 	/* First, save restore bits */
 	for (size_t i=0; i<detour_restore.bytes; i++)
 	{
-		detour_restore.patch[i] = ((unsigned char *)detour_address)[i];
+		detour_restore.patch[i] = static_cast<unsigned char*>(detour_address)[i];
 	}
 
 	JitWriter wr;
 	JitWriter *jit = &wr;
-	unsigned int CodeSize = 0;
-	
-	wr.outbase = NULL;
-	wr.outptr = NULL;
+
+	wr.outbase = nullptr;
+	wr.outptr = nullptr;
 
 jit_rewind:
 
 	/* Patch old bytes in */
-	if (wr.outbase != NULL)
+	if (wr.outbase != nullptr)
 	{
-		copy_bytes((unsigned char *)detour_address, (unsigned char*)wr.outptr, detour_restore.bytes);
+		copy_bytes(static_cast<unsigned char*>(detour_address), (unsigned char*)wr.outptr, detour_restore.bytes);
 	}
 	wr.outptr += detour_restore.bytes;
 
 	/* Return to the original function */
-	unsigned int call = IA32_Jump_Imm32(jit, 0);
-	IA32_Write_Jump32_Abs(jit, call, (unsigned char *)detour_address + detour_restore.bytes);
+	const unsigned int call = IA32_Jump_Imm32(jit, 0);
+	IA32_Write_Jump32_Abs(jit, call, static_cast<unsigned char*>(detour_address) + detour_restore.bytes);
 
-	if (wr.outbase == NULL)
+	if (wr.outbase == nullptr)
 	{
-		CodeSize = wr.get_outputpos();
+		const unsigned int CodeSize = wr.get_outputpos();
 		wr.outbase = (char *)AllocatePageMemory(CodeSize);
 		//spengine->SetReadWrite(wr.outbase);
 		wr.outptr = wr.outbase;
@@ -208,7 +209,7 @@ void CDetour::DeleteDetour()
 	{
 		/* Free the allocated trampoline memory */
 		FreePageMemory(detour_trampoline, detour_trampolineSize);
-		detour_trampoline = NULL;
+		detour_trampoline = nullptr;
 	}
 }
 
@@ -216,7 +217,7 @@ void CDetour::EnableDetour()
 {
 	if (!detoured)
 	{
-		DoGatePatch((unsigned char *)detour_address, &detour_callback);
+		DoGatePatch(static_cast<unsigned char*>(detour_address), &detour_callback);
 		detoured = true;
 	}
 }
@@ -226,7 +227,7 @@ void CDetour::DisableDetour()
 	if (detoured)
 	{
 		/* Remove the patch */
-		ApplyPatch(detour_address, 0, &detour_restore, NULL);
+		ApplyPatch(detour_address, 0, &detour_restore, nullptr);
 		detoured = false;
 	}
 }

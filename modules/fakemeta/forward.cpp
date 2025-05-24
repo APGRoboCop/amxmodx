@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -269,23 +271,23 @@ void KeyValue_post(edict_t* entity, KeyValueData* data)
 	RETURN_META(MRES_IGNORED);
 }
 
-void AlertMessage(ALERT_TYPE atype, const char *szFmt, ...)
+void AlertMessage(ALERT_TYPE atype, const char* szFmt, ...)
 {
 	static char buf[2048];
 	va_list ap;
 	va_start(ap, szFmt);
-	vsprintf(buf, szFmt, ap);
+	vsnprintf(buf, sizeof(buf), szFmt, ap); // Use vsnprintf with buffer size
 	va_end(ap);
 	FM_ENG_HANDLE(FM_AlertMessage, (Engine[FM_AlertMessage].at(i), (cell)atype, buf));
 	RETURN_META(mswi(lastFmRes));
 }
 
-void AlertMessage_post(ALERT_TYPE atype, const char *szFmt, ...)
+void AlertMessage_post(ALERT_TYPE atype, const char* szFmt, ...)
 {
 	static char buf[2048];
 	va_list ap;
 	va_start(ap, szFmt);
-	vsprintf(buf, szFmt, ap);
+	vsnprintf(buf, sizeof(buf), szFmt, ap); // Use vsnprintf with buffer size
 	va_end(ap);
 	FM_ENG_HANDLE_POST(FM_AlertMessage, (EnginePost[FM_AlertMessage].at(i), (cell)atype, buf));
 	RETURN_META(MRES_IGNORED);

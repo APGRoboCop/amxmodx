@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -99,8 +101,7 @@ void CTaskMngr::CTask::resetNextExecTime(float fCurrentTime)
 void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, float fTimeLeft)
 {
 	bool execute = false;
-	bool done = false;
-	
+
 	if (m_bAfterStart)
 	{
 		if (fCurrentTime - fTimeLeft + 1.0f >= m_fBase)
@@ -118,13 +119,14 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 
 	if (execute)
 	{
+		bool done = false;
 		//only bother calling if we have something to call
 		if (!(m_bLoop && !m_iRepeat))
 		{
 			m_bInExecute = true;
 			if (m_iParamLen)	// call with parameters
 			{
-				cell arr = prepareCellArray(m_pParams, m_iParamLen);
+				const cell arr = prepareCellArray(m_pParams, m_iParamLen);
 				executeForwards(m_iFunc, arr, m_iId);
 			} else {
 				executeForwards(m_iFunc, m_iId);
@@ -138,9 +140,17 @@ void CTaskMngr::CTask::executeIfRequired(float fCurrentTime, float fTimeLimit, f
 		// set new exec time OR remove the task if needed
 		if (m_bLoop)
 		{
-			if (m_iRepeat != -1 && --m_iRepeat <= 0)
-				done = true;
-		} else {
+			if (m_iRepeat != -1)
+			{
+				--m_iRepeat;
+				if (m_iRepeat <= 0)
+				{
+					done = true;
+				}
+			}
+		}
+		else
+		{
 			done = true;
 		}
 
@@ -203,7 +213,7 @@ void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pT
 void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
 {
 	// first, search for free tasks
-	for (auto &task : m_Tasks)
+	for (const ke::AutoPtr<CTask>& task : m_Tasks)
 	{
 		if (task->isFree() && !task->inExecute())
 		{
@@ -213,7 +223,7 @@ void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlag
 		}
 	}
 	// not found: make a new one
-	auto task = ke::AutoPtr<CTask>(new CTask);
+	ke::AutoPtr<CTask> task = ke::AutoPtr<CTask>(new CTask);
 		
 	if (!task)
 		return;
@@ -226,7 +236,7 @@ int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 {
 	int i = 0;
 	
-	for (auto &task : m_Tasks)
+	for (const ke::AutoPtr<CTask>& task : m_Tasks)
 	{
 		if (task->match(iId, pAmx))
 		{
@@ -242,7 +252,7 @@ int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 {
 	int i = 0;
 	
-	for (auto &task : m_Tasks)
+	for (const ke::AutoPtr<CTask>& task : m_Tasks)
 	{
 		if (task->match(iId, pAmx))
 		{
@@ -257,7 +267,7 @@ int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 
 bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 {
-	for (auto &task : m_Tasks)
+	for (const ke::AutoPtr<CTask>& task : m_Tasks)
 	{
 		if (task->match(iId, pAmx))
 		{
@@ -269,10 +279,10 @@ bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 
 void CTaskMngr::startFrame()
 {
-	auto lastSize = m_Tasks.length();
-	for(auto i = 0u; i < lastSize; i++)
+	const size_t lastSize = m_Tasks.length();
+	for(unsigned i = 0u; i < lastSize; i++)
 	{
-		auto &task = m_Tasks[i];
+		const ke::AutoPtr<CTask>& task = m_Tasks[i];
 
 		if (task->isFree())
 			continue;

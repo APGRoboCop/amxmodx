@@ -106,7 +106,7 @@ void Client_TextMsg(void*);
 void Client_BarTime(void*);
 void Client_DeathMsg(void*);
 
-bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );
+bool ignoreBots (edict_t *pEnt, edict_t *pOther = nullptr);
 bool isModuleActive();
 
 #define CHECK_ENTITY(x) \

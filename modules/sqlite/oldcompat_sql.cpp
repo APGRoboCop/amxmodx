@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -33,7 +35,7 @@ struct oldresult_s
 
 void FreeOldDb(void *ptr, unsigned int hndl)
 {
-	olddb_s *old = (olddb_s *)ptr;
+	olddb_s *old = static_cast<olddb_s*>(ptr);
 
 	if (old->pDatabase)
 	{
@@ -46,7 +48,7 @@ void FreeOldDb(void *ptr, unsigned int hndl)
 
 void FreeOldResult(void *ptr, unsigned int hndl)
 {
-	oldresult_s *oldres = (oldresult_s *)ptr;
+	oldresult_s *oldres = static_cast<oldresult_s*>(ptr);
 
 	if (oldres->pQuery)
 	{
@@ -93,10 +95,9 @@ static cell AMX_NATIVE_CALL dbi_connect(AMX *amx, cell *params)
 	}
 
 	olddb_s *old = new olddb_s;
-	int hndl;
 
 	old->pDatabase = pDatabase;
-	hndl = MakeHandle(old, Handle_OldDb, FreeOldDb);
+	const int hndl = MakeHandle(old, Handle_OldDb, FreeOldDb);
 
 	return hndl;
 }
@@ -104,7 +105,7 @@ static cell AMX_NATIVE_CALL dbi_connect(AMX *amx, cell *params)
 //native Result:dbi_query(Sql:_sql, _query[], {Float,_}:...);
 static cell AMX_NATIVE_CALL dbi_query(AMX *amx, cell *params)
 {
-	olddb_s *old = (olddb_s *)GetHandle(params[1], Handle_OldDb);
+	olddb_s *old = static_cast<olddb_s*>(GetHandle(params[1], Handle_OldDb));
 	if (!old)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI handle %d", params[1]);
@@ -128,12 +129,11 @@ static cell AMX_NATIVE_CALL dbi_query(AMX *amx, cell *params)
 		if (info.rs && info.rs->RowCount())
 		{
 			oldresult_s *oldrs = new oldresult_s;
-			int hndl;
 
 			oldrs->info = info;
 			oldrs->pQuery = pQuery;
 			oldrs->firstCall = true;
-			hndl = MakeHandle(oldrs, Handle_OldResult, FreeOldResult);
+			const int hndl = MakeHandle(oldrs, Handle_OldResult, FreeOldResult);
 			return hndl;
 		} else {
 			pQuery->FreeHandle();
@@ -142,13 +142,13 @@ static cell AMX_NATIVE_CALL dbi_query(AMX *amx, cell *params)
 	}
 
 	/** never reach here */
-	return 0;
+	//return 0;
 }
 
 //native Result:dbi_query2(Sql:_sql, &rows, _query[], {Float,_}:...);
 static cell AMX_NATIVE_CALL dbi_query2(AMX *amx, cell *params)
 {
-	olddb_s *old = (olddb_s *)GetHandle(params[1], Handle_OldDb);
+	olddb_s *old = static_cast<olddb_s*>(GetHandle(params[1], Handle_OldDb));
 	if (!old)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI handle %d", params[1]);
@@ -174,12 +174,11 @@ static cell AMX_NATIVE_CALL dbi_query2(AMX *amx, cell *params)
 		if (info.rs && info.rs->RowCount())
 		{
 			oldresult_s *oldrs = new oldresult_s;
-			int hndl;
 
 			oldrs->info = info;
 			oldrs->pQuery = pQuery;
 			oldrs->firstCall = true;
-			hndl = MakeHandle(oldrs, Handle_OldResult, FreeOldResult);
+			const int hndl = MakeHandle(oldrs, Handle_OldResult, FreeOldResult);
 			return hndl;
 		} else {
 			pQuery->FreeHandle();
@@ -188,7 +187,7 @@ static cell AMX_NATIVE_CALL dbi_query2(AMX *amx, cell *params)
 	}
 
 	/** never reach here */
-	return 0;
+	//return 0;
 }
 
 //native dbi_nextrow(Result:_result);
@@ -199,7 +198,7 @@ static cell AMX_NATIVE_CALL dbi_nextrow(AMX *amx, cell *params)
 		return 0;
 	}
 
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(params[1], Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", params[1]);
@@ -219,7 +218,7 @@ static cell AMX_NATIVE_CALL dbi_nextrow(AMX *amx, cell *params)
 //native dbi_field(Result:_result, _fieldnum, {Float,_}:... );
 static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 {
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(params[1], Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", params[1]);
@@ -228,7 +227,7 @@ static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 
 	IResultSet *rs = oldrs->info.rs;
 	IResultRow *rr = rs->GetRow();
-	unsigned int num = (unsigned int)params[2] - 1;
+	unsigned int num = static_cast<unsigned int>(params[2]) - 1;
 	if (num >= rs->FieldCount())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column %d", params[2]);
@@ -249,7 +248,7 @@ static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 	case 3:
 		{
 			cell *destaddr = MF_GetAmxAddr(amx, params[3]);
-			REAL fdata = atof(data);
+			REAL fdata = static_cast<float>(atof(data));
 			*destaddr = amx_ftoc(fdata);
 			return 1;
 		}
@@ -266,7 +265,7 @@ static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 //native dbi_result(Result:_result, _field[], {Float,_}:... );
 static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 {
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(params[1], Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", params[1]);
@@ -275,7 +274,7 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 
 	IResultSet *rs = oldrs->info.rs;
 	IResultRow *rr = rs->GetRow();
-	unsigned int num;
+	unsigned int num = 0;
 	bool found = false;
 	unsigned int fields = rs->FieldCount();
 	int len;
@@ -310,7 +309,7 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 	case 3:
 		{
 			cell *destaddr = MF_GetAmxAddr(amx, params[3]);
-			REAL fdata = atof(data);
+			REAL fdata = static_cast<float>(atof(data));
 			*destaddr = amx_ftoc(fdata);
 			return 1;
 		}
@@ -327,7 +326,7 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 //native dbi_num_rows(Result:_result);
 static cell AMX_NATIVE_CALL dbi_num_rows(AMX *amx, cell *params)
 {
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(params[1], Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", params[1]);
@@ -348,7 +347,7 @@ static cell AMX_NATIVE_CALL dbi_free_result(AMX *amx, cell *params)
 		return 1;
 	}
 
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(num, Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(num, Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", num);
@@ -367,7 +366,7 @@ static cell AMX_NATIVE_CALL dbi_close(AMX *amx, cell *params)
 {
 	cell *_r = MF_GetAmxAddr(amx, params[1]);
 	cell num = *_r;
-	olddb_s *old = (olddb_s *)GetHandle(num, Handle_OldDb);
+	olddb_s *old = static_cast<olddb_s*>(GetHandle(num, Handle_OldDb));
 	if (!old)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI handle %d", num);
@@ -384,7 +383,7 @@ static cell AMX_NATIVE_CALL dbi_close(AMX *amx, cell *params)
 //native dbi_error(Sql:_sql, _error[], _len);
 static cell AMX_NATIVE_CALL dbi_error(AMX *amx, cell *params)
 {
-	olddb_s *old = (olddb_s *)GetHandle(params[1], Handle_OldDb);
+	olddb_s *old = static_cast<olddb_s*>(GetHandle(params[1], Handle_OldDb));
 	if (!old)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI handle %d", params[1]);
@@ -404,7 +403,7 @@ static cell AMX_NATIVE_CALL dbi_type(AMX *amx, cell *params)
 //native dbi_num_fields(Result:result);
 static cell AMX_NATIVE_CALL dbi_num_fields(AMX *amx, cell *params)
 {
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(params[1], Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", params[1]);
@@ -417,7 +416,7 @@ static cell AMX_NATIVE_CALL dbi_num_fields(AMX *amx, cell *params)
 //native dbi_field_name(Result:result, field, name[], maxLength);
 static cell AMX_NATIVE_CALL dbi_field_name(AMX *amx, cell *params)
 {
-	oldresult_s *oldrs = (oldresult_s *)GetHandle(params[1], Handle_OldResult);
+	oldresult_s *oldrs = static_cast<oldresult_s*>(GetHandle(params[1], Handle_OldResult));
 	if (!oldrs)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid DBI result handle %d", params[1]);

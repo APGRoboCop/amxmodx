@@ -365,7 +365,7 @@ enum AdminProperty
 enum PrintColor
 {
 	print_team_default = 0,
-	print_team_grey =-1,
+	print_team_grey = -1,
 	print_team_red = -2,
 	print_team_blue = -3,
 };

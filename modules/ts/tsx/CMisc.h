@@ -19,7 +19,7 @@
 #include "CRank.h"
 
 #define TSMAX_CUSTOMWPNS		5
-#define TSMAX_WEAPONS			39 + TSMAX_CUSTOMWPNS
+#define TSMAX_WEAPONS			(39 + TSMAX_CUSTOMWPNS)
 
 
 #if defined(_WIN32)

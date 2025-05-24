@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -16,7 +18,7 @@
  *  Written by David "BAILOPAN" Anderson
  */
 
-enum AmxOpcodes
+enum AmxOpcodes : std::uint8_t
 {
   OP_NONE,              /* invalid opcode */
   OP_LOAD_PRI,
@@ -213,12 +215,10 @@ void Debugger::Tracer::StepI(cell frm, cell cip)
 
 void Debugger::Tracer::Clear()
 {
-	trace_info *pInfo, *pNext;
-
-	pInfo = m_pStart;
+	const trace_info* pInfo = m_pStart;
 	while (pInfo)
 	{
-		pNext = pInfo->next;
+		const trace_info* pNext = pInfo->next;
 		delete pInfo;
 		pInfo = pNext;
 	}
@@ -259,7 +259,7 @@ void Debugger::BeginExec()
 	m_Top++;
 	assert(m_Top >= 0);
 
-	if (m_Top >= (int)m_pCalls.length())
+	if (m_Top >= static_cast<int>(m_pCalls.length()))
 	{
 		Tracer *pTracer = new Tracer();
 		m_pCalls.append(pTracer);
@@ -271,7 +271,7 @@ void Debugger::BeginExec()
 
 void Debugger::EndExec()
 {
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
 	m_pCalls[m_Top]->Reset();
 
@@ -280,7 +280,7 @@ void Debugger::EndExec()
 
 void Debugger::StepI()
 {
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
 #if defined BINLOG_ENABLED
 	if (g_binlog_level & 32)
@@ -306,28 +306,28 @@ void Debugger::Reset()
 
 int Debugger::GetTracedError()
 {
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
 	return m_pCalls[m_Top]->m_Error;
 }
 
 void Debugger::SetTracedError(int error)
 {
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
 	m_pCalls[m_Top]->m_Error = error;
 }
 
 trace_info_t *Debugger::GetTraceStart() const
 {
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
 	return m_pCalls[m_Top]->GetEnd();
 }
 
-bool Debugger::GetTraceInfo(trace_info_t *pTraceInfo, long &line, const char *&function, const char *&file)
+bool Debugger::GetTraceInfo(trace_info_t *pTraceInfo, long &line, const char *&function, const char *&file) const
 {
-	cell addr = pTraceInfo->cip;
+	const cell addr = pTraceInfo->cip;
 
 	dbg_LookupFunction(m_pAmxDbg, addr, &function);
 	dbg_LookupLine(m_pAmxDbg, addr, &line);
@@ -346,7 +346,7 @@ trace_info_t *Debugger::GetNextTrace(trace_info_t *pTraceInfo)
 
 bool Debugger::ErrorExists()
 {
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
 	return (m_pCalls[m_Top]->m_Error != AMX_ERR_NONE);
 }
@@ -356,12 +356,12 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 	if (!ErrorExists())
 		return -1;
 
-	assert(m_Top >= 0 && m_Top < (int)m_pCalls.length());
+	assert(m_Top >= 0 && m_Top < static_cast<int>(m_pCalls.length()));
 
-	Tracer *pTracer = m_pCalls[m_Top];
-	int error = pTracer->m_Error;
+	const Tracer *pTracer = m_pCalls[m_Top];
+	const int error = pTracer->m_Error;
 	const char *gen_err = GenericError(error);
-	int size = 0;
+	size_t size = 0;
 	//trace_info_t *pTrace = pTracer->GetEnd();
 	//cell cip = _CipAsVa(m_pAmx->cip);
 	//cell *p_cip = NULL;
@@ -396,9 +396,9 @@ int Debugger::FormatError(char *buffer, size_t maxLength)
 	return size;
 }
 
-cell Debugger::_CipAsVa(cell cip)
+cell Debugger::_CipAsVa(cell cip) const
 {
-	AMX_HEADER *hdr = (AMX_HEADER*)(m_pAmx->base);
+	const AMX_HEADER *hdr = (AMX_HEADER*)(m_pAmx->base);
 	unsigned char *code = m_pAmx->base + hdr->cod;
 
 	if (cip >= (cell)code && cip < (cell)(m_pAmx->base + hdr->dat))
@@ -409,9 +409,9 @@ cell Debugger::_CipAsVa(cell cip)
 	}
 }
 
-int Debugger::_GetOpcodeFromCip(cell cip, cell *&addr)
+int Debugger::_GetOpcodeFromCip(cell cip, cell *&addr) const
 {
-	AMX_HEADER *hdr = (AMX_HEADER*)(m_pAmx->base);
+	const AMX_HEADER *hdr = (AMX_HEADER*)(m_pAmx->base);
 	unsigned char *code = m_pAmx->base + hdr->cod;
 
 	cell *p_cip = nullptr;
@@ -453,7 +453,7 @@ int Debugger::_GetOpcodeFromCip(cell cip, cell *&addr)
 
 void Debugger::_CacheAmxOpcodeList()
 {
-    m_pOpcodeList = (cell *)m_pAmx->userdata[UD_OPCODELIST];
+    m_pOpcodeList = static_cast<cell*>(m_pAmx->userdata[UD_OPCODELIST]);
 }
 
 //by BAILOPAN
@@ -509,7 +509,7 @@ int AMXAPI Debugger::DebugHook(AMX *amx)
 	if (amx->flags & AMX_FLAG_PRENIT)
 		return AMX_ERR_NONE;
 
-	pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+	pDebugger = static_cast<Debugger*>(amx->userdata[UD_DEBUGGER]);
 
 	if (!pDebugger)
 		return AMX_ERR_NONE;
@@ -535,7 +535,7 @@ void Debugger::DisplayTrace(const char *message)
 		AMXXLOG_Error("%s", message);
 
 	char buffer[512];
-	int length = FormatError(buffer, sizeof(buffer)-1);
+	const int length = FormatError(buffer, sizeof(buffer)-1);
 
 	const char *filename = _GetFilename();
 	const char *version = _GetVersion();
@@ -559,7 +559,7 @@ void Debugger::DisplayTrace(const char *message)
 			count,
 			file,
 			function,
-			(int)(lLine + 1)
+			static_cast<int>(lLine + 1)
 			);
 		count++;
 		pTrace = GetNextTrace(pTrace);
@@ -577,7 +577,7 @@ const char *Debugger::_GetFilename()
         }
         else
         {
-            for (auto script : g_loadedscripts)
+            for (const auto script : g_loadedscripts)
             {
                 if (script->getAMX() == m_pAmx)
                 {
@@ -619,7 +619,7 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
             break;
         }
     }
-    size_t len = strlen(filename);
+    const size_t len = strlen(filename);
     for (size_t i=len-1; i<len; i--)
     {
         if ((filename[i] == '/' || filename[i] == '\\') && i != len - 1)
@@ -660,7 +660,7 @@ Debugger::~Debugger()
 
 int Handler::SetErrorHandler(const char *function)
 {
-	int error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
+	const int error = amx_FindPublic(m_pAmx, function, &m_iErrFunc);
 
 	if (error != AMX_ERR_NONE && m_iErrFunc < 0)
 		m_iErrFunc = -1;
@@ -670,7 +670,7 @@ int Handler::SetErrorHandler(const char *function)
 
 int Handler::SetModuleFilter(const char *function)
 {
-	int error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
+	const int error = amx_FindPublic(m_pAmx, function, &m_iModFunc);
 
 	if (error != AMX_ERR_NONE && m_iModFunc < 0)
 		m_iModFunc = -1;
@@ -680,7 +680,7 @@ int Handler::SetModuleFilter(const char *function)
 
 int Handler::SetNativeFilter(const char *function)
 {
-	int error = amx_FindPublic(m_pAmx, function, &m_iNatFunc);
+	const int error = amx_FindPublic(m_pAmx, function, &m_iNatFunc);
 
 	if (error != AMX_ERR_NONE && !IsNativeFiltering())
 		m_iNatFunc = -1;
@@ -696,7 +696,7 @@ void Handler::SetErrorMsg(const char *msg)
 		m_MsgCache = msg;
 }
 
-const char *Handler::GetLastMsg()
+const char *Handler::GetLastMsg() const
 {
 	if (m_MsgCache.length() < 1)
 		return nullptr;
@@ -704,7 +704,7 @@ const char *Handler::GetLastMsg()
 	return m_MsgCache.chars();
 }
 
-int Handler::HandleModule(const char *module, bool isClass)
+int Handler::HandleModule(const char *module, bool isClass) const
 {
 	if (m_iModFunc < 0)
 		return 0;
@@ -714,9 +714,8 @@ int Handler::HandleModule(const char *module, bool isClass)
 	 */
 
 	cell hea_addr, *phys_addr, retval;
-	Debugger *pd;
 
-	pd = DisableDebugHandler(m_pAmx);
+	Debugger* pd = DisableDebugHandler(m_pAmx);
 
 	//temporarily set prenit
 	m_pAmx->flags |= AMX_FLAG_PRENIT;
@@ -747,7 +746,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 
 	m_InNativeFilter = true;
 
-	Debugger *pDebugger = (Debugger *)m_pAmx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = static_cast<Debugger*>(m_pAmx->userdata[UD_DEBUGGER]);
 
 	if (pDebugger && trap)
 		pDebugger->BeginExec();
@@ -811,7 +810,7 @@ int Handler::HandleError(const char *msg)
 	m_pTrace = nullptr;
 	m_FmtCache = nullptr;
 
-	Debugger *pDebugger = (Debugger *)m_pAmx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = static_cast<Debugger*>(m_pAmx->userdata[UD_DEBUGGER]);
 
 	const int error = m_pAmx->error;
 
@@ -871,7 +870,7 @@ static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
 	int len;
 	char *function = get_amxstring(amx, params[1], 0, len);
 
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	if (!pHandler)
 	{
@@ -880,7 +879,7 @@ static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
 		return 0;
 	}
 
-	int err = pHandler->SetErrorHandler(function);
+	const int err = pHandler->SetErrorHandler(function);
 	if (err != AMX_ERR_NONE)
 	{
 		Debugger::GenericMessage(amx, AMX_ERR_NOTFOUND);
@@ -893,7 +892,7 @@ static cell AMX_NATIVE_CALL set_error_filter(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL dbg_trace_begin(AMX *amx, cell *params)
 {
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	const Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	if (!pHandler)
 		return 0;		//should never happen
@@ -905,7 +904,7 @@ static cell AMX_NATIVE_CALL dbg_trace_begin(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL dbg_trace_next(AMX *amx, cell *params)
 {
-	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = static_cast<Debugger*>(amx->userdata[UD_DEBUGGER]);
 
 	if (!pDebugger)
 		return 0;
@@ -920,7 +919,7 @@ static cell AMX_NATIVE_CALL dbg_trace_next(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL dbg_trace_info(AMX *amx, cell *params)
 {
-	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = static_cast<Debugger*>(amx->userdata[UD_DEBUGGER]);
 
 	if (!pDebugger)
 		return 0;
@@ -938,14 +937,14 @@ static cell AMX_NATIVE_CALL dbg_trace_info(AMX *amx, cell *params)
 
 	set_amxstring(amx, params[3], function ? function : "", params[4]);
 	set_amxstring(amx, params[5], file ? file : "", params[5]);
-	*line_addr = (cell)lLine + 1;
+	*line_addr = static_cast<cell>(lLine) + 1;
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL dbg_fmt_error(AMX *amx, cell *params)
 {
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	if (!pHandler)
 		return 0;
@@ -959,7 +958,7 @@ static cell AMX_NATIVE_CALL dbg_fmt_error(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_native_filter(AMX *amx, cell *params)
 {
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	if (!pHandler)
 	{
@@ -976,9 +975,9 @@ static cell AMX_NATIVE_CALL set_native_filter(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *func = get_amxstring(amx, params[1], 0, len);
+	const char *func = get_amxstring(amx, params[1], 0, len);
 
-	int err = pHandler->SetNativeFilter(func);
+	const int err = pHandler->SetNativeFilter(func);
 
 	if (err != AMX_ERR_NONE)
 	{
@@ -995,13 +994,13 @@ static cell AMX_NATIVE_CALL set_module_filter(AMX *amx, cell *params)
 	if ( !(amx->flags & AMX_FLAG_PRENIT) )
 		return -1;
 
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	if (!pHandler)
 		return -2;
 
 	int len;
-	char *function = get_amxstring(amx, params[1], 0, len);
+	const char *function = get_amxstring(amx, params[1], 0, len);
 
 	return pHandler->SetModuleFilter(function);
 }

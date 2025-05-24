@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -75,7 +77,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 	}
 
 	// Find now folder
-	char pluginName[256], error[256], debug[256];
+	char pluginName[256], debug[256];
 	int debugFlag = 0;
 	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
 
@@ -85,6 +87,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 
 	while (!feof(fp))
 	{
+		char error[256];
 		pluginName[0] = '\0';
 
 		debug[0] = '\0';
@@ -227,7 +230,7 @@ void CPluginMngr::clear()
 	m_BlockList.clear();
 }
 
-CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx)
+CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx) const
 {
 	CPlugin*a = head;
 
@@ -237,7 +240,7 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(AMX *amx)
 	return a;
 }
 
-CPluginMngr::CPlugin* CPluginMngr::findPlugin(int index)
+CPluginMngr::CPlugin* CPluginMngr::findPlugin(int index) const
 {
 	CPlugin*a = head;
 
@@ -247,12 +250,12 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(int index)
 	return a;
 }
 
-CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name)
+CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name) const
 {
 	if (!name)
 		return nullptr;
 
-	int len = strlen(name);
+	const size_t len = strlen(name);
 
 	if (!len)
 		return nullptr;
@@ -288,7 +291,7 @@ const char* CPluginMngr::CPlugin::getStatus() const
 			} else {
 				return "running";
 			}
-			break;
+			//break;
 		}
 		case ps_paused: return "paused";
 		case ps_bad_load: return "bad load";
@@ -299,7 +302,8 @@ const char* CPluginMngr::CPlugin::getStatus() const
 	return "error";
 }
 
-CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, size_t m, int d) : name(n), title(n), m_pNullStringOfs(nullptr), m_pNullVectorOfs(nullptr)
+CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, size_t m, int d) : name(n), title(n),
+	m_pNullStringOfs(nullptr), m_pNullVectorOfs(nullptr)
 {
 	const char* unk = "unknown";
 
@@ -348,7 +352,7 @@ CPluginMngr::CPlugin::~CPlugin()
 
 int AMXAPI native_handler(AMX *amx, int index)
 {
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	char name[sNAMEMAX + 1];
 	amx_GetNative(amx, index, name);
@@ -361,7 +365,7 @@ static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
 	//A script has accidentally called an invalid native! give them a
 	// first chance to block the resulting error.
 
-	Handler *pHandler = (Handler *)amx->userdata[UD_HANDLER];
+	Handler *pHandler = static_cast<Handler*>(amx->userdata[UD_HANDLER]);
 
 	//this should never happen
 	if (!pHandler)
@@ -379,8 +383,8 @@ static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
 	}
 
 	char name[sNAMEMAX + 1];
-	int native = (int)(_INT_PTR)(amx->usertags[UT_NATIVE]);
-	int err = amx_GetNative(amx, native, name);
+	const int native = (int)(_INT_PTR)(amx->usertags[UT_NATIVE]);
+	const int err = amx_GetNative(amx, native, name);
 
 	if (err != AMX_ERR_NONE)
 		name[0] = '\0';
@@ -400,13 +404,13 @@ static cell AMX_NATIVE_CALL invalid_native(AMX *amx, cell *params)
 void CPluginMngr::CPlugin::Finalize()
 {
 	char buffer[128];
-	int old_status = status;
+	const int old_status = status;
 
 	if (CheckModules(&amx, buffer))
 	{
 		if (amx_Register(&amx, core_Natives, -1) != AMX_ERR_NONE)
 		{
-			Handler *pHandler = (Handler *)amx.userdata[UD_HANDLER];
+			Handler *pHandler = static_cast<Handler*>(amx.userdata[UD_HANDLER]);
 			int res = 0;
 
 			if (pHandler->IsNativeFiltering())
@@ -503,7 +507,7 @@ void CPluginMngr::CPlugin::AddConfig(bool create, const char *name, const char *
 	m_configs.append(c);
 }
 
-size_t CPluginMngr::CPlugin::GetConfigCount()
+size_t CPluginMngr::CPlugin::GetConfigCount() const
 {
 	return m_configs.length();
 }
@@ -637,7 +641,7 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 	}
 
 	amx_Align32((uint32_t*)&hdr.nametable);
-	uint16_t *namelength=(uint16_t*)((unsigned char*)prog + (unsigned)hdr.nametable);
+	uint16_t *namelength=(uint16_t*)((unsigned char*)prog + static_cast<unsigned>(hdr.nametable));
 	amx_Align16(namelength);
 	if (*namelength>sNAMEMAX)
 	{
@@ -762,7 +766,7 @@ void CPluginMngr::CALMFromFile(const char *file)
 		/* HACK: see if there's a 'disabled' coming up
 		 * new block for scopying flexibility
 		 */
-		if (true)
+		if constexpr (true)
 		{
 			const char *_ptr = rline + strlen(pluginName);
 			while (*_ptr != '\0'  && isspace(*_ptr))

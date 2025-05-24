@@ -61,7 +61,7 @@
 			memcpy(target, REPLACEMENT_CHARACTER_STRING, REPLACEMENT_CHARACTER_STRING_LENGTH); \
 		} \
 		UTF8_SET_ERROR(INVALID_DATA); \
-		return _result + REPLACEMENT_CHARACTER_STRING_LENGTH; \
+		return (_result) + REPLACEMENT_CHARACTER_STRING_LENGTH; \
 	} \
 	if (target != 0 && targetSize == 0) { \
 		UTF8_SET_ERROR(NOT_ENOUGH_SPACE); \
@@ -122,7 +122,7 @@
 			*target = REPLACEMENT_CHARACTER; \
 		} \
 		UTF8_SET_ERROR(INVALID_DATA); \
-		return _result + sizeof(_outputType); \
+		return (_result) + sizeof(_outputType); \
 	} \
 	if (target != 0 && targetSize < sizeof(_outputType)) { \
 		UTF8_SET_ERROR(NOT_ENOUGH_SPACE); \

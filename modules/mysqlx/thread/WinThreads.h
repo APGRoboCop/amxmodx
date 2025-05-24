@@ -26,16 +26,16 @@ public:
 		friend DWORD WINAPI Win32_ThreadGate(LPVOID param);
 	public:
 		ThreadHandle(IThreader *parent, HANDLE hthread, IThread *run, const ThreadParams *params);
-		virtual ~ThreadHandle();
+		~ThreadHandle() override;
 	public:
-		virtual bool WaitForThread();
-		virtual void DestroyThis();
-		virtual IThreadCreator *Parent();
-		virtual void GetParams(ThreadParams *ptparams);
-		virtual ThreadPriority GetPriority();
-		virtual bool SetPriority(ThreadPriority prio);
-		virtual ThreadState GetState();
-		virtual bool Unpause();
+		bool WaitForThread() override;
+		void DestroyThis() override;
+		IThreadCreator *Parent() override;
+		void GetParams(ThreadParams *ptparams) override;
+		ThreadPriority GetPriority() override;
+		bool SetPriority(ThreadPriority prio) override;
+		ThreadState GetState() override;
+		bool Unpause() override;
 	protected:
 		IThreader *m_parent;		//Parent handle
 		HANDLE m_thread;			//Windows HANDLE	
@@ -51,12 +51,12 @@ public:
 		{
 		}
 
-		virtual ~WinMutex();
+		~WinMutex() override;
 	public:
-		virtual bool TryLock();
-		virtual void Lock();
-		virtual void Unlock();
-		virtual void DestroyThis();
+		bool TryLock() override;
+		void Lock() override;
+		void Unlock() override;
+		void DestroyThis() override;
 	protected:
 		HANDLE m_mutex;
 	};
@@ -67,22 +67,22 @@ public:
 		{
 		}
 
-		virtual ~WinEvent();
+		~WinEvent() override;
 	public:
-		virtual void Wait();
-		virtual void Signal();
-		virtual void DestroyThis();
+		void Wait() override;
+		void Signal() override;
+		void DestroyThis() override;
 	public:
 		HANDLE m_event;
 	};
 public:
-	virtual IMutex *MakeMutex();
-	virtual void MakeThread(IThread *pThread);
-	virtual IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags);
-	virtual IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params);
-	virtual void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min);
-	virtual void ThreadSleep(unsigned int ms);
-	virtual IEventSignal *MakeEventSignal();
+	IMutex *MakeMutex() override;
+	void MakeThread(IThread *pThread) override;
+	IThreadHandle *MakeThread(IThread *pThread, ThreadFlags flags) override;
+	IThreadHandle *MakeThread(IThread *pThread, const ThreadParams *params) override;
+	void GetPriorityBounds(ThreadPriority &max, ThreadPriority &min) override;
+	void ThreadSleep(unsigned int ms) override;
+	IEventSignal *MakeEventSignal() override;
 };
 
 #if defined SM_DEFAULT_THREADER && !defined SM_MAIN_THREADER

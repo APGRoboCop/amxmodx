@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Core module for the Pawn AMX
  *
  *  Copyright (c) ITB CompuPhase, 1997-2005
@@ -74,7 +76,7 @@ static proplist *list_additem(proplist *root)
   proplist *item;
 
   assert(root!= nullptr);
-  if ((item=(proplist *)malloc(sizeof(proplist)))== nullptr)
+  if ((item=static_cast<proplist*>(malloc(sizeof(proplist))))== nullptr)
     return nullptr;
   item->name= nullptr;
   item->id=0;
@@ -97,7 +99,7 @@ static void list_setitem(proplist *item,cell id,char *name,cell value)
   char *ptr;
 
   assert(item!= nullptr);
-  if ((ptr=(char *)malloc(strlen(name)+1))== nullptr)
+  if ((ptr=static_cast<char*>(malloc(strlen(name) + 1)))== nullptr)
     return;
   if (item->name!= nullptr)
     free(item->name);
@@ -114,7 +116,7 @@ static proplist *list_finditem(proplist *root,cell id,char *name,cell value,
 
   /* check whether to find by name or by value */
   assert(name!= nullptr);
-  if (strlen(name)>0) {
+  if (name[0] != '\0') {
     /* find by name */
     while (item!= nullptr && (item->id!=id || stricmp(item->name,name)!=0)) {
       prev=item;
@@ -135,15 +137,11 @@ static proplist *list_finditem(proplist *root,cell id,char *name,cell value,
 
 static cell AMX_NATIVE_CALL numargs(AMX *amx, cell *params)
 {
-  AMX_HEADER *hdr;
-  uchar *data;
-  cell bytes;
-
-  (void)params;
-  hdr=(AMX_HEADER *)amx->base;
-  data=amx->data ? amx->data : amx->base+(int)hdr->dat;
+	(void)params;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
+  uchar* data = amx->data ? amx->data : amx->base + static_cast<int>(hdr->dat);
   /* the number of bytes is on the stack, at "frm + 2*cell" */
-  bytes= * (cell *)(data+(int)amx->frm+2*sizeof(cell));
+	const cell bytes = *(cell*)(data + (int)amx->frm + 2 * sizeof(cell));
   /* the number of arguments is the number of bytes divided
    * by the size of a cell */
   return bytes/sizeof(cell);
@@ -151,14 +149,10 @@ static cell AMX_NATIVE_CALL numargs(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL getarg(AMX *amx, cell *params)
 {
-  AMX_HEADER *hdr;
-  uchar *data;
-  cell value;
-
-  hdr=(AMX_HEADER *)amx->base;
-  data=amx->data ? amx->data : amx->base+(int)hdr->dat;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
+  uchar* data = amx->data ? amx->data : amx->base + static_cast<int>(hdr->dat);
   /* get the base value */
-  value= * (cell *)(data+(int)amx->frm+((int)params[1]+3)*sizeof(cell));
+  cell value = *(cell*)(data + (int)amx->frm + ((int)params[1] + 3) * sizeof(cell));
   /* adjust the address in "value" in case of an array access */
   value+=params[2]*sizeof(cell);
   /* get the value indirectly */
@@ -168,14 +162,10 @@ static cell AMX_NATIVE_CALL getarg(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL setarg(AMX *amx, cell *params)
 {
-  AMX_HEADER *hdr;
-  uchar *data;
-  cell value;
-
-  hdr=(AMX_HEADER *)amx->base;
-  data=amx->data ? amx->data : amx->base+(int)hdr->dat;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
+  uchar* data = amx->data ? amx->data : amx->base + static_cast<int>(hdr->dat);
   /* get the base value */
-  value= * (cell *)(data+(int)amx->frm+((int)params[1]+3)*sizeof(cell));
+  cell value = *(cell*)(data + (int)amx->frm + ((int)params[1] + 3) * sizeof(cell));
   /* adjust the address in "value" in case of an array access */
   value+=params[2]*sizeof(cell);
   /* verify the address */
@@ -196,7 +186,7 @@ static cell AMX_NATIVE_CALL funcidx(AMX *amx,cell *params)
 {
   char name[64];
   cell *cstr;
-  int index,err,len;
+  int index, len;
 
   amx_GetAddr(amx,params[1],&cstr);
 
@@ -208,7 +198,7 @@ static cell AMX_NATIVE_CALL funcidx(AMX *amx,cell *params)
   } /* if */
 
   amx_GetString(name,cstr,0,UNLIMITED);
-  err=amx_FindPublic(amx,name,&index);
+  const int err = amx_FindPublic(amx, name, &index);
   if (err!=AMX_ERR_NONE)
     index=-1;   /* this is not considered a fatal error */
   return index;
@@ -231,7 +221,7 @@ static cell AMX_NATIVE_CALL swapchars(AMX *amx,cell *params)
   uchar t;
 
   (void)amx;
-  assert((size_t)params[0]==sizeof(cell));
+  assert(static_cast<size_t>(params[0]) ==sizeof(cell));
   value.c = params[1];
   #if PAWN_CELL_SIZE==16
     t = value.b[0];
@@ -315,20 +305,18 @@ static cell AMX_NATIVE_CALL core_clamp(AMX *amx,cell *params)
 static char *MakePackedString(cell *cptr)
 {
   int len;
-  char *dest;
 
   amx_StrLen(cptr,&len);
-  dest=(char *)malloc(len+sizeof(cell));
+  char* dest = static_cast<char*>(malloc(len + sizeof(cell)));
   amx_GetString(dest,cptr,0,UNLIMITED);
   return dest;
 }
 
 static int verify_addr(AMX *amx,cell addr)
 {
-  int err;
-  cell *cdest;
+	cell *cdest;
 
-  err=amx_GetAddr(amx,addr,&cdest);
+	const int err = amx_GetAddr(amx, addr, &cdest);
   if (err!=AMX_ERR_NONE)
     amx_RaiseError(amx,err);
   return err;
@@ -337,16 +325,14 @@ static int verify_addr(AMX *amx,cell addr)
 static cell AMX_NATIVE_CALL getproperty(AMX *amx,cell *params)
 {
   cell *cstr;
-  char *name;
-  proplist *item;
 
   amx_GetAddr(amx,params[2],&cstr);
-  name=MakePackedString(cstr);
-  item=list_finditem(&proproot,params[1],name,params[3], nullptr);
+  char* name = MakePackedString(cstr);
+  const proplist* item = list_finditem(&proproot, params[1], name, params[3], nullptr);
   /* if list_finditem() found the value, store the name */
-  if (item!= nullptr && item->value==params[3] && strlen(name)==0) {
-    int needed=(strlen(item->name)+sizeof(cell)-1)/sizeof(cell);     /* # of cells needed */
-    if (verify_addr(amx,(cell)(params[4]+needed))!=AMX_ERR_NONE) {
+  if (item!= nullptr && item->value==params[3] && name[0]=='\0') {
+	  const unsigned int needed=(strlen(item->name)+sizeof(cell)-1)/sizeof(cell);     /* # of cells needed */
+    if (verify_addr(amx,static_cast<cell>(params[4] + needed))!=AMX_ERR_NONE) {
       free(name);
       return 0;
     } /* if */
@@ -361,19 +347,17 @@ static cell AMX_NATIVE_CALL setproperty(AMX *amx,cell *params)
 {
   cell prev=0;
   cell *cstr;
-  char *name;
-  proplist *item;
 
   amx_GetAddr(amx,params[2],&cstr);
-  name=MakePackedString(cstr);
-  item=list_finditem(&proproot,params[1],name,params[3], nullptr);
+  char* name = MakePackedString(cstr);
+  proplist* item = list_finditem(&proproot, params[1], name, params[3], nullptr);
   if (item== nullptr)
     item=list_additem(&proproot);
   if (item== nullptr) {
     amx_RaiseError(amx,AMX_ERR_MEMORY);
   } else {
     prev=item->value;
-    if (strlen(name)==0) {
+    if (name[0] == '\0') {
       free(name);
       amx_GetAddr(amx,params[4],&cstr);
       name=MakePackedString(cstr);
@@ -388,12 +372,11 @@ static cell AMX_NATIVE_CALL delproperty(AMX *amx,cell *params)
 {
   cell prev=0;
   cell *cstr;
-  char *name;
-  proplist *item,*pred;
+  proplist*pred;
 
   amx_GetAddr(amx,params[2],&cstr);
-  name=MakePackedString(cstr);
-  item=list_finditem(&proproot,params[1],name,params[3],&pred);
+  char* name = MakePackedString(cstr);
+  proplist* item = list_finditem(&proproot, params[1], name, params[3], &pred);
   if (item!= nullptr) {
     prev=item->value;
     list_delete(pred,item);
@@ -405,12 +388,10 @@ static cell AMX_NATIVE_CALL delproperty(AMX *amx,cell *params)
 static cell AMX_NATIVE_CALL existproperty(AMX *amx,cell *params)
 {
   cell *cstr;
-  char *name;
-  proplist *item;
 
   amx_GetAddr(amx,params[2],&cstr);
-  name=MakePackedString(cstr);
-  item=list_finditem(&proproot,params[1],name,params[3], nullptr);
+  char* name = MakePackedString(cstr);
+  const proplist* item = list_finditem(&proproot, params[1], name, params[3], nullptr);
   free(name);
   return (item!= nullptr);
 }
@@ -436,7 +417,7 @@ static cell AMX_NATIVE_CALL core_random(AMX *amx,cell *params)
     /* one-time initialization (or, mostly one-time) */
     #if !defined SN_TARGET_PS2 && !defined _WIN32_WCE
         if (IL_StandardRandom_seed == INITIAL_SEED)
-            IL_StandardRandom_seed=(unsigned long)time(nullptr);
+            IL_StandardRandom_seed=static_cast<unsigned long>(time(nullptr));
     #endif
 
     lo = IL_StandardRandom_seed & 0xffff;
@@ -450,7 +431,7 @@ static cell AMX_NATIVE_CALL core_random(AMX *amx,cell *params)
     result &= ~LONG_MIN;        /* remove sign bit */
     if (params[1]!=0)
         result %= params[1];
-    return (cell)result;
+    return static_cast<cell>(result);
 }
 #endif
 

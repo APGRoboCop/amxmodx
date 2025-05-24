@@ -59,13 +59,13 @@ public:
 			void *addr = (void *)ALIGN(&ivtable[entry]);
 			mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
 #endif
-			ivtable[entry]=(int*)tramp;
+			ivtable[entry]=static_cast<int*>(tramp);
 
 			size_t len=strlen(name);
 			ent=new char[len+1];
 
 			ke::SafeSprintf(ent, len + 1, "%s", name);
-		};
+		}
 
 	~Hook()
 	{
@@ -80,7 +80,7 @@ public:
 		mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
 #endif
 
-		ivtable[entry]=(int *)func;
+		ivtable[entry]=static_cast<int*>(func);
 #if defined(_WIN32)
 		VirtualFree(tramp, 0, MEM_RELEASE);
 #elif defined(__linux__)

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -20,6 +22,7 @@
 
 #include "GameManager.h"
 #include "CPlayer.h"
+#include "HLTypeConversion.h"
 
 // ns_has_weapon(idPlayer,NsWeapon,set=0)
 static cell AMX_NATIVE_CALL ns_has_weapon(AMX *amx,cell *params)
@@ -67,7 +70,7 @@ static cell AMX_NATIVE_CALL ns_set_weapon_dmg(AMX *amx, cell *params)
 
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -83,7 +86,7 @@ static cell AMX_NATIVE_CALL ns_get_weapon_dmg(AMX *amx, cell *params)
 
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -98,7 +101,7 @@ static cell AMX_NATIVE_CALL ns_set_weapon_range(AMX *amx, cell *params)
 
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -113,7 +116,7 @@ static cell AMX_NATIVE_CALL ns_get_weapon_range(AMX *amx, cell *params)
 
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -126,7 +129,7 @@ static cell AMX_NATIVE_CALL ns_get_weapon_clip(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -138,7 +141,7 @@ static cell AMX_NATIVE_CALL ns_set_weapon_clip(AMX *amx, cell *params)
 {
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -151,7 +154,7 @@ static cell AMX_NATIVE_CALL ns_add_weapon_clip(AMX *amx, cell *params)
 
 	CreateNonPlayerEdict(amx,params[1]);
 
-	if (Entity->pvPrivateData == NULL || Entity->free)
+	if (Entity->pvPrivateData == nullptr || Entity->free)
 	{
 		return 0;
 	}
@@ -190,7 +193,7 @@ static cell AMX_NATIVE_CALL ns_get_weap_reserve(AMX *amx, cell *params)
 	default:
 		return 0;
 	}
-	return 0;
+	//return 0;
 }
 static cell AMX_NATIVE_CALL ns_set_weap_reserve(AMX *amx, cell *params)
 {
@@ -224,7 +227,7 @@ static cell AMX_NATIVE_CALL ns_set_weap_reserve(AMX *amx, cell *params)
 	default:
 		return 0;
 	}
-	return 0;
+	//return 0;
 }
 static cell AMX_NATIVE_CALL ns_add_weap_reserve(AMX *amx, cell *params)
 {
@@ -252,7 +255,7 @@ static cell AMX_NATIVE_CALL ns_add_weap_reserve(AMX *amx, cell *params)
 	default:
 		return 0;
 	}
-	return 0;
+	//return 0;
 }
 // ns_get_weapon(idPlayer,weaponid,&weapontype=0)
 static cell AMX_NATIVE_CALL ns_get_weapon(AMX *amx, cell *params)
@@ -315,12 +318,11 @@ static cell AMX_NATIVE_CALL ns_get_weapon(AMX *amx, cell *params)
 	// Finding weapon by ID
 
 	char **pPlayerItems = reinterpret_cast<char**>(static_cast<char*>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(PLAYER_ITEMS));
-	char *pItem;
 	int weapon=params[2];
 
 	for (int i = 0; i < 6; i++)
 	{
-		pItem = pPlayerItems[i];
+		char* pItem = pPlayerItems[i];
 		while (pItem)
 		{
 			if (*(int *)(pItem + MAKE_OFFSET(WEAPID)) == weapon)
@@ -349,7 +351,7 @@ static cell AMX_NATIVE_CALL ns_find_weapon_offset(AMX *amx, cell *params)
 
 	edict_t *Temp= nullptr;
 
-	while ((Temp=UTIL_FindEntityByString(Temp,"classname",SPrimWeapon))!=NULL)
+	while ((Temp=UTIL_FindEntityByString(Temp,"classname",SPrimWeapon))!= nullptr)
 	{
 		if (Temp->v.owner==ePlayer)
 		{
@@ -357,8 +359,8 @@ static cell AMX_NATIVE_CALL ns_find_weapon_offset(AMX *amx, cell *params)
 			break;
 		}
 	}
-	Temp=NULL;
-	while ((Temp=UTIL_FindEntityByString(Temp,"classname",SLastInv))!=NULL)
+	Temp= nullptr;
+	while ((Temp=UTIL_FindEntityByString(Temp,"classname",SLastInv))!= nullptr)
 	{
 		if (Temp->v.owner==ePlayer)
 		{

@@ -1,3 +1,7 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -13,7 +17,9 @@
 
 #include "engine.h"
 
-struct usercmd_s *g_cmd;
+#include <cmath>
+
+struct usercmd_s*g_cmd;
 struct PlayerInfo plinfo[33];
 struct GlobalInfo glinfo;
 
@@ -29,7 +35,7 @@ void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax)
 }
 
 edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float flRadius) {
-	if (!pStart) pStart = NULL;
+	if (!pStart) pStart = nullptr;
 
 	pStart = FIND_ENTITY_IN_SPHERE(pStart, vecCenter, flRadius);
 
@@ -57,17 +63,17 @@ static cell AMX_NATIVE_CALL register_think(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL unregister_think(AMX *amx, cell *params)
 {
-	int fwd = params[1];
+	const int fwd = params[1];
 	for (size_t i = 0; i < Thinks.length(); ++i)
 	{
-		EntClass *p = Thinks.at(i);
+		const EntClass *p = Thinks.at(i);
 		if (p->Forward == fwd)
 		{
 			Thinks.remove(i);
 			delete p;
 
 			if (!Thinks.length())
-				g_pFunctionTable->pfnThink = NULL;
+				g_pFunctionTable->pfnThink = nullptr;
 
 			return 1;
 		}
@@ -95,17 +101,17 @@ static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL unregister_impulse(AMX *amx, cell *params)
 {
-	int fwd = params[1];
+	const int fwd = params[1];
 	for (size_t i = 0; i < Impulses.length(); ++i)
 	{
-		Impulse *p = Impulses.at(i);
+		const Impulse *p = Impulses.at(i);
 		if (p->Forward == fwd)
 		{
 			Impulses.remove(i);
 			delete p;
 
 			if (!Impulses.length())
-				g_pFunctionTable->pfnCmdStart = NULL;
+				g_pFunctionTable->pfnCmdStart = nullptr;
 
 			return 1;
 		}
@@ -118,8 +124,8 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 {
 	int len;
 
-	char *Toucher = MF_GetAmxString(amx, params[1], 0, &len);
-	char *Touched = MF_GetAmxString(amx, params[2], 1, &len);
+	const char *Toucher = MF_GetAmxString(amx, params[1], 0, &len);
+	const char *Touched = MF_GetAmxString(amx, params[2], 1, &len);
 
 	Touch *p = new Touch;
 
@@ -146,17 +152,17 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL unregister_touch(AMX *amx, cell *params)
 {
-	int fwd = params[1];
+	const int fwd = params[1];
 	for (size_t i = 0; i < Touches.length(); ++i)
 	{
-		Touch *p = Touches.at(i);
+		const Touch *p = Touches.at(i);
 		if (p->Forward == fwd)
 		{
 			Touches.remove(i);
 			delete p;
 
 			if (!Touches.length())
-				g_pFunctionTable->pfnTouch = NULL;
+				g_pFunctionTable->pfnTouch = nullptr;
 
 			return 1;
 		}
@@ -177,18 +183,18 @@ static cell AMX_NATIVE_CALL halflife_time(AMX *amx, cell *params)
 // (the red arrow-like things on the screen).
 static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
 {
-	cell *cAddr = MF_GetAmxAddr(amx,params[1]);
+	const cell *cAddr = MF_GetAmxAddr(amx,params[1]);
 
 	REAL fCurrentX = amx_ctof(cAddr[0]);
 	REAL fCurrentY = amx_ctof(cAddr[1]);
 	REAL fCurrentZ = amx_ctof(cAddr[2]);
-	int iDamageMultiplier = params[2];
-	int iRadiusMultiplier = params[3];
+	const int iDamageMultiplier = params[2];
+	const int iRadiusMultiplier = params[3];
 
-	Vector vOrigin = Vector(fCurrentX, fCurrentY, fCurrentZ);
+	const Vector vOrigin = Vector(fCurrentX, fCurrentY, fCurrentZ);
 
 	edict_t *pSearchEnt = nullptr;
-	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 5 * iRadiusMultiplier)) != NULL)
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 5 * iRadiusMultiplier)) != nullptr)
 	{
 		if (FStrEq(STRING(pSearchEnt->v.classname), "player")) 
 		{
@@ -203,9 +209,9 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
 		}
 	}
 
-	pSearchEnt = NULL;
+	pSearchEnt = nullptr;
 
-	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 4 * iRadiusMultiplier)) != NULL)
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 4 * iRadiusMultiplier)) != nullptr)
 	{
 		if (FStrEq(STRING(pSearchEnt->v.classname), "player"))
 		{
@@ -220,9 +226,9 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
 		}
 	}
 
-	pSearchEnt = NULL;
+	pSearchEnt = nullptr;
 
-	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 3 * iRadiusMultiplier)) != NULL)
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 3 * iRadiusMultiplier)) != nullptr)
 	{
 		if (FStrEq(STRING(pSearchEnt->v.classname), "player"))
 		{
@@ -237,9 +243,9 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
 		}
 	}
 
-	pSearchEnt = NULL;
+	pSearchEnt = nullptr;
 
-	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 2 * iRadiusMultiplier)) != NULL)
+	while ((pSearchEnt = UTIL_FindEntityInSphere(pSearchEnt, vOrigin, 2 * iRadiusMultiplier)) != nullptr)
 	{
 		if (FStrEq(STRING(pSearchEnt->v.classname), "player"))
 		{
@@ -255,7 +261,7 @@ static cell AMX_NATIVE_CALL RadiusDamage(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
 {
-	cell *cAddr = MF_GetAmxAddr(amx, params[1]);
+	const cell *cAddr = MF_GetAmxAddr(amx, params[1]);
 
 	REAL fX = amx_ctof(cAddr[0]);
 	REAL fY = amx_ctof(cAddr[1]);
@@ -268,13 +274,13 @@ static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 	if (iEnt > 0) {
-		CHECK_ENTITY(iEnt);
+		CHECK_ENTITY(iEnt)
 	}
 
-	cell *cStart = MF_GetAmxAddr(amx, params[2]);
-	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
+	const cell *cStart = MF_GetAmxAddr(amx, params[2]);
+	const cell *cEnd = MF_GetAmxAddr(amx, params[3]);
 	REAL fStartX = amx_ctof(cStart[0]);
 	REAL fStartY = amx_ctof(cStart[1]);
 	REAL fStartZ = amx_ctof(cStart[2]);
@@ -301,13 +307,13 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 	if (iEnt > 0) {
-		CHECK_ENTITY(iEnt);
+		CHECK_ENTITY(iEnt)
 	}
 
-	cell *cStart = MF_GetAmxAddr(amx, params[2]);
-	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
+	const cell *cStart = MF_GetAmxAddr(amx, params[2]);
+	const cell *cEnd = MF_GetAmxAddr(amx, params[3]);
 	REAL fStartX = amx_ctof(cStart[0]);
 	REAL fStartY = amx_ctof(cStart[1]);
 	REAL fStartZ = amx_ctof(cStart[2]);
@@ -323,7 +329,7 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 	if (iEnt > 0)
 		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, TypeConversion.id_to_edict(iEnt), &g_tr);
 	else
-		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &g_tr);
+		TRACE_LINE(vStart, vEnd, ignore_monsters, nullptr, &g_tr);
 
 	edict_t *pHit = g_tr.pHit;
 
@@ -337,9 +343,9 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 	return TypeConversion.edict_to_id(pHit);
 }
 
-static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) { 
-	int iIndex = params[1];
-	int iNewSpeakFlags = params[2];
+static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
+	const int iIndex = params[1];
+	const int iNewSpeakFlags = params[2];
 
 	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
@@ -352,7 +358,7 @@ static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) {
 }
 
 static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
-	int iIndex = params[1];
+	const int iIndex = params[1];
 
 	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
@@ -365,18 +371,18 @@ static cell AMX_NATIVE_CALL get_speak(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL get_decal_index(AMX *amx, cell *params)
 {
 	int len;
-	char *szDecal = MF_GetAmxString(amx, params[1], 0, &len);
+	const char *szDecal = MF_GetAmxString(amx, params[1], 0, &len);
 	return DECAL_INDEX(szDecal);
 }
 
 static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 	if (iEnt != -1) {
-		CHECK_ENTITY(iEnt);
+		CHECK_ENTITY(iEnt)
 	}
 
-	char *info = GETINFOKEYBUFFER((iEnt == -1) ? nullptr : TypeConversion.id_to_edict(iEnt));
+	const char *info = GETINFOKEYBUFFER((iEnt == -1) ? nullptr : TypeConversion.id_to_edict(iEnt));
 	
 	return MF_SetAmxStringUTF8Char(amx, params[2], info, strlen(info), params[3]);
 }
@@ -385,9 +391,9 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 // it works, it's just a picky engine call -sawce
 static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
+	const int iEnt = params[1];
 
-	CHECK_ENTITY(iEnt);
+	CHECK_ENTITY(iEnt)
 
 	edict_t *e = TypeConversion.id_to_edict(iEnt);
 
@@ -398,12 +404,12 @@ static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 // use AttachView(player, player) to reset view.
 //(vexd)
 static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
-{ 
-	int iIndex = params[1];
-	int iTargetIndex = params[2];
+{
+	const int iIndex = params[1];
+	const int iTargetIndex = params[2];
 
-	CHECK_ENTITY(iIndex);
-	CHECK_ENTITY(iTargetIndex);
+	CHECK_ENTITY(iIndex)
+	CHECK_ENTITY(iTargetIndex)
 
 	SET_VIEW(TypeConversion.id_to_edict(iIndex), TypeConversion.id_to_edict(iTargetIndex));
 
@@ -413,9 +419,9 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 // SetView, this sets the view of a player. This is done by
 // Creating a camera entity, which follows the player.
 //(vexd)
-static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) { 
-	int iIndex = params[1];
-	int iCameraType = params[2];
+static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
+	const int iIndex = params[1];
+	const int iCameraType = params[2];
 
 	if (iIndex > gpGlobals->maxClients || !MF_IsPlayerIngame(iIndex)) {
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", iIndex);
@@ -438,13 +444,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 				if (g_CameraCount < 0)
 					g_CameraCount=0;
 				if (g_CameraCount==0) // Reset the AddToFullPack pointer if there's no more cameras in use...
-					g_pFunctionTable->pfnAddToFullPack=NULL;
+					g_pFunctionTable->pfnAddToFullPack= nullptr;
 			}
 
 			plinfo[iIndex].iViewType = CAMERA_NONE;
-			plinfo[iIndex].pViewEnt = NULL;
+			plinfo[iIndex].pViewEnt = nullptr;
 			return 1;
-			break;
+			//break;
 		case CAMERA_3RDPERSON:
 			if(plinfo[iIndex].iViewType != CAMERA_NONE) {
 				plinfo[iIndex].iViewType = CAMERA_3RDPERSON;
@@ -566,7 +572,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 //(vexd)
 static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) { 
 	int iLength;
-	char *szLights = MF_GetAmxString(amx, params[1], 0, &iLength);
+	const char *szLights = MF_GetAmxString(amx, params[1], 0, &iLength);
 
 	if (FStrEq(szLights, "#OFF")) {
 		glinfo.bCheckLights = false;
@@ -596,17 +602,16 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 //(mahnsawce)
 static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 {
-	int iEnt = params[3];
+	const int iEnt = params[3];
 	if (iEnt > 0) {
-		CHECK_ENTITY(iEnt);
+		CHECK_ENTITY(iEnt)
 	}
 
 	int iResult=0;
 	Vector vStart;
 	Vector vEnd;
-	cell *vCell;
 
-	vCell = MF_GetAmxAddr(amx, params[1]);
+	const cell* vCell = MF_GetAmxAddr(amx, params[1]);
 
 	vStart.x = amx_ctof(vCell[0]);
 	vStart.y = amx_ctof(vCell[1]);
@@ -658,13 +663,13 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	int bparam2;
 	flags = params[1];
 	if (params[2] > 0) {
-		CHECK_ENTITY(params[2]);
+		CHECK_ENTITY(params[2])
 	}
 	pInvoker=TypeConversion.id_to_edict(params[2]);
 	eventindex=params[3];
 	delay=amx_ctof(params[4]);
-	cell *cOrigin=MF_GetAmxAddr(amx, params[5]);
-	cell *cAngles=MF_GetAmxAddr(amx, params[6]);
+	const cell *cOrigin=MF_GetAmxAddr(amx, params[5]);
+	const cell *cAngles=MF_GetAmxAddr(amx, params[6]);
 	origin.x=amx_ctof(cOrigin[0]);
 	origin.y=amx_ctof(cOrigin[1]);
 	origin.z=amx_ctof(cOrigin[2]);
@@ -686,7 +691,7 @@ static cell AMX_NATIVE_CALL get_usercmd(AMX *amx, cell *params)
 {
 	if (!incmd)
 		return 0;
-	int type = params[1];
+	const int type = params[1];
 	if (type > usercmd_int_start && type < usercmd_int_end)
 	{
 		// Requesting an integer value...
@@ -756,12 +761,12 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 {
 	if (!incmd)
 		return 0;
-	int type = params[1];
+	const int type = params[1];
 	if (type > usercmd_int_start && type < usercmd_int_end)
 	{
 		// Setting an integer value...
-		cell *blah = MF_GetAmxAddr(amx,params[2]);
-		int iValue = blah[0];
+		const cell *blah = MF_GetAmxAddr(amx,params[2]);
+		const int iValue = blah[0];
 		switch(type)
 		{
 		case usercmd_lerp_msec:
@@ -791,7 +796,7 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 		// Requesting a single float value
 		// The second parameter needs to be the float variable.
 
-		cell *blah = MF_GetAmxAddr(amx,params[2]);
+		const cell *blah = MF_GetAmxAddr(amx,params[2]);
 		REAL fValue = amx_ctof(blah[0]);
 		switch(type)
 		{
@@ -812,7 +817,7 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 	{
 		// Requesting a Vector value.
 		Vector vValue;
-		cell *blah = MF_GetAmxAddr(amx,params[2]);
+		const cell *blah = MF_GetAmxAddr(amx,params[2]);
 		vValue.x = amx_ctof(blah[0]);
 		vValue.y = amx_ctof(blah[1]);
 		vValue.z = amx_ctof(blah[2]);
@@ -833,10 +838,10 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 {
-	int src = params[1];
-	int dest = params[2];
-	CHECK_ENTITY(src);
-	CHECK_ENTITY(dest);
+	const int src = params[1];
+	const int dest = params[2];
+	CHECK_ENTITY(src)
+	CHECK_ENTITY(dest)
 
 	edict_t *pEntity = TypeConversion.id_to_edict(src);
 	edict_t *pTarget = TypeConversion.id_to_edict(dest);
@@ -849,7 +854,7 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 
 	TraceResult tr;
 
-	auto oldSolid = pTarget->v.solid;
+	const auto oldSolid = pTarget->v.solid;
 	pTarget->v.solid = SOLID_NOT;
 	TRACE_LINE(vLooker, vTarget, FALSE, pEntity, &tr);
 	pTarget->v.solid = oldSolid;
@@ -865,19 +870,19 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 //taken from dlls\combat.cpp
 static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 {
-	int src = params[1];
+	const int src = params[1];
 
-	CHECK_ENTITY(src);
+	CHECK_ENTITY(src)
 
 	edict_t *pEdictSrc = TypeConversion.id_to_edict(src);
 
 	Vector vecLOS, vecForward;
 	float flDot;
 
-	cell *addr = MF_GetAmxAddr(amx, params[2]);
-	Vector origin(amx_ctof(addr[0]), amx_ctof(addr[1]), amx_ctof(addr[2]));
+	const cell *addr = MF_GetAmxAddr(amx, params[2]);
+	const Vector origin(amx_ctof(addr[0]), amx_ctof(addr[1]), amx_ctof(addr[2]));
 
-	bool use2D = (params[0] / sizeof(cell)) == 2 || params[3] == 0;
+	const bool use2D = (params[0] / sizeof(cell)) == 2 || params[3] == 0;
 
 	if (use2D)
 	{
@@ -910,7 +915,7 @@ static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 {
-	int type = params[1];
+	const int type = params[1];
 	cell *cRet;
 /*
 	TR_AllSolid,			// (int) if true, plane is not valid
@@ -976,12 +981,12 @@ static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params) // (string, retur
 static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
 //native trace_forward(Float:start[3], Float:angles[3], give, ignoreEnt, &Float:hitX, &Float:hitY, &Float:shortestDistance, &Float:shortestDistLow, &Float:shortestDistHigh)
 {
-   cell *cStart = MF_GetAmxAddr(amx, params[1]);
-   cell *cAngles = MF_GetAmxAddr(amx, params[2]);
+	const cell *cStart = MF_GetAmxAddr(amx, params[1]);
+	const cell *cAngles = MF_GetAmxAddr(amx, params[2]);
    REAL fGive = amx_ctof(params[3]);
-   int iIgnoreEnt = params[4];
+	const int iIgnoreEnt = params[4];
    if (iIgnoreEnt > 0) {
-	   CHECK_ENTITY(iIgnoreEnt);
+	   CHECK_ENTITY(iIgnoreEnt)
    }
 
    cell *hitX = MF_GetAmxAddr(amx, params[5]);
@@ -1007,11 +1012,11 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    REAL fEndX = forwardVector[0] * 4000;
    REAL fEndY = forwardVector[1] * 4000;
 
-   REAL fClosestDist = 999999.9;
-   REAL fClosestLow = 0.0;
-   REAL fClosestHigh = 0.0;
-   REAL fClosestX = 0.0;
-   REAL fClosestY = 0.0;
+   REAL fClosestDist = 999999.9f;
+   REAL fClosestLow = 0.0f;
+   REAL fClosestHigh = 0.0f;
+   REAL fClosestX = 0.0f;
+   REAL fClosestY = 0.0f;
    TraceResult tr;
    REAL fRetX;
    REAL fRetY;
@@ -1025,14 +1030,14 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
 	  if(iIgnoreEnt > 0)
 		  TRACE_LINE(vStart, vEnd, dont_ignore_monsters, TypeConversion.id_to_edict(iIgnoreEnt), &tr);
 	  else
-		  TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
+		  TRACE_LINE(vStart, vEnd, ignore_monsters, nullptr, &tr);
 	  fRetX = tr.vecEndPos.x;
 	  fRetY = tr.vecEndPos.y;
 	  fRetZ = tr.vecEndPos.z;
 	  Vector vHit = Vector(fRetX, fRetY, fRetZ);
 
 	  REAL fLength = (vStart - vHit).Length();
-	  if(fabs(fLength - fClosestDist) < fGive)
+	  if(std::fabs(fLength - fClosestDist) < fGive)
 			fClosestHigh = fUseZ - fStartZ;
 	  else if(fLength < fClosestDist)
 	  {
@@ -1043,8 +1048,8 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
 		 fClosestY = fRetY;
 	  }
    }
-   fClosestLow += 36.0;
-   fClosestHigh += 36.0;
+   fClosestLow += 36.0f;
+   fClosestHigh += 36.0f;
 
    *hitX = amx_ftoc(fClosestX);
    *hitY = amx_ftoc(fClosestY);

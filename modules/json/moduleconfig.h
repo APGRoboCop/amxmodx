@@ -21,7 +21,7 @@
 #define MODULE_NAME "JSON"
 #define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "http://www.amxmodx.org"
+#define MODULE_URL "www.amxmodx.org"
 #define MODULE_LOGTAG "JSON"
 #define MODULE_LIBRARY "json"
 #define MODULE_LIBCLASS ""

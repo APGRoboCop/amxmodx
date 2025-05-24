@@ -54,12 +54,13 @@ public:
 		m_HudText2=0;
 		m_SetFOV=0;
 
-		m_SavedEdict=NULL;
+		m_SavedEdict=nullptr;
 
 		m_RoundInProgress=0;
 
 		ResetForwards();
-	};
+	}
+
 	inline void CheckMap()
 	{
 		ke::AString MapName;
@@ -82,19 +83,22 @@ public:
 		}
 
 
-	};
+	}
+
 	inline int &TitleMap()
 	{
 		return m_iTitlesMap;
-	};
+	}
+
 	inline void SetCombat(int value)
 	{
 		m_IsCombat=value;
-	};
+	}
+
 	inline int &IsCombat()
 	{
 		return m_IsCombat;
-	};
+	}
 
 	inline void UpdateHudText2()
 	{
@@ -102,27 +106,31 @@ public:
 		{
 			GetMessageIDs();
 		}
-	};
+	}
+
 	inline void UpdateSetFOV()
 	{
 		if (!m_SetFOV)
 		{
 			GetMessageIDs();
 		}
-	};
+	}
+
 	inline int &GetHudText2()
 	{
 		return m_HudText2;
-	};
+	}
+
 	inline int &GetSetFOV()
 	{
 		return m_SetFOV;
-	};
+	}
+
 	inline void GetMessageIDs()
 	{
-		m_HudText2=GET_USER_MSG_ID(&Plugin_info,"HudText2",NULL);
-		m_SetFOV=GET_USER_MSG_ID(&Plugin_info,"SetFOV",NULL);
-	};
+		m_HudText2=GET_USER_MSG_ID(&Plugin_info,"HudText2", nullptr);
+		m_SetFOV=GET_USER_MSG_ID(&Plugin_info,"SetFOV", nullptr);
+	}
 
 	inline void EvaluateCombat()
 	{
@@ -139,7 +147,7 @@ public:
 		}
 
 		SetCombat(0);
-	};
+	}
 
 	inline void ResetForwards()
 	{
@@ -150,7 +158,8 @@ public:
 		m_RoundStartForward=-1;
 		m_RoundEndForward=-1;
 		m_MapResetForward=-1;
-	};
+	}
+
 	inline void RegisterForwards()
 	{
 		ResetForwards();
@@ -164,16 +173,16 @@ public:
 		m_MapResetForward = MF_RegisterForward("map_reset", ET_IGNORE, FP_CELL, FP_DONE);
 		
 
-	};
+	}
 
 	inline void StartFrame()
 	{
 		if (gpGlobals->time >= m_fRoundStartTime)
 		{
-			g_pFunctionTable->pfnStartFrame=NULL;
+			g_pFunctionTable->pfnStartFrame= nullptr;
 			RoundStart();
 		}
-	};
+	}
 
 	/**
 	 * This is called from MessageHandler's Countdown
@@ -188,7 +197,7 @@ public:
 		m_fRoundStartTime=gpGlobals->time + Time;
 		
 		m_SendMapReset = true;
-	};
+	}
 
 	/**
 	 * This is called from MessageHandler's GameStatus
@@ -215,50 +224,58 @@ public:
 			RoundEnd();
 			break;
 		}
-	};
+	}
 
 	inline void RoundStart()
 	{
 		m_RoundInProgress=1;
 		MF_ExecuteForward(m_RoundStartForward);
-	};
+	}
+
 	inline void RoundEnd()
 	{
 		m_RoundInProgress=0;
 
 		MF_ExecuteForward(m_RoundEndForward,gpGlobals->time - m_fRoundStartTime);
-	};
+	}
+
 	inline int &RoundInProgress()
 	{
 		return m_RoundInProgress;
-	};
+	}
+
 	// no need to check -1 forwards in these
 	// amxmodx checks it anyway
 	inline void ExecuteClientBuilt(int &PlayerID, int StructureID, int &StructureType, int &Impulse)
 	{
 		MF_ExecuteForward(m_BuiltForward,PlayerID, StructureID, StructureType, Impulse);
-	};
+	}
+
 	inline void ExecuteClientSpawn(int &PlayerID)
 	{
 		MF_ExecuteForward(m_SpawnForward,PlayerID);
-	};
+	}
+
 	inline void ExecuteClientChangeTeam(int &PlayerID, int &NewTeam, int &OldTeam)
 	{
 		MF_ExecuteForward(m_TeamForward, PlayerID, NewTeam, OldTeam);
-	};
+	}
+
 	inline void ExecuteClientChangeClass(int &PlayerID, int &NewClass, int &OldClass)
 	{
 		MF_ExecuteForward(m_ChangeclassForward,PlayerID,NewClass,OldClass);
-	};
+	}
+
 	inline void ExecuteRoundStart()
 	{
 		MF_ExecuteForward(m_RoundStartForward);
-	};
+	}
+
 	inline void ExecuteRoundEnd()
 	{
 		MF_ExecuteForward(m_RoundEndForward);
-	};
-	
+	}
+
 
 	/**
 	 * The next few functions tell the module what metamod hooks
@@ -278,17 +295,17 @@ public:
 		HookPreThink_Post();
 		HookUpdateClientData();
 		HookLogs();
-	};
-	
+	}
+
 	inline void SetTemporaryEdict(edict_t *Edict)
 	{
 		m_SavedEdict=Edict;
-	};
+	}
+
 	inline edict_t *GetTemporaryEdict()
 	{
 		return m_SavedEdict;
-	};
-
+	}
 };
 
 extern GameManager GameMan;

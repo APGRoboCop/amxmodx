@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -32,7 +34,7 @@ void GameManager::HookPreThink()
 		return;
 	}
 
-	g_pFunctionTable->pfnPlayerPreThink=NULL;
+	g_pFunctionTable->pfnPlayerPreThink= nullptr;
 };
 
 void GameManager::HookPostThink_Post()
@@ -47,7 +49,7 @@ void GameManager::HookPostThink_Post()
 		}
 	}
 
-	g_pFunctionTable_Post->pfnPlayerPostThink=NULL;
+	g_pFunctionTable_Post->pfnPlayerPostThink= nullptr;
 };
 void GameManager::HookPreThink_Post()
 {
@@ -61,7 +63,7 @@ void GameManager::HookPreThink_Post()
 		}
 	}
 
-	g_pFunctionTable_Post->pfnPlayerPreThink=NULL;
+	g_pFunctionTable_Post->pfnPlayerPreThink= nullptr;
 };
 void GameManager::HookUpdateClientData()
 {
@@ -75,7 +77,7 @@ void GameManager::HookUpdateClientData()
 		}
 	}
 
-	g_pFunctionTable->pfnUpdateClientData=NULL;
+	g_pFunctionTable->pfnUpdateClientData= nullptr;
 };
 void GameManager::HookLogs()
 {
@@ -90,8 +92,8 @@ void GameManager::HookLogs()
 	else 
 	{
 		// no need for these hooks in co
-		g_pengfuncsTable_Post->pfnAlertMessage=NULL;
-		g_pengfuncsTable_Post->pfnCreateNamedEntity=NULL;
+		g_pengfuncsTable_Post->pfnAlertMessage= nullptr;
+		g_pengfuncsTable_Post->pfnCreateNamedEntity= nullptr;
 	}
 
 };

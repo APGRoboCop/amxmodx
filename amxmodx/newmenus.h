@@ -10,10 +10,10 @@
 #ifndef _INCLUDE_NEWMENUS_H
 #define _INCLUDE_NEWMENUS_H
 
-#define MENU_TIMEOUT	-4
-#define	MENU_EXIT		-3
-#define	MENU_BACK		-2
-#define	MENU_MORE		-1
+#define MENU_TIMEOUT	(-4)
+#define	MENU_EXIT		(-3)
+#define	MENU_BACK		(-2)
+#define	MENU_MORE		(-1)
 #define	ITEM_IGNORE		0
 #define	ITEM_ENABLED	1
 #define ITEM_DISABLED	2
@@ -105,7 +105,7 @@ public:
 	
 	const char *GetTextString(int player, page_t page, int &keys);
 	bool Display(int player, page_t page);
-	void Close(int player);
+	void Close(int player) const;
 
 	int PagekeyToItem(page_t page, item_t key);
 	int GetMenuMenuid();

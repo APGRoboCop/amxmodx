@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -99,7 +101,7 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 	return 1;
 }
 
-MysqlThread::MysqlThread()
+MysqlThread::MysqlThread(): m_qrInfo()
 {
 	m_fwd = 0;
 	m_data = nullptr;
@@ -236,7 +238,7 @@ void MysqlThread::Execute()
 	{
 		data_addr = MF_PrepareCellArray(m_data, m_datalen);
 	} else {
-		static cell tmpdata[1] = {0};
+		static cell tmpdata[1] = {};
 		data_addr = MF_PrepareCellArray(tmpdata, 1);
 	}
 	int state = 0;
@@ -301,7 +303,7 @@ void OnPluginsLoaded()
 		delete g_pWorker;
 		g_pWorker = nullptr;
 	}
-	g_pFunctionTable->pfnSpawn = NULL;
+	g_pFunctionTable->pfnSpawn = nullptr;
 
 	g_lasttime = 0.0f;
 }
@@ -371,7 +373,7 @@ void OnPluginsUnloading()
  * ATOMIC RESULT STUFF *
  ***********************/
 
-AtomicResult::AtomicResult()
+AtomicResult::AtomicResult(): m_FieldCount(0)
 {
 	m_IsFree = true;
 	m_CurRow = 1;

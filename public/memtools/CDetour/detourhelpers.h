@@ -73,7 +73,7 @@ inline void ProtectMemory(void *addr, int length, int prot)
 inline unsigned char *AllocatePageMemory(size_t size)
 {
 #if defined WIN32
-	return (unsigned char *)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+	return static_cast<unsigned char*>(VirtualAlloc(nullptr, size, MEM_COMMIT, PAGE_EXECUTE_READWRITE));
 #elif defined __GNUC__
 #if defined __APPLE__
 	unsigned char *addr = (unsigned char *)valloc(size);
@@ -98,7 +98,7 @@ inline void FreePageMemory(void *addr, size_t size)
 
 inline void SetMemPatchable(void *address, size_t size)
 {
-	ProtectMemory(address, (int)size, PAGE_EXECUTE_READWRITE);
+	ProtectMemory(address, static_cast<int>(size), PAGE_EXECUTE_READWRITE);
 }
 
 inline void DoGatePatch(unsigned char *target, void *callback)
@@ -107,14 +107,14 @@ inline void DoGatePatch(unsigned char *target, void *callback)
 
 	target[0] = 0xFF;	/* JMP */
 	target[1] = 0x25;	/* MEM32 */
-	*(void **)(&target[2]) = callback;
+	*reinterpret_cast<void**>(&target[2]) = callback;
 }
 
 inline void ApplyPatch(void *address, int offset, const patch_t *patch, patch_t *restore)
 {
 	ProtectMemory(address, 20, PAGE_EXECUTE_READWRITE);
 
-	unsigned char *addr = (unsigned char *)address + offset;
+	unsigned char *addr = static_cast<unsigned char*>(address) + offset;
 	if (restore)
 	{
 		for (size_t i=0; i<patch->bytes; i++)

@@ -29,7 +29,7 @@ struct Stats {
 	int damage;
 	int hs;
 	int tks;
-	int points; // DoD score
+	int points; // DoD score //Not required? [APG]RoboCop[CL]
 	int kills;
 	int deaths;
 	int bodyHits[8];

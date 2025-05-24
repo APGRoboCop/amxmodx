@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -47,16 +49,14 @@ void Initialize_MessageHandler()
 	}
 
 	// Hook our messages
-	int index;
-
-	index=GET_USER_MSG_ID(&Plugin_info,"Countdown",NULL);
+	int index = GET_USER_MSG_ID(&Plugin_info, "Countdown", nullptr);
 
 	if (index)
 	{
 		MessageLists[index]=new MessageCountDown;
 	}
 
-	index=GET_USER_MSG_ID(&Plugin_info,"GameStatus",NULL);
+	index=GET_USER_MSG_ID(&Plugin_info,"GameStatus", nullptr);
 
 	if (index)
 	{
@@ -119,15 +119,15 @@ void MessageEnd_Post()
 	HookedMessage= nullptr;
 
 	// Stop metamod forwarding
-	g_pengfuncsTable_Post->pfnWriteByte=NULL;
-	g_pengfuncsTable_Post->pfnWriteChar=NULL;
-	g_pengfuncsTable_Post->pfnWriteShort=NULL;
-	g_pengfuncsTable_Post->pfnWriteLong=NULL;
-	g_pengfuncsTable_Post->pfnWriteAngle=NULL;
-	g_pengfuncsTable_Post->pfnWriteCoord=NULL;
-	g_pengfuncsTable_Post->pfnWriteString=NULL;
-	g_pengfuncsTable_Post->pfnWriteEntity=NULL;
-	g_pengfuncsTable_Post->pfnMessageEnd=NULL;
+	g_pengfuncsTable_Post->pfnWriteByte= nullptr;
+	g_pengfuncsTable_Post->pfnWriteChar= nullptr;
+	g_pengfuncsTable_Post->pfnWriteShort= nullptr;
+	g_pengfuncsTable_Post->pfnWriteLong= nullptr;
+	g_pengfuncsTable_Post->pfnWriteAngle= nullptr;
+	g_pengfuncsTable_Post->pfnWriteCoord= nullptr;
+	g_pengfuncsTable_Post->pfnWriteString= nullptr;
+	g_pengfuncsTable_Post->pfnWriteEntity= nullptr;
+	g_pengfuncsTable_Post->pfnMessageEnd= nullptr;
 
 	RETURN_META(MRES_IGNORED);
 };

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -19,8 +21,8 @@ ke::UniquePtr<JSONMngr> JsonMngr;
 static cell AMX_NATIVE_CALL amxx_json_parse(AMX *amx, cell *params)
 {
 	int len;
-	auto string = MF_GetAmxString(amx, params[1], 0, &len);
-	auto is_file = params[2] != 0;
+	char* string = MF_GetAmxString(amx, params[1], 0, &len);
+	bool is_file = params[2] != 0;
 
 	if (is_file)
 	{
@@ -29,7 +31,7 @@ static cell AMX_NATIVE_CALL amxx_json_parse(AMX *amx, cell *params)
 	}
 
 	JS_Handle handle;
-	auto result = JsonMngr->Parse(string, &handle, is_file, params[3] != 0);
+	bool result = JsonMngr->Parse(string, &handle, is_file, params[3] != 0);
 
 	return (result) ? handle : -1;
 }
@@ -37,7 +39,7 @@ static cell AMX_NATIVE_CALL amxx_json_parse(AMX *amx, cell *params)
 //native bool:json_equals(const JSON:value1, const JSON:value2);
 static cell AMX_NATIVE_CALL amxx_json_equals(AMX *amx, cell *params)
 {
-	auto value1 = params[1], value2 = params[2];
+	cell value1 = params[1], value2 = params[2];
 	//For check against Invalid_JSON
 	if (value1 == -1 || value2 == -1)
 	{
@@ -62,7 +64,7 @@ static cell AMX_NATIVE_CALL amxx_json_equals(AMX *amx, cell *params)
 //native bool:json_validate(const JSON:schema, const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_validate(AMX *amx, cell *params)
 {
-	auto schema = params[1], value = params[2];
+	cell schema = params[1], value = params[2];
 	if (!JsonMngr->IsValidHandle(schema))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON schema! %d", schema);
@@ -81,7 +83,7 @@ static cell AMX_NATIVE_CALL amxx_json_validate(AMX *amx, cell *params)
 //native JSON:json_get_parent(const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_get_parent(AMX *amx, cell *params)
 {
-	auto value = params[1];
+	cell value = params[1];
 	if (!JsonMngr->IsValidHandle(value))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", value);
@@ -89,7 +91,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_parent(AMX *amx, cell *params)
 	}
 
 	JS_Handle parent;
-	auto result = JsonMngr->GetValueParent(value, &parent);
+	bool result = JsonMngr->GetValueParent(value, &parent);
 
 	return (result) ? parent : -1;
 }
@@ -97,7 +99,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_parent(AMX *amx, cell *params)
 //native JSONType:json_get_type(const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_get_type(AMX *amx, cell *params)
 {
-	auto value = params[1];
+	cell value = params[1];
 	if (!JsonMngr->IsValidHandle(value))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", value);
@@ -111,7 +113,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_type(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amxx_json_init_object(AMX *amx, cell *params)
 {
 	JS_Handle handle;
-	auto result = JsonMngr->InitObject(&handle);
+	bool result = JsonMngr->InitObject(&handle);
 
 	return (result) ? handle : -1;
 }
@@ -120,7 +122,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_object(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amxx_json_init_array(AMX *amx, cell *params)
 {
 	JS_Handle handle;
-	auto result = JsonMngr->InitArray(&handle);
+	bool result = JsonMngr->InitArray(&handle);
 
 	return (result) ? handle : -1;
 }
@@ -130,7 +132,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_string(AMX *amx, cell *params)
 {
 	int len;
 	JS_Handle handle;
-	auto result = JsonMngr->InitString(MF_GetAmxString(amx, params[1], 0, &len), &handle);
+	bool result = JsonMngr->InitString(MF_GetAmxString(amx, params[1], 0, &len), &handle);
 
 	return (result) ? handle : -1;
 }
@@ -139,7 +141,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amxx_json_init_number(AMX *amx, cell *params)
 {
 	JS_Handle handle;
-	auto result = JsonMngr->InitNum(params[1], &handle);
+	bool result = JsonMngr->InitNum(params[1], &handle);
 
 	return (result) ? handle : -1;
 }
@@ -148,7 +150,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_number(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amxx_json_init_real(AMX *amx, cell *params)
 {
 	JS_Handle handle;
-	auto result = JsonMngr->InitNum(amx_ctof(params[1]), &handle);
+	bool result = JsonMngr->InitNum(amx_ctof(params[1]), &handle);
 
 	return (result) ? handle : -1;
 }
@@ -157,7 +159,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_real(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amxx_json_init_bool(AMX *amx, cell *params)
 {
 	JS_Handle handle;
-	auto result = JsonMngr->InitBool(params[1] != 0, &handle);
+	bool result = JsonMngr->InitBool(params[1] != 0, &handle);
 
 	return (result) ? handle : -1;
 }
@@ -166,7 +168,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_bool(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amxx_json_init_null(AMX *amx, cell *params)
 {
 	JS_Handle handle;
-	auto result = JsonMngr->InitNull(&handle);
+	bool result = JsonMngr->InitNull(&handle);
 
 	return (result) ? handle : -1;
 }
@@ -174,7 +176,7 @@ static cell AMX_NATIVE_CALL amxx_json_init_null(AMX *amx, cell *params)
 //native JSON:json_deep_copy(const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_deep_copy(AMX *amx, cell *params)
 {
-	auto value = params[1];
+	cell value = params[1];
 	if (!JsonMngr->IsValidHandle(value))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", value);
@@ -182,7 +184,7 @@ static cell AMX_NATIVE_CALL amxx_json_deep_copy(AMX *amx, cell *params)
 	}
 
 	JS_Handle clonedHandle;
-	auto result = JsonMngr->DeepCopyValue(value, &clonedHandle);
+	bool result = JsonMngr->DeepCopyValue(value, &clonedHandle);
 
 	return (result) ? clonedHandle : -1;
 }
@@ -190,7 +192,7 @@ static cell AMX_NATIVE_CALL amxx_json_deep_copy(AMX *amx, cell *params)
 //native bool:json_free(&JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_free(AMX *amx, cell *params)
 {
-	auto value = MF_GetAmxAddr(amx, params[1]);
+	cell* value = MF_GetAmxAddr(amx, params[1]);
 	if (!JsonMngr->IsValidHandle(*value))
 	{
 		return 0;
@@ -213,7 +215,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto string = JsonMngr->ValueToString(value);
+	const char* string = JsonMngr->ValueToString(value);
 
 	return MF_SetAmxStringUTF8Char(amx, params[2], string, strlen(string), params[3]);
 }
@@ -221,7 +223,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_string(AMX *amx, cell *params)
 //native json_get_number(const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_get_number(AMX *amx, cell *params)
 {
-	auto value = params[1];
+	cell value = params[1];
 	if (!JsonMngr->IsValidHandle(value))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", value);
@@ -241,7 +243,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_real(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto result = static_cast<float>(JsonMngr->ValueToNum(value));
+	float result = static_cast<float>(JsonMngr->ValueToNum(value));
 
 	return amx_ftoc(result);
 }
@@ -249,7 +251,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_real(AMX *amx, cell *params)
 //native bool:json_get_bool(const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_get_bool(AMX *amx, cell *params)
 {
-	auto value = params[1];
+	cell value = params[1];
 	if (!JsonMngr->IsValidHandle(value))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", value);
@@ -262,7 +264,7 @@ static cell AMX_NATIVE_CALL amxx_json_get_bool(AMX *amx, cell *params)
 //native JSON:json_array_get_value(const JSON:array, index);
 static cell AMX_NATIVE_CALL amxx_json_array_get_value(AMX *amx, cell *params)
 {
-	auto array = params[1];
+	cell array = params[1];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
@@ -270,7 +272,7 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_value(AMX *amx, cell *params)
 	}
 
 	JS_Handle handle;
-	auto result = JsonMngr->ArrayGetValue(array, params[2], &handle);
+	bool result = JsonMngr->ArrayGetValue(array, params[2], &handle);
 
 	return (result) ? handle : -1;
 }
@@ -278,14 +280,14 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_value(AMX *amx, cell *params)
 //native json_array_get_string(const JSON:array, index, buffer[], maxlen);
 static cell AMX_NATIVE_CALL amxx_json_array_get_string(AMX *amx, cell *params)
 {
-	auto array = params[1];
+	cell array = params[1];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
 		return 0;
 	}
 
-	auto string = JsonMngr->ArrayGetString(array, params[2]);
+	const char* string = JsonMngr->ArrayGetString(array, params[2]);
 
 	return MF_SetAmxStringUTF8Char(amx, params[3], string, strlen(string), params[4]);
 }
@@ -293,7 +295,7 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_string(AMX *amx, cell *params)
 //native json_array_get_number(const JSON:array, index);
 static cell AMX_NATIVE_CALL amxx_json_array_get_number(AMX *amx, cell *params)
 {
-	auto array = params[1];
+	cell array = params[1];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
@@ -306,14 +308,14 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_number(AMX *amx, cell *params)
 //native Float:json_array_get_real(const JSON:array, index);
 static cell AMX_NATIVE_CALL amxx_json_array_get_real(AMX *amx, cell *params)
 {
-	auto array = params[1];
+	cell array = params[1];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
 		return 0;
 	}
 
-	auto result = static_cast<float>(JsonMngr->ArrayGetNum(array, params[2]));
+	float result = static_cast<float>(JsonMngr->ArrayGetNum(array, params[2]));
 
 	return amx_ftoc(result);
 }
@@ -321,7 +323,7 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_real(AMX *amx, cell *params)
 //native bool:json_array_get_bool(const JSON:array, index);
 static cell AMX_NATIVE_CALL amxx_json_array_get_bool(AMX *amx, cell *params)
 {
-	auto array = params[1];
+	cell array = params[1];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
@@ -334,7 +336,7 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_bool(AMX *amx, cell *params)
 //native json_array_get_count(const JSON:array);
 static cell AMX_NATIVE_CALL amxx_json_array_get_count(AMX *amx, cell *params)
 {
-	auto array = params[1];
+	cell array = params[1];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
@@ -347,7 +349,7 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_count(AMX *amx, cell *params)
 //native bool:json_array_replace_value(JSON:array, index, const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_array_replace_value(AMX *amx, cell *params)
 {
-	auto array = params[1], value = params[3];
+	cell array = params[1], value = params[3];
 	if (!JsonMngr->IsValidHandle(array, Handle_Array))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -17,13 +19,13 @@
 // native any:get_gamerules_int(const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[3];
-	CHECK_DATA(data, element, BaseFieldType::Integer);
+	const int element = params[3];
+	CHECK_DATA(data, element, BaseFieldType::Integer)
 
 	return PvData::GetInt(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 }
@@ -31,13 +33,13 @@ static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
 // native set_gamerules_int(const class[], const member[], any:value, element = 0);
 static cell AMX_NATIVE_CALL set_gamerules_int(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Integer);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Integer)
 
 	if (data.fieldType == FieldType::FIELD_STRUCTURE || data.fieldType == FieldType::FIELD_CLASS)
 	{
@@ -54,13 +56,13 @@ static cell AMX_NATIVE_CALL set_gamerules_int(AMX *amx, cell *params)
 // native Float:get_gamerules_float(const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_float(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[3];
-	CHECK_DATA(data, element, BaseFieldType::Float);
+	const int element = params[3];
+	CHECK_DATA(data, element, BaseFieldType::Float)
 
 	return PvData::GetFloat(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 }
@@ -68,13 +70,13 @@ static cell AMX_NATIVE_CALL get_gamerules_float(AMX *amx, cell *params)
 // native set_gamerules_float(const class[], const member[], Float:value, element = 0);
 static cell AMX_NATIVE_CALL set_gamerules_float(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Float);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Float)
 
 	PvData::SetFloat(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, amx_ctof(params[3]), element);
 
@@ -85,13 +87,13 @@ static cell AMX_NATIVE_CALL set_gamerules_float(AMX *amx, cell *params)
 // native get_gamerules_vector(const class[], const member[], Float:value[3], element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_vector(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Vector);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Vector)
 
 	PvData::GetVector(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
 
@@ -101,13 +103,13 @@ static cell AMX_NATIVE_CALL get_gamerules_vector(AMX *amx, cell *params)
 // native set_gamerules_vector(const class[], const member[], Float:value[3], element = 0);
 static cell AMX_NATIVE_CALL set_gamerules_vector(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Vector);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Vector)
 
 	PvData::GetVector(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
 
@@ -118,13 +120,13 @@ static cell AMX_NATIVE_CALL set_gamerules_vector(AMX *amx, cell *params)
 // native get_gamerules_entity(const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_entity(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[3];
-	CHECK_DATA(data, element, BaseFieldType::Entity);
+	const int element = params[3];
+	CHECK_DATA(data, element, BaseFieldType::Entity)
 
 	return PvData::GetEntity(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 }
@@ -132,20 +134,20 @@ static cell AMX_NATIVE_CALL get_gamerules_entity(AMX *amx, cell *params)
 // native set_gamerules_entity(const class[], const member[], value, element = 0);
 static cell AMX_NATIVE_CALL set_gamerules_entity(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
-	int value = params[3];
+	const int value = params[3];
 
 	if (value != -1)
 	{
-		CHECK_ENTITY(value);
+		CHECK_ENTITY(value)
 	}
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Entity);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Entity)
 
 	PvData::SetEntity(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, params[3], element);
 
@@ -156,18 +158,18 @@ static cell AMX_NATIVE_CALL set_gamerules_entity(AMX *amx, cell *params)
 // native get_gamerules_string(const class[], const member[], value[], maxlen, element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_string(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::String);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::String)
 
-	auto buffer = params[3];
+	const auto buffer = params[3];
 	auto maxlen = params[4];
 
-	auto string = PvData::GetString(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
+	const auto string = PvData::GetString(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 
 	if (data.fieldSize)
 	{
@@ -180,13 +182,13 @@ static cell AMX_NATIVE_CALL get_gamerules_string(AMX *amx, cell *params)
 // native set_gamerules_string(const class[], const member[], const value[], element = 0);
 static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::String);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::String)
 
 	int length;
 	const char *value = MF_GetAmxString(amx, params[3], 0, &length);
@@ -198,10 +200,10 @@ static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
 // native get_gamerules_size(const class[], const member[]);
 static cell AMX_NATIVE_CALL get_gamerules_size(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
 	return data.fieldSize;
 }
@@ -209,10 +211,10 @@ static cell AMX_NATIVE_CALL get_gamerules_size(AMX *amx, cell *params)
 // native find_gamerules_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
 static cell AMX_NATIVE_CALL find_gamerules_info(AMX *amx, cell *params)
 {
-	CHECK_GAMERULES();
+	CHECK_GAMERULES()
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig)
 
 	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
 	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);

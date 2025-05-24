@@ -21,7 +21,7 @@
 #define MODULE_NAME "TfcX"
 #define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
-#define MODULE_URL "http://www.amxmodx.org"
+#define MODULE_URL "www.amxmodx.org"
 #define MODULE_LOGTAG "TFCX"
 #define MODULE_LIBRARY "tfcx"
 #define MODULE_LIBCLASS "xstats"

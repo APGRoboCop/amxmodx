@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  LIBPAWNC.C
  *
  *  A "glue file" for building the Pawn compiler as a DLL or shared library.
@@ -78,11 +80,10 @@ int pc_printf(const char *message, ...)
 #endif
 {
 #if PAWN_CELL_SIZE==32
-  int ret;
-  va_list argptr;
+	va_list argptr;
 
   va_start(argptr,message);
-  ret=vprintf(message,argptr);
+	const int ret = vprintf(message, argptr);
   va_end(argptr);
 
   return ret;
@@ -111,8 +112,7 @@ int pc_error(int number,char *message,char *filename,int firstline,int lastline,
 static char *prefix[3]={ "error", "fatal error", "warning" };
 
   if (number!=0) {
-    char *pre;
-    int idx;
+	  int idx;
 
     if (number < 100 || (number >= 200 && sc_warnings_are_errors))
       idx = 0;
@@ -121,7 +121,7 @@ static char *prefix[3]={ "error", "fatal error", "warning" };
     else
       idx = 2;
 
-    pre=prefix[idx];
+    char* pre = prefix[idx];
     if (firstline>=0)
       pc_printf("%s(%d -- %d) : %s %03d: ",filename,firstline,lastline,pre,number);
     else
@@ -253,7 +253,7 @@ void pc_closesrc(void *handle)
 void pc_resetsrc(void *handle,void *position)
 {
   src_file_t *src = (src_file_t *)handle;
-  ptrdiff_t pos = (ptrdiff_t)position;
+  const ptrdiff_t pos = (ptrdiff_t)position;
 
   assert(!src->fp);
   assert(pos >= 0 && src->buffer + pos <= src->end);
@@ -268,7 +268,7 @@ char *pc_readsrc(void *handle,unsigned char *target,int maxchars)
 {
   src_file_t *src = (src_file_t *)handle;
   char *outptr = (char *)target;
-  char *outend = outptr + maxchars;
+  const char *outend = outptr + maxchars;
 
   assert(!src->fp);
 
@@ -276,7 +276,7 @@ char *pc_readsrc(void *handle,unsigned char *target,int maxchars)
     return NULL;
 
   while (outptr < outend && src->pos < src->end) {
-    char c = *src->pos++;
+	  const char c = *src->pos++;
     *outptr++ = c;
 
     if (c == '\n')
@@ -303,8 +303,8 @@ char *pc_readsrc(void *handle,unsigned char *target,int maxchars)
  */
 int pc_writesrc(void *handle,unsigned char *source)
 {
-  char *str = (char *)source;
-  size_t len = strlen(str);
+	const char *str = (char *)source;
+	const size_t len = strlen(str);
   src_file_t *src = (src_file_t *)handle;
 
   assert(src->fp && src->maxlength);
@@ -312,7 +312,7 @@ int pc_writesrc(void *handle,unsigned char *source)
   if (src->pos + len > src->end) {
     char *newbuf;
     size_t newmax = src->maxlength;
-    size_t newlen = (src->pos - src->buffer) + len;
+    const size_t newlen = (src->pos - src->buffer) + len;
     while (newmax < newlen) {
       // Grow by 1.5X
       newmax += newmax + newmax / 2;
@@ -320,12 +320,14 @@ int pc_writesrc(void *handle,unsigned char *source)
         abort();
     }
 
-    newbuf = (char *)realloc(src->buffer, newmax);
-    if (!newbuf)
-      abort();
-    src->pos = newbuf + (src->pos - src->buffer);
-    src->end = newbuf + newmax;
+    newbuf = (char*)realloc(src->buffer, newmax);
+    if (!newbuf) {
+        abort();
+    }
+    const ptrdiff_t pos_offset = src->pos - src->buffer;
     src->buffer = newbuf;
+    src->pos = src->buffer + pos_offset;
+    src->end = src->buffer + newmax;
     src->maxlength = newmax;
   }
 
@@ -336,7 +338,7 @@ int pc_writesrc(void *handle,unsigned char *source)
 
 void *pc_getpossrc(void *handle)
 {
-  src_file_t *src = (src_file_t *)handle;
+	const src_file_t *src = (src_file_t *)handle;
 
   assert(!src->fp);
   return (void *)(ptrdiff_t)(src->pos - src->buffer);
@@ -344,7 +346,7 @@ void *pc_getpossrc(void *handle)
 
 int pc_eofsrc(void *handle)
 {
-  src_file_t *src = (src_file_t *)handle;
+	const src_file_t *src = (src_file_t *)handle;
 
   assert(!src->fp);
   return src->pos == src->end;

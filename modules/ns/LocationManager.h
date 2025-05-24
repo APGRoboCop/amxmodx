@@ -37,13 +37,13 @@ public:
 	LocationManager()
 	{
 		Clear();
-	};
+	}
 
 	inline void Clear()
 	{
 		m_LocationList.clear();
 		m_LocationList.ensure(32);
-	};
+	}
 
 	inline void Add(const char *Name, edict_t *Entity)
 	{
@@ -59,7 +59,8 @@ public:
 		Temp.titlelookup=TitleMan.Lookup(NameString);
 
 		m_LocationList.append(Temp);
-	};
+	}
+
 	inline const char *Lookup(vec3_t origin, cell titlelookup)
 	{
 		unsigned int i=0;
@@ -89,8 +90,7 @@ public:
 			}
 		}
 		return "";
-	};
-
+	}
 };
 
 extern LocationManager LocationMan;

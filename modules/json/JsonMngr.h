@@ -27,7 +27,7 @@ class JSONMngr : public IJSONMngr
 	public:
 
 	JSONMngr() = default;
-	virtual ~JSONMngr();
+	~JSONMngr() override;
 
 	// Handles
 	bool IsValidHandle(JS_Handle id, JSONHandleType type = Handle_Value) override;

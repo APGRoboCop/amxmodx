@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /* vim: set ts=4 sw=4 tw=99 et: */
 #include <stdlib.h>
 #include <string.h>
@@ -19,18 +21,17 @@ NameHash(const char *str)
     #define get16bits(d) ((((uint32_t)(((const uint8_t *)(d))[1])) << 8)\
                      +(uint32_t)(((const uint8_t *)(d))[0]) )
   #endif
-  uint32_t hash = len, tmp;
-  int rem;
+  uint32_t hash = len;
 
   if (len <= 0 || data == NULL) return 0;
 
-  rem = len & 3;
+  const int rem = len & 3;
   len >>= 2;
 
   /* Main loop */
   for (;len > 0; len--) {
       hash  += get16bits (data);
-      tmp    = (get16bits (data+2) << 11) ^ hash;
+      const uint32_t tmp = (get16bits(data+2) << 11) ^ hash;
       hash   = (hash << 16) ^ tmp;
       data  += 2*sizeof (uint16_t);
       hash  += hash >> 11;
@@ -105,9 +106,9 @@ FindTaggedInHashTable(HashTable *ht, const char *name, int fnumber,
 {
     int count=0;
     symbol *firstmatch=NULL;
-    uint32_t hash = NameHash(name);
-    uint32_t bucket = hash & ht->bucketmask;
-    HashEntry *he = ht->buckets[bucket];
+    const uint32_t hash = NameHash(name);
+    const uint32_t bucket = hash & ht->bucketmask;
+    const HashEntry *he = ht->buckets[bucket];
 
     assert(cmptag!=NULL);
 
@@ -138,9 +139,9 @@ FindTaggedInHashTable(HashTable *ht, const char *name, int fnumber,
 SC_FUNC symbol *
 FindInHashTable(HashTable *ht, const char *name, int fnumber)
 {
-    uint32_t hash = NameHash(name);
-    uint32_t bucket = hash & ht->bucketmask;
-    HashEntry *he = ht->buckets[bucket];
+	const uint32_t hash = NameHash(name);
+	const uint32_t bucket = hash & ht->bucketmask;
+    const HashEntry *he = ht->buckets[bucket];
 
     while (he != NULL) {
         symbol *sym = he->sym;
@@ -160,8 +161,8 @@ static void
 ResizeHashTable(HashTable *ht)
 {
     uint32_t i;
-    uint32_t xnbuckets = ht->nbuckets * 2;
-    uint32_t xbucketmask = xnbuckets - 1;
+    const uint32_t xnbuckets = ht->nbuckets * 2;
+    const uint32_t xbucketmask = xnbuckets - 1;
     HashEntry **xbuckets = (HashEntry **)calloc(xnbuckets, sizeof(HashEntry*));
     if (!xbuckets)
         return;
@@ -170,7 +171,7 @@ ResizeHashTable(HashTable *ht)
         HashEntry *he = ht->buckets[i];
         while (he != NULL) {
             HashEntry *next = he->next;
-            uint32_t bucket = he->sym->hash & xbucketmask;
+            const uint32_t bucket = he->sym->hash & xbucketmask;
             he->next = xbuckets[bucket];
             xbuckets[bucket] = he;
             he = next;
@@ -185,16 +186,15 @@ ResizeHashTable(HashTable *ht)
 SC_FUNC void
 AddToHashTable(HashTable *ht, symbol *sym)
 {
-    uint32_t bucket = sym->hash & ht->bucketmask;
-    HashEntry **hep, *he;
+	const uint32_t bucket = sym->hash & ht->bucketmask;
 
-    hep = &ht->buckets[bucket];
+	HashEntry** hep = &ht->buckets[bucket];
     while (*hep) {
         assert((*hep)->sym != sym);
         hep = &(*hep)->next;
     }
 
-    he = (HashEntry *)malloc(sizeof(HashEntry));
+    HashEntry* he = (HashEntry*)malloc(sizeof(HashEntry));
     if (!he)
       error(163);
     he->sym = sym;
@@ -209,7 +209,7 @@ AddToHashTable(HashTable *ht, symbol *sym)
 SC_FUNC void
 RemoveFromHashTable(HashTable *ht, symbol *sym)
 {
-    uint32_t bucket = sym->hash & ht->bucketmask;
+	const uint32_t bucket = sym->hash & ht->bucketmask;
     HashEntry **hep = &ht->buckets[bucket];
     HashEntry *he = *hep;
 

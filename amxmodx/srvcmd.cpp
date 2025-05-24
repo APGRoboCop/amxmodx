@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -73,7 +75,7 @@ void amx_command()
 		else
 		{
 			char *pEnd;
-			auto id = strtol(CMD_ARGV(2), &pEnd, 10);
+			const auto id = strtol(CMD_ARGV(2), &pEnd, 10);
 
 			if (!pEnd)
 			{
@@ -81,7 +83,7 @@ void amx_command()
 				return;
 			}
 
-			auto plugin = g_plugins.findPlugin(id);
+			const auto plugin = g_plugins.findPlugin(id);
 
 			if (plugin && plugin->isValid())
 			{
@@ -89,13 +91,13 @@ void amx_command()
 				print_srvconsole("   Version: %s\n", plugin->getVersion());
 				print_srvconsole("   Author: %s\n", plugin->getAuthor());
 
-				auto url = plugin->getUrl();
+				const auto url = plugin->getUrl();
 				if (url[0])
 				{
 					print_srvconsole("   URL: %s\n", url);
 				}
 
-				auto description = plugin->getDescription(); 
+				const auto description = plugin->getDescription(); 
 				if (description[0])
 				{
 					print_srvconsole("   Description: %s\n", description);
@@ -183,7 +185,7 @@ void amx_command()
 		if (CMD_ARGC() > 2) // Searching for commands registered to a plugin
 		{
 			const char* targetname = CMD_ARGV(2);
-			size_t len = strlen(targetname);
+			const size_t len = strlen(targetname);
 			while (a)
 			{
 				if (strncmp((*a).getPlugin()->getName(), targetname, len) == 0)
@@ -310,8 +312,8 @@ void plugin_srvcmd()
 	{
 		if ((*a).matchCommand(cmd) && (*a).getPlugin()->isExecutable((*a).getFunction()))
 		{
-			cell ret = executeForwards((*a).getFunction(), static_cast<cell>(g_srvindex),
-									   static_cast<cell>((*a).getFlags()), static_cast<cell>((*a).getId()));
+			const cell ret = executeForwards((*a).getFunction(), static_cast<cell>(g_srvindex),
+			                                 static_cast<cell>((*a).getFlags()), static_cast<cell>((*a).getId()));
 			if (ret) break;
 		}
 		++a;

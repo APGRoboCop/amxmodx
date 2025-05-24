@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -19,7 +21,7 @@ IGameConfig *CommonConfig;
 // GAME CONFIG
 //
 
-enum
+enum : std::uint8_t
 {
 	PSTATE_NONE,
 	PSTATE_GAMES,
@@ -200,7 +202,7 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 		{
 			++m_CustomLevel;
 			return m_CustomHandler->ReadSMC_NewSection(states, name);
-			break;
+			//break;
 		}
 		case PSTATE_GAMEDEFS_ADDRESSES:
 		{
@@ -393,7 +395,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 		{
 			if (strcmp(key, "read") == 0)
 			{
-				int limit = sizeof(m_AddressRead) / sizeof(m_AddressRead[0]);
+				constexpr int limit = sizeof(m_AddressRead) / sizeof(m_AddressRead[0]);
 
 				if (m_AddressReadCount < limit)
 				{
@@ -539,14 +541,13 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 				addressInBase = reinterpret_cast<void*>(gpGlobals);
 			}
 
-			void *finalAddress = nullptr;
-
 			if (!addressInBase)
 			{
 				AMXXLOG_Error("Unrecognized library \"%s\" (gameconf \"%s\")", TempSig.library, m_CurrentPath);
 			}
 			else if (TempSig.signature[0])
 			{
+				void *finalAddress = nullptr;
 				if (TempSig.signature[0] == '@')
 				{
 #if defined PLATFORM_WINDOWS
@@ -607,7 +608,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 
 			if (m_Address[0] != '\0' && m_AddressSignature[0] != '\0')
 			{
-				AddressConf addrConf(m_AddressSignature, sizeof(m_AddressSignature), m_AddressReadCount, m_AddressRead);
+				const AddressConf addrConf(m_AddressSignature, sizeof(m_AddressSignature), m_AddressReadCount, m_AddressRead);
 				m_Addresses.replace(m_Address, addrConf);
 			}
 
@@ -652,7 +653,7 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 		{
 			g_LibSys.PathFormat(path, sizeof(path), "custom/%s.txt", m_File);
 
-			auto success = EnterFile(path, error, maxlength);
+			const auto success = EnterFile(path, error, maxlength);
 
 			if (success)
 			{
@@ -664,13 +665,12 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 		return true;
 	}
 
-	SMCError err;
 	SMCStates state = { 0, 0 };
 
 	ke::Vector<ke::AString> fileList;
 	MasterReader.m_FileList = &fileList;
 
-	err = textparsers->ParseSMCFile(path, &MasterReader, &state, error, maxlength);
+	const SMCError err = textparsers->ParseSMCFile(path, &MasterReader, &state, error, maxlength);
 
 	if (err != SMCError_Okay)
 	{
@@ -710,7 +710,7 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 
 		const char *currentFile = customDir->GetEntryName();
 
-		size_t length = strlen(currentFile);
+		const size_t length = strlen(currentFile);
 
 		if (length > 4 && strcmp(&currentFile[length - 4], ".txt") != 0)
 		{
@@ -809,7 +809,7 @@ bool CGameConfig::GetAddress(const char *key, void **retaddr)
 		return false;
 	}
 
-	AddressConf &addrConf = r->value;
+	const AddressConf &addrConf = r->value;
 
 	void *address;
 
@@ -821,7 +821,7 @@ bool CGameConfig::GetAddress(const char *key, void **retaddr)
 
 	for (size_t i = 0; i < addrConf.m_ReadCount; ++i)
 	{
-		int offset = addrConf.m_ReadBytes[i];
+		const int offset = addrConf.m_ReadBytes[i];
 
 		if (!address || reinterpret_cast<uintptr_t>(address) < VALID_MINIMUM_MEMORY_ADDRESS)
 		{
@@ -839,8 +839,8 @@ bool CGameConfig::GetAddress(const char *key, void **retaddr)
 
 CGameConfig::AddressConf::AddressConf(const char *sigName, size_t sigLength, size_t readCount, int *read)
 {
-	size_t limit = sizeof(m_ReadBytes) / sizeof(m_ReadBytes[0]);
-	size_t readLimit = (readCount <= limit) ? readCount : limit;
+	constexpr size_t limit = sizeof(m_ReadBytes) / sizeof(m_ReadBytes[0]);
+	const size_t readLimit = (readCount <= limit) ? readCount : limit;
 
 	strncopy(m_SignatureName, sigName, sizeof(m_SignatureName));
 
@@ -974,13 +974,9 @@ SMCResult CGameMasterReader::ReadSMC_LeavingSection(const SMCStates *states)
 // CONFIG MANAGER
 //
 
-CGameConfigManager::CGameConfigManager()
-{
-}
+CGameConfigManager::CGameConfigManager() = default;
 
-CGameConfigManager::~CGameConfigManager()
-{
-}
+CGameConfigManager::~CGameConfigManager() = default;
 
 void CGameConfigManager::OnAmxxStartup()
 {
@@ -1007,7 +1003,7 @@ bool CGameConfigManager::LoadGameConfigFile(const char *file, IGameConfig **conf
 	configFromCache = new CGameConfig(file);
 	configFromCache->AddRef();
 
-	bool returnValue = configFromCache->Reparse(error, maxlength);
+	const bool returnValue = configFromCache->Reparse(error, maxlength);
 
 	m_Lookup.insert(file, configFromCache);
 	*config = configFromCache;

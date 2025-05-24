@@ -75,12 +75,12 @@ struct CPlayer {
 	// player methods
 	void Init(edict_t *ple, int plindex);
 	void UpdateHUD();
-	edict_t *GetWeaponEdict();
+	edict_t *GetWeaponEdict() const;
 	uint16_t GetPowerup(int *duration), GetPowerup();
 	void GivePowerup(uint16_t type, byte duration);
-	inline bool IsAlive() { return (this->PlayerEdict->v.deadflag == DEAD_NO && this->PlayerEdict->v.health > 0); };
-	inline bool IsOnGround() { return (this->PlayerEdict->v.flags & FL_ONGROUND) != 0; };
-	inline long GetFreeSlots() { return this->GetPDataInt(333); };
+	inline bool IsAlive() { return (this->PlayerEdict->v.deadflag == DEAD_NO && this->PlayerEdict->v.health > 0); }
+	inline bool IsOnGround() { return (this->PlayerEdict->v.flags & FL_ONGROUND) != 0; }
+	inline long GetFreeSlots() { return this->GetPDataInt(333); }
 	inline void SetFreeSlots(long val) { this->SetPDataInt(333, val); }
 	inline long GetCash() { return this->GetPDataInt(331); }
 	inline void SetCash(long val) { this->SetPDataInt(331, val); }

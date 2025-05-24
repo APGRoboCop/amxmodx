@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -295,7 +297,7 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params){ // wid,att,vic,dmg
 	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
 
 	if ( !pAtt ) pAtt = pVic;
-	pVic->pEdict->v.dmg_inflictor = NULL;
+	pVic->pEdict->v.dmg_inflictor = nullptr;
 	pAtt->saveHit( pVic , weapon , dmg, aim );
 
 	int TA = 0;

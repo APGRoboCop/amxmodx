@@ -25,13 +25,13 @@ namespace SourceMod
 	{
 	public:
 		MysqlQuery(const char *querystring, MysqlDatabase *db);
-		~MysqlQuery();
+		~MysqlQuery() override;
 	public:
-		void FreeHandle();
-		bool Execute(QueryInfo *info, char *error, size_t maxlength);
-		bool ExecuteR(QueryInfo *info, char *error, size_t maxlength);
-		bool Execute2(QueryInfo *info, char *error, size_t maxlength);
-		const char *GetQueryString();
+		void FreeHandle() override;
+		bool Execute(QueryInfo *info, char *error, size_t maxlength) override;
+		bool ExecuteR(QueryInfo *info, char *error, size_t maxlength) override;
+		bool Execute2(QueryInfo *info, char *error, size_t maxlength) override;
+		const char *GetQueryString() override;
 	private:
 		MysqlDatabase *m_pDatabase;
 		char *m_QueryString;

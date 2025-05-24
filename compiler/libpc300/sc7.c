@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn compiler - Staging buffer and optimizer
  *
  *  The staging buffer
@@ -72,7 +74,7 @@ static int stgmax = 0;  /* current size of the staging buffer */
 static void grow_stgbuffer(int requiredsize)
 {
   char *p;
-  int clear = stgbuf==NULL;     /* if previously none, empty buffer explicitly */
+  const int clear = stgbuf==NULL;     /* if previously none, empty buffer explicitly */
 
   assert(stgmax<requiredsize);
   /* if the staging buffer (holding intermediate code for one line) grows
@@ -153,9 +155,7 @@ static int filewrite(char *str)
  */
 SC_FUNC void stgwrite(const char *st)
 {
-  int len;
-
-  CHECK_STGBUFFER(0);
+	CHECK_STGBUFFER(0);
   if (staging) {
     if (stgidx>=2 && stgbuf[stgidx-1]=='\0' && stgbuf[stgidx-2]!='\n')
       stgidx-=1;                       /* overwrite last '\0' */
@@ -166,9 +166,9 @@ SC_FUNC void stgwrite(const char *st)
     CHECK_STGBUFFER(stgidx);
     stgbuf[stgidx++]='\0';
   } else {
-    CHECK_STGBUFFER(strlen(stgbuf)+strlen(st)+1);
+	  CHECK_STGBUFFER(strlen(stgbuf)+strlen(st)+1);
     strcat(stgbuf,st);
-    len=strlen(stgbuf);
+	  const unsigned int len = strlen(stgbuf);
     if (len>0 && stgbuf[len-1]=='\n') {
       filewrite(stgbuf);
       stgbuf[0]='\0';
@@ -222,20 +222,16 @@ typedef struct {
  */
 static void stgstring(char *start,char *end)
 {
-  char *ptr;
-  int nest,argc,arg;
-  argstack *stack;
-
-  while (start<end) {
+	while (start<end) {
     if (*start==sSTARTREORDER) {
       start+=1;         /* skip token */
       /* allocate a argstack with sMAXARGS items */
-      stack=(argstack *)malloc(sMAXARGS*sizeof(argstack));
+      argstack* stack = (argstack*)malloc(sMAXARGS * sizeof(argstack));
       if (stack==NULL)
         error(103);     /* insufficient memory */
-      nest=1;           /* nesting counter */
-      argc=0;           /* argument counter */
-      arg=-1;           /* argument index; no valid argument yet */
+      int nest = 1;           /* nesting counter */
+      int argc = 0;           /* argument counter */
+      int arg = -1;           /* argument index; no valid argument yet */
       do {
         switch (*start) {
         case sSTARTREORDER:
@@ -270,7 +266,7 @@ static void stgstring(char *start,char *end)
       } /* while */
       free(stack);
     } else {
-      ptr=start;
+      char* ptr = start;
       while (ptr<end && *ptr!=sSTARTREORDER)
         ptr+=strlen(ptr)+1;
       stgopt(start,ptr);
@@ -323,7 +319,7 @@ SC_FUNC void stgset(int onoff)
     /* write any contents that may be put in the buffer by stgwrite()
      * when "staging" was 0
      */
-    if (strlen(stgbuf)>0)
+    if (stgbuf[0] != '\0')
       filewrite(stgbuf);
   } /* if */
   stgbuf[0]='\0';
@@ -525,21 +521,22 @@ static void strreplace(char *dest,char *replace,int sub_length,int repl_length,i
 
 static void stgopt(char *start,char *end)
 {
-  char symbols[MAX_OPT_VARS][MAX_ALIAS+1];
-  int seq,match_length,repl_length;
-  int matches;
-  char *debut=start;
+	int match_length,repl_length;
+	char *debut=start;
 
   assert(sequences!=NULL);
   /* do not match anything if debug-level is maximum */
-  if ((sc_debug & sNOOPTIMIZE)==0 && sc_status==statWRITE) {
-    do {
+  if ((sc_debug & sNOOPTIMIZE)==0 && sc_status==statWRITE)
+  {
+	  int matches;
+	  do {
       matches=0;
       start=debut;
       while (start<end) {
-        seq=0;
+        int seq = 0;
         while (sequences[seq].find!=NULL) {
-          assert(seq>=0);
+	        char symbols[MAX_OPT_VARS][MAX_ALIAS+1];
+	        assert(seq>=0);
           if (matchsequence(start,end,sequences[seq].find,symbols,&match_length)) {
             char *replace=replacesequence(sequences[seq].replace,symbols,&repl_length);
             /* If the replacement is bigger than the original section, we may need

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -60,9 +62,9 @@ void CPlayer::PutInServer(){
 	const char* unique;
 	const char* name = STRING(pEdict->v.netname);
 	bool isip = false;
-	switch((int)dodstats_rank->value) {
+	switch(static_cast<int>(dodstats_rank->value)) {
 	case 1:
-		if ( (unique = GETPLAYERAUTHID(pEdict)) == 0 )
+		if ( (unique = GETPLAYERAUTHID(pEdict)) == nullptr )
 			unique = name; // failed to get authid
 		break;
 	case 2:
@@ -133,7 +135,7 @@ void CPlayer::Init( int pi, edict_t* pe )
 	sModel.body_num = 0;
 
 	// Object stuff
-	object.pEdict = NULL;
+	object.pEdict = nullptr;
 	object.type = 0;
 	object.carrying = false;
 	object.do_forward = false;
@@ -154,9 +156,9 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 		return;
 	}
 
-	int vw = get_weaponid(pVictim);
+	const int vw = get_weaponid(pVictim);
 
-	pVictim->attackers[index].name = (char*)weaponData[wweapon].name;
+	pVictim->attackers[index].name = static_cast<char*>(weaponData[wweapon].name);
 	pVictim->attackers[index].kills++;
 	pVictim->attackers[index].hs += hhs;
 	pVictim->attackers[index].tks += ttk;
@@ -174,8 +176,8 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk){
 	pVictim->weaponsRnd[vw].deaths++; // DEC-Weapon (round) stats
 	pVictim->weaponsRnd[0].deaths++;                // DEC-Weapon (round) stats
 
-	int vi = pVictim->index;
-	victims[vi].name = (char*)weaponData[wweapon].name;
+	const int vi = pVictim->index;
+	victims[vi].name = static_cast<char*>(weaponData[wweapon].name);
 	victims[vi].deaths++;
 	victims[vi].hs += hhs;
 	victims[vi].tks += ttk;
@@ -224,7 +226,7 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody){
 	pVictim->attackers[0].damage += ddamage;
 	pVictim->attackers[0].bodyHits[bbody]++;
 
-	int vi = pVictim->index;
+	const int vi = pVictim->index;
 	victims[vi].hits++;
 	victims[vi].damage += ddamage;
 	victims[vi].bodyHits[bbody]++;
@@ -298,7 +300,7 @@ void CPlayer::updateScore(int weapon, int score)
 
 void CPlayer::killPlayer()
 {
-	pEdict->v.dmg_inflictor = NULL;
+	pEdict->v.dmg_inflictor = nullptr;
 	pEdict->v.health = 0;
 	pEdict->v.deadflag = DEAD_RESPAWNABLE;
 	pEdict->v.weaponmodel = 0;
@@ -359,7 +361,7 @@ void CPlayer::PreThink()
 		MF_ExecuteForward(iFProneForward, index, pEdict->v.iuser3);
 
 	if(oldstamina > pEdict->v.fuser4 && iFStaminaForward != -1)
-		MF_ExecuteForward(iFStaminaForward, index, ((int)pEdict->v.fuser4));
+		MF_ExecuteForward(iFStaminaForward, index, static_cast<int>(pEdict->v.fuser4));
 
 	if(wpns_bitfield != pEdict->v.weapons)
 		WeaponsCheck(pEdict->v.weapons & ~(1<<31));
@@ -417,7 +419,7 @@ void CPlayer::Scoping(int value)
 void CPlayer::ScopingCheck()
 {
 	if(do_scoped)
-		MF_ExecuteForward(iFScopeForward, index, (int)is_scoped);
+		MF_ExecuteForward(iFScopeForward, index, static_cast<int>(is_scoped));
 }
 
 void CPlayer::WeaponsCheck(int weapons)
@@ -512,7 +514,7 @@ void Grenades::clear()
 
 void CMapInfo::Init()
 {
-	pEdict = 0;
+	pEdict = nullptr;
 	initialized = false;
 
 	/* default values from dod.fgd */

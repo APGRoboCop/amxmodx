@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
 	Copyright (C) 2014-2016 Quinten Lansu
 
@@ -320,7 +322,7 @@ size_t casemapping_execute(CaseMappingState* state, int32_t* errors, int no_repl
 
 				if (stream.canonical_combining_class[stream.current - 1] == CCC_ABOVE)
 				{
-					unicode_t cp_swap = stream.codepoint[stream.current - 1];
+					const unicode_t cp_swap = stream.codepoint[stream.current - 1];
 					stream.codepoint[stream.current - 1] = CP_COMBINING_DOT_ABOVE;
 					stream.codepoint[stream.current] = cp_swap;
 				}

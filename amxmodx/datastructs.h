@@ -86,8 +86,8 @@ public:
 		}
 
 		/* Otherwise, it's time to move stuff! */
-		size_t remaining_indexes = (m_Size - 1) - index;
-		cell *src = at(index + 1);
+		const size_t remaining_indexes = (m_Size - 1) - index;
+		const cell *src = at(index + 1);
 		cell *dest = at(index);
 		memmove(dest, src, sizeof(cell)* m_BlockSize * remaining_indexes);
 
@@ -129,12 +129,12 @@ public:
 		return true;
 	}
 
-	CellArray *clone()
+	CellArray *clone() const
 	{
 		CellArray *array = new CellArray(m_BlockSize);
 		array->m_AllocSize = m_AllocSize;
 		array->m_Size = m_Size;
-		array->m_Data = (cell *)malloc(sizeof(cell)* m_BlockSize * m_AllocSize);
+		array->m_Data = static_cast<cell*>(malloc(sizeof(cell) * m_BlockSize * m_AllocSize));
 
 		if (!array->m_Data)
 		{
@@ -146,12 +146,12 @@ public:
 		return array;
 	}
 
-	cell *base()
+	cell *base() const
 	{
 		return m_Data;
 	}
 
-	size_t mem_usage()
+	size_t mem_usage() const
 	{
 		return m_AllocSize * m_BlockSize * sizeof(cell);
 	}
@@ -177,10 +177,10 @@ private:
 		/* finally, allocate the new block */
 		if (m_Data)
 		{
-			m_Data = (cell *)realloc(m_Data, sizeof(cell)* m_BlockSize * m_AllocSize);
+			m_Data = static_cast<cell*>(realloc(m_Data, sizeof(cell) * m_BlockSize * m_AllocSize));
 		}
 		else {
-			m_Data = (cell *)malloc(sizeof(cell)* m_BlockSize * m_AllocSize);
+			m_Data = static_cast<cell*>(malloc(sizeof(cell) * m_BlockSize * m_AllocSize));
 		}
 		return (m_Data != nullptr);
 	}

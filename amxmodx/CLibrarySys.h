@@ -14,7 +14,7 @@
 #include <platform_helpers.h>
 #include <amtl/os/am-shared-library.h>
 
-enum FileTimeType
+enum FileTimeType : std::uint8_t
 {
 	FileTime_LastAccess = 0,  /* Last access (not available on FAT) */
 	FileTime_Created    = 1,  /* Creation (not available on FAT) */
@@ -32,15 +32,15 @@ class CDirectory
 
 		bool MoreFiles();
 		void NextEntry();
-		const char* GetEntryName();
-		bool IsEntryDirectory();
-		bool IsEntryFile();
+		const char* GetEntryName() const;
+		bool IsEntryDirectory() const;
+		bool IsEntryFile() const;
 		bool IsEntryValid();
 
 	public:
 
-		bool IsValid();
-		DirHandle GetHandle();
+		bool IsValid() const;
+		DirHandle GetHandle() const;
 
 	private:
 
@@ -61,12 +61,12 @@ class CLibrary
 {
 	public:
 
-		CLibrary(ke::RefPtr<ke::SharedLib> lib);
+		CLibrary(const ke::RefPtr<ke::SharedLib>& lib);
 
 	public:
 
-		void CloseLibrary();
-		void *GetSymbolAddress(const char* symname);
+		void CloseLibrary() const;
+		void *GetSymbolAddress(const char* symname) const;
 
 	private:
 

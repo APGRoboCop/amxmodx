@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /**
 * vim: set ts=4 :
 * =============================================================================
@@ -43,30 +45,30 @@
 TextParsers g_TextParser;
 ITextParsers *textparsers = &g_TextParser;
 
-static int g_ini_chartable1[255] = { 0 };
-static int g_ws_chartable[255] = { 0 };
+static int g_ini_chartable1[255] = {};
+static int g_ws_chartable[255] = {};
 
 bool TextParsers::IsWhitespace(const char *stream)
 {
-	return g_ws_chartable[(unsigned char)*stream] == 1;
+	return g_ws_chartable[static_cast<unsigned char>(*stream)] == 1;
 }
 
 TextParsers::TextParsers()
 {
-	g_ini_chartable1[(unsigned)'_'] = 1;
-	g_ini_chartable1[(unsigned)'-'] = 1;
-	g_ini_chartable1[(unsigned)','] = 1;
-	g_ini_chartable1[(unsigned)'+'] = 1;
-	g_ini_chartable1[(unsigned)'.'] = 1;
-	g_ini_chartable1[(unsigned)'$'] = 1;
-	g_ini_chartable1[(unsigned)'?'] = 1;
-	g_ini_chartable1[(unsigned)'/'] = 1;
-	g_ws_chartable[(unsigned)'\n'] = 1;
-	g_ws_chartable[(unsigned)'\v'] = 1;
-	g_ws_chartable[(unsigned)'\r'] = 1;
-	g_ws_chartable[(unsigned)'\t'] = 1;
-	g_ws_chartable[(unsigned)'\f'] = 1;
-	g_ws_chartable[(unsigned)' '] = 1;
+	g_ini_chartable1[static_cast<unsigned>('_')] = 1;
+	g_ini_chartable1[static_cast<unsigned>('-')] = 1;
+	g_ini_chartable1[static_cast<unsigned>(',')] = 1;
+	g_ini_chartable1[static_cast<unsigned>('+')] = 1;
+	g_ini_chartable1[static_cast<unsigned>('.')] = 1;
+	g_ini_chartable1[static_cast<unsigned>('$')] = 1;
+	g_ini_chartable1[static_cast<unsigned>('?')] = 1;
+	g_ini_chartable1[static_cast<unsigned>('/')] = 1;
+	g_ws_chartable[static_cast<unsigned>('\n')] = 1;
+	g_ws_chartable[static_cast<unsigned>('\v')] = 1;
+	g_ws_chartable[static_cast<unsigned>('\r')] = 1;
+	g_ws_chartable[static_cast<unsigned>('\t')] = 1;
+	g_ws_chartable[static_cast<unsigned>('\f')] = 1;
+	g_ws_chartable[static_cast<unsigned>(' ')] = 1;
 }
 
 /*
@@ -86,16 +88,16 @@ unsigned int TextParsers::GetUTF8CharBytes(const char *stream)
 
 bool FileStreamReader(void *stream, char *buffer, size_t maxlength, unsigned int *read)
 {
-	size_t num = fread(buffer, 1, maxlength, (FILE *)stream);
+	const size_t num = fread(buffer, 1, maxlength, static_cast<FILE*>(stream));
 
 	*read = num;
 
-	if (num == 0 && feof((FILE *)stream))
+	if (num == 0 && feof(static_cast<FILE*>(stream)))
 	{
 		return true;
 	}
 
-	return (ferror((FILE *)stream) == 0);
+	return (ferror(static_cast<FILE*>(stream)) == 0);
 }
 
 SMCError TextParsers::ParseFile_SMC(const char *file, ITextListener_SMC *smc, SMCStates *states)
@@ -112,7 +114,7 @@ SMCError TextParsers::ParseFile_SMC(const char *file, ITextListener_SMC *smc, SM
 		return SMCError_StreamOpen;
 	}
 
-	SMCError result = ParseStream_SMC(fp, FileStreamReader, smc, states);
+	const SMCError result = ParseStream_SMC(fp, FileStreamReader, smc, states);
 
 	fclose(fp);
 
@@ -125,7 +127,6 @@ SMCError TextParsers::ParseSMCFile(const char *file,
 	char *buffer,
 	size_t maxsize)
 {
-	const char *errstr;
 	FILE *fp = fopen(file, "rt");
 
 	if (fp == nullptr)
@@ -141,11 +142,11 @@ SMCError TextParsers::ParseSMCFile(const char *file,
 		return SMCError_StreamOpen;
 	}
 
-	SMCError result = ParseStream_SMC(fp, FileStreamReader, smc_listener, states);
+	const SMCError result = ParseStream_SMC(fp, FileStreamReader, smc_listener, states);
 
 	fclose(fp);
 
-	errstr = GetSMCErrorString(result);
+	const char* errstr = GetSMCErrorString(result);
 	ke::SafeSprintf(buffer, maxsize, "%s", errstr != nullptr ? errstr : "Unknown error");
 
 	return result;
@@ -160,17 +161,17 @@ struct RawStream
 
 bool RawStreamReader(void *stream, char *buffer, size_t maxlength, unsigned int *read)
 {
-	RawStream *rs = (RawStream *)stream;
+	RawStream *rs = static_cast<RawStream*>(stream);
 
 	if (rs->pos >= rs->length)
 	{
 		return false;
 	}
 
-	size_t remaining = rs->length - rs->pos;
+	const size_t remaining = rs->length - rs->pos;
 
 	/* Use the smaller of the two */
-	size_t copy = (remaining > maxlength) ? maxlength : remaining;
+	const size_t copy = (remaining > maxlength) ? maxlength : remaining;
 
 	memcpy(buffer, &rs->stream[rs->pos], copy);
 	rs->pos += copy;
@@ -185,16 +186,15 @@ SMCError TextParsers::ParseSMCStream(const char *stream,
 	ITextListener_SMC *smc_listener,
 	SMCStates *states,
 	char *buffer,
-	size_t maxsize)
+	const size_t maxsize)
 {
 	RawStream rs;
-	SMCError result;
 
 	rs.stream = stream;
 	rs.length = length;
 	rs.pos = 0;
 
-	result = ParseStream_SMC(&rs, RawStreamReader, smc_listener, states);
+	const SMCError result = ParseStream_SMC(&rs, RawStreamReader, smc_listener, states);
 
 	const char *errstr = GetSMCErrorString(result);
 	ke::SafeSprintf(buffer, maxsize, "%s", errstr != nullptr ? errstr : "Unknown error");
@@ -239,7 +239,7 @@ const char *FixupString(StringInfo &data)
 	if (data.special)
 	{
 		char *outptr = data.ptr;
-		size_t len = data.end - data.ptr;
+		const size_t len = data.end - data.ptr;
 		if (len >= 2)
 		{
 			for (size_t i = 0; i<len; i++)
@@ -349,7 +349,6 @@ SMCError TextParsers::ParseStream_SMC(void *stream,
 	char c;
 
 	StringInfo strings[3];
-	StringInfo emptystring;
 
 	states.line = 1;
 	states.col = 0;
@@ -376,9 +375,9 @@ SMCError TextParsers::ParseStream_SMC(void *stream,
 		* Not worth it, but it could be moved out of the loop.
 		*/
 		if (states.line == 1 &&
-			in_buf[0] == (char)0xEF &&
-			in_buf[1] == (char)0xBB &&
-			in_buf[2] == (char)0xBF)
+			in_buf[0] == static_cast<char>(0xEF) &&
+			in_buf[1] == static_cast<char>(0xBB) &&
+			in_buf[2] == static_cast<char>(0xBF))
 		{
 			/* Move EVERYTHING down :\ */
 			memmove(in_buf, &in_buf[3], read - 3);
@@ -512,7 +511,7 @@ SMCError TextParsers::ParseStream_SMC(void *stream,
 			else
 			{
 				/* Check if we're whitespace or not */
-				if (!g_ws_chartable[(unsigned char)c])
+				if (!g_ws_chartable[static_cast<unsigned char>(c)])
 				{
 					bool restage = false;
 					/* Check various special tokens:
@@ -566,6 +565,7 @@ SMCError TextParsers::ParseStream_SMC(void *stream,
 					}
 					else if (c == '{')
 					{
+						StringInfo emptystring;
 						/* If we are staging a string, we must rotate here */
 						if (strings[0].ptr)
 						{
@@ -783,7 +783,6 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 	FILE *fp = fopen(file, "rt");
 	unsigned int curline = 0;
 	unsigned int curtok;
-	size_t len;
 
 	if (!fp)
 	{
@@ -798,8 +797,7 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 	ini_listener->ReadINI_ParseStart();
 
 	char buffer[2048];
-	char *ptr, *save_ptr;
-	bool in_quote;
+	char *ptr;
 
 	while (!feof(fp))
 	{
@@ -814,9 +812,9 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 		//:TODO: this will only run once, so find a nice way to move it out of the while loop
 		/* If this is the first line, check the first three bytes for BOM */
 		if (curline == 1 &&
-			buffer[0] == (char)0xEF &&
-			buffer[1] == (char)0xBB &&
-			buffer[2] == (char)0xBF)
+			buffer[0] == static_cast<char>(0xEF) &&
+			buffer[1] == static_cast<char>(0xBB) &&
+			buffer[2] == static_cast<char>(0xBF))
 		{
 			/* We have a UTF-8 marked file... skip these bytes */
 			ptr = &buffer[3];
@@ -830,12 +828,12 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 		***************************************************/
 
 		/* First strip beginning whitespace */
-		while (*ptr != '\0' && g_ws_chartable[(unsigned char)*ptr] != 0)
+		while (*ptr != '\0' && g_ws_chartable[static_cast<unsigned char>(*ptr)] != 0)
 		{
 			ptr++;
 		}
 
-		len = strlen(ptr);
+		size_t len = strlen(ptr);
 
 		if (!len)
 		{
@@ -845,8 +843,8 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 		if (inline_comment)
 		{
 			/* Now search for comment characters */
-			in_quote = false;
-			save_ptr = ptr;
+			bool in_quote = false;
+			char* save_ptr = ptr;
 			for (size_t i = 0; i<len; i++, ptr++)
 			{
 				if (!in_quote)
@@ -889,7 +887,7 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 		/* Lastly, strip ending whitespace off */
 		for (size_t i = len - 1; i<len; i--)
 		{
-			if (g_ws_chartable[(unsigned char)ptr[i]])
+			if (g_ws_chartable[static_cast<unsigned char>(ptr[i])])
 			{
 				ptr[i] = '\0';
 				len--;
@@ -915,13 +913,12 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			bool got_bracket = false;
 			bool extra_tokens = false;
 			char c;
-			bool alnum;
 			wchar_t wc;
 
 			for (size_t i = 1; i<len; i++)
 			{
 				c = ptr[i];
-				alnum = false;
+				bool alnum = false;
 
 				if (c & (1 << 7))
 				{
@@ -932,7 +929,7 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 					}
 				}
 				else {
-					alnum = (isalnum(c) != 0) || (g_ini_chartable1[(unsigned char)c] != 0);
+					alnum = (isalnum(c) != 0) || (g_ini_chartable1[static_cast<unsigned char>(c)] != 0);
 				}
 				if (!alnum)
 				{
@@ -966,18 +963,16 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 		else {
 			char *key_ptr = ptr;
 			char *val_ptr = nullptr;
-			char c;
 			size_t first_space = 0;
 			bool invalid_tokens = false;
 			bool equal_token = false;
 			bool quotes = false;
-			bool alnum;
 			wchar_t wc;
 
 			for (size_t i = 0; i<len; i++)
 			{
-				c = ptr[i];
-				alnum = false;
+				const char c = ptr[i];
+				bool alnum = false;
 				/* is this an invalid char? */
 				if (c & (1 << 7))
 				{
@@ -988,12 +983,12 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 					}
 				}
 				else {
-					alnum = (isalnum(c) != 0) || (g_ini_chartable1[(unsigned char)c] != 0);
+					alnum = (isalnum(c) != 0) || (g_ini_chartable1[static_cast<unsigned char>(c)] != 0);
 				}
 
 				if (!alnum)
 				{
-					if (g_ws_chartable[(unsigned char)c])
+					if (g_ws_chartable[static_cast<unsigned char>(c)])
 					{
 						/* if it's a space, keep track of the first occurring space */
 						if (!first_space)
@@ -1035,7 +1030,7 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			if (val_ptr)
 			{
 				/* eat up spaces! there shouldn't be any h*/
-				while ((*val_ptr != '\0') && g_ws_chartable[(unsigned char)*val_ptr] != 0)
+				while ((*val_ptr != '\0') && g_ws_chartable[static_cast<unsigned char>(*val_ptr)] != 0)
 				{
 					val_ptr++;
 				}
@@ -1045,7 +1040,7 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 					goto skip_value;
 				}
 				/* Do we have an initial quote? If so, the parsing rules change! */
-				if (*val_ptr == '"' && *val_ptr != '\0')
+				if (*val_ptr == '"')
 				{
 					len = strlen(val_ptr);
 					if (val_ptr[len - 1] == '"')

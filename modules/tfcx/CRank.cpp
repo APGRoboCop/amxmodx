@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -285,18 +287,18 @@ void RankSystem::loadRank(const char* filename)
 		{
 			char name[64];
 			char unique[64];
-			TRYREAD(name, i, sizeof(char), bfp);
-			TRYREAD(&i, 1, sizeof(short int), bfp);
-			TRYREAD(unique, i, sizeof(char), bfp);
-			TRYREAD(&d.tks, 1, sizeof(int), bfp);
-			TRYREAD(&d.damage, 1, sizeof(int), bfp);
-			TRYREAD(&d.deaths, 1, sizeof(int), bfp);
-			TRYREAD(&d.kills, 1, sizeof(int), bfp);
-			TRYREAD(&d.shots, 1, sizeof(int), bfp);
-			TRYREAD(&d.hits, 1, sizeof(int), bfp);
-			TRYREAD(&d.hs, 1, sizeof(int), bfp);
-			TRYREAD(d.bodyHits, 1, sizeof(d.bodyHits), bfp);
-			TRYREAD(&i, 1, sizeof(short int), bfp);
+			TRYREAD(name, i, sizeof(char), bfp)
+			TRYREAD(&i, 1, sizeof(short int), bfp)
+			TRYREAD(unique, i, sizeof(char), bfp)
+			TRYREAD(&d.tks, 1, sizeof(int), bfp)
+			TRYREAD(&d.damage, 1, sizeof(int), bfp)
+			TRYREAD(&d.deaths, 1, sizeof(int), bfp)
+			TRYREAD(&d.kills, 1, sizeof(int), bfp)
+			TRYREAD(&d.shots, 1, sizeof(int), bfp)
+			TRYREAD(&d.hits, 1, sizeof(int), bfp)
+			TRYREAD(&d.hs, 1, sizeof(int), bfp)
+			TRYREAD(d.bodyHits, 1, sizeof(d.bodyHits), bfp)
+			TRYREAD(&i, 1, sizeof(short int), bfp)
 
 			RankStats* a = findEntryInRank( unique , name );
 			if ( a ) a->updatePosition( &d );

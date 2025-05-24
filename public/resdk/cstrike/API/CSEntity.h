@@ -42,24 +42,24 @@ public:
 
 class CCSDelay: public CCSEntity
 {
-public:
+//public:
 
 };
 
 class CCSAnimating: public CCSDelay
 {
-public:
+//public:
 
 };
 
 class CCSToggle: public CCSAnimating
 {
-public:
+//public:
 
 };
 
 class CCSMonster: public CCSToggle
 {
-public:
+//public:
 
 };

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -23,7 +25,7 @@ ke::Vector<RegEx *> PEL;
 
 int GetPEL()
 {
-	for (int i=0; i<(int)PEL.length(); i++)
+	for (int i=0; i<static_cast<int>(PEL.length()); i++)
 	{
 		if (PEL[i]->isFree())
 			return i;
@@ -32,7 +34,7 @@ int GetPEL()
 	RegEx *x = new RegEx();
 	PEL.append(x);
 
-	return (int)PEL.length() - 1;
+	return static_cast<int>(PEL.length()) - 1;
 }
 
 // native Regex:regex_compile(const pattern[], &ret, error[], maxLen, const flags[]="");
@@ -85,12 +87,12 @@ cell match(AMX *amx, cell *params, bool all)
 	int id = GetPEL();
 	RegEx *x = PEL[id];
 
-	char *flags = nullptr;
 	cell *errorCode;
-	int result = 0;
+	int result;
 
 	if (!all)
 	{
+		const char *flags = nullptr;
 		if (*params / sizeof(cell) >= 6) // compiled with 1.8's extra parameter
 		{
 			flags = MF_GetAmxString(amx, params[6], 2, &len);
@@ -159,7 +161,7 @@ cell match_c(AMX *amx, cell *params, bool all)
 {
 	int id = params[2] - 1;
 
-	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
+	if (id >= static_cast<int>(PEL.length()) || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -219,7 +221,7 @@ static cell AMX_NATIVE_CALL regex_match_all_c(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 {
 	int id = params[1]-1;
-	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
+	if (id >= static_cast<int>(PEL.length()) || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -240,7 +242,7 @@ static cell AMX_NATIVE_CALL regex_substr(AMX *amx, cell *params)
 
 	if (length >= maxLength && ret[length - 1] & 1 << 7)
 	{
-		maxLength -= UTIL_CheckValidChar((char *)ret + length - 1);
+		maxLength -= UTIL_CheckValidChar(const_cast<char*>(ret) + length - 1);
 	}
 
 	MF_SetAmxString(amx, params[3], ret, maxLength);
@@ -254,7 +256,7 @@ static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
 	int id = *c;
 	*c = 0;
 	id -= 1;
-	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
+	if (id >= static_cast<int>(PEL.length()) || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -270,7 +272,7 @@ static cell AMX_NATIVE_CALL regex_free(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL regex_replace(AMX *amx, cell *params)
 {
 	int id = params[1] - 1;
-	if (id >= (int)PEL.length() || id < 0 || PEL[id]->isFree())
+	if (id >= static_cast<int>(PEL.length()) || id < 0 || PEL[id]->isFree())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid regex handle %d", id);
 		return 0;
@@ -323,7 +325,7 @@ void OnAmxxAttach()
 
 void OnAmxxDetach()
 {
-	for (int i = 0; i<(int)PEL.length(); i++)
+	for (int i = 0; i<static_cast<int>(PEL.length()); i++)
 	{
 		if (PEL[i])
 		{

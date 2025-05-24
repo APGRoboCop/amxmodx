@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -20,7 +22,7 @@ SqliteDriver g_Sqlite;
 
 void FreeConnection(void *p, unsigned int num)
 {
-	SQL_Connection *cn = (SQL_Connection *)p;
+	const SQL_Connection *cn = (SQL_Connection *)p;
 
 	free(cn->host);
 	free(cn->user);
@@ -32,7 +34,7 @@ void FreeConnection(void *p, unsigned int num)
 
 void FreeQuery(void *p, unsigned int num)
 {
-	AmxQueryInfo *qry = (AmxQueryInfo *)p;
+	const AmxQueryInfo *qry = (AmxQueryInfo *)p;
 
 	qry->pQuery->FreeHandle();
 	delete qry;
@@ -71,7 +73,7 @@ static cell AMX_NATIVE_CALL SQL_MakeDbTuple(AMX *amx, cell *params)
 		sql->db = strdup(path);
 	}
 
-	unsigned int num = MakeHandle(sql, Handle_Connection, FreeConnection);
+	const unsigned int num = MakeHandle(sql, Handle_Connection, FreeConnection);
 
 	return num;
 }
@@ -89,7 +91,7 @@ static cell AMX_NATIVE_CALL SQL_FreeHandle(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_Connect(AMX *amx, cell *params)
 {
-	SQL_Connection *sql = (SQL_Connection *)GetHandle(params[1], Handle_Connection);
+	const SQL_Connection *sql = (SQL_Connection *)GetHandle(params[1], Handle_Connection);
 	if (!sql)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid handle: %d", params[1]);
@@ -131,7 +133,7 @@ static cell AMX_NATIVE_CALL SQL_PrepareQuery(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *fmt = MF_FormatAmxString(amx, params, 2, &len);
+	const char *fmt = MF_FormatAmxString(amx, params, 2, &len);
 
 	IQuery *pQuery = pDb->PrepareQuery(fmt);
 	if (!pQuery)
@@ -168,7 +170,7 @@ static cell AMX_NATIVE_CALL SQL_Execute(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_QueryError(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -182,7 +184,7 @@ static cell AMX_NATIVE_CALL SQL_QueryError(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_MoreResults(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -197,7 +199,7 @@ static cell AMX_NATIVE_CALL SQL_MoreResults(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_IsNull(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -212,7 +214,7 @@ static cell AMX_NATIVE_CALL SQL_IsNull(AMX *amx, cell *params)
 		return 0;
 	}
 
-	unsigned int col = static_cast<unsigned int>(params[2]);
+	const unsigned int col = static_cast<unsigned int>(params[2]);
 	if (col >= rs->FieldCount())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column: %d", col);
@@ -226,7 +228,7 @@ static cell AMX_NATIVE_CALL SQL_IsNull(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -243,14 +245,14 @@ static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 
 	IResultRow *row = rs->GetRow();
 
-	unsigned int col = static_cast<unsigned int>(params[2]);
+	const unsigned int col = static_cast<unsigned int>(params[2]);
 	if (col >= rs->FieldCount())
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid column: %d", col);
 		return 0;
 	}
 
-	cell numparams = params[0] / sizeof(cell);
+	const cell numparams = params[0] / sizeof(cell);
 	switch (numparams)
 	{
 	case 4:
@@ -258,7 +260,7 @@ static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 			const char *str = row->GetString(col);
 			if (!str)
 				str = "";
-			cell *len = MF_GetAmxAddr(amx, params[4]);
+			const cell *len = MF_GetAmxAddr(amx, params[4]);
 			MF_SetAmxString(amx, params[3], str, (int)*len);
 			break;
 		}
@@ -271,7 +273,7 @@ static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 		}
 	case 2:
 		{
-			int num = row->GetInt(col);
+			const int num = row->GetInt(col);
 			return num;
 		}
 	default:
@@ -286,7 +288,7 @@ static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_NextRow(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -308,7 +310,7 @@ static cell AMX_NATIVE_CALL SQL_NextRow(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_AffectedRows(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -320,7 +322,7 @@ static cell AMX_NATIVE_CALL SQL_AffectedRows(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_NumResults(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -339,7 +341,7 @@ static cell AMX_NATIVE_CALL SQL_NumResults(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_NumColumns(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -359,7 +361,7 @@ static cell AMX_NATIVE_CALL SQL_NumColumns(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -374,7 +376,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 		return 0;
 	}
 
-	unsigned int col = static_cast<unsigned int>(params[2]);
+	const unsigned int col = static_cast<unsigned int>(params[2]);
 	const char *namewa = rs->FieldNumToName(col);
 
 	if (!namewa)
@@ -390,7 +392,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNumToName(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_GetQueryString(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 
 	if (!qInfo || (!qInfo->pQuery && !qInfo->opt_ptr))
 	{
@@ -405,7 +407,7 @@ static cell AMX_NATIVE_CALL SQL_GetQueryString(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -421,7 +423,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 	}
 
 	int len;
-	char *namewa = MF_GetAmxString(amx, params[2], 0, &len);
+	const char *namewa = MF_GetAmxString(amx, params[2], 0, &len);
 	unsigned int columnId;
 	if (!rs->FieldNameToNum(namewa, &columnId))
 	{
@@ -433,7 +435,7 @@ static cell AMX_NATIVE_CALL SQL_FieldNameToNum(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_GetInsertId(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -451,7 +453,7 @@ static cell AMX_NATIVE_CALL SQL_GetAffinity(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
 {
 	int len;
-	char *str = MF_GetAmxString(amx, params[1], 0, &len);
+	const char *str = MF_GetAmxString(amx, params[1], 0, &len);
 
 	if (!str[0])
 	{
@@ -463,7 +465,7 @@ static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
 		return 1;
 	}
 
-	SqlFunctions *pFuncs = (SqlFunctions *)MF_RequestFunction(SQL_DRIVER_FUNC);
+	const SqlFunctions *pFuncs = (SqlFunctions *)MF_RequestFunction(SQL_DRIVER_FUNC);
 	while (pFuncs)
 	{
 		if (pFuncs->driver->IsCompatDriver(str))
@@ -478,7 +480,7 @@ static cell AMX_NATIVE_CALL SQL_SetAffinity(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SQL_Rewind(AMX *amx, cell *params)
 {
-	AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
+	const AmxQueryInfo *qInfo = (AmxQueryInfo *)GetHandle(params[1], Handle_Query);
 	if (!qInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid query handle: %d", params[1]);
@@ -529,7 +531,7 @@ static cell AMX_NATIVE_CALL SQL_NextResultSet(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL SQL_QuoteString(AMX *amx, cell *params)
 {
 	int len;
-	char *str = MF_GetAmxString(amx, params[4], 0, &len);
+	const char *str = MF_GetAmxString(amx, params[4], 0, &len);
 	size_t newsize;
 	static char buffer[8192];
 
@@ -563,7 +565,7 @@ static cell AMX_NATIVE_CALL SQL_QuoteString(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL SQL_QuoteStringFmt(AMX *amx, cell *params)
 {
 	int len;
-	char *str = MF_FormatAmxString(amx, params, 4, &len);
+	const char *str = MF_FormatAmxString(amx, params, 4, &len);
 	size_t newsize;
 	static char buffer[8192];
 

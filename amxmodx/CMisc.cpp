@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -46,7 +48,7 @@ void CPlayer::Disconnect()
 	disconnecting = false;
 	teamIdsInitialized = false;
 
-	if (Menu *pMenu = get_menu_by_id(newmenu))
+	if (const Menu *pMenu = get_menu_by_id(newmenu))
 		pMenu->Close(index);
 
 	List<ClientCvarQuery_Info *>::iterator iter, end=queries.end();
@@ -68,7 +70,7 @@ void CPlayer::PutInServer()
 	ingame = true;
 }
 
-int CPlayer::NextHUDChannel()
+int CPlayer::NextHUDChannel() const
 {
 	int ilow = 1;
 
@@ -262,9 +264,9 @@ void TeamIds::registerTeam(const char* n, int s)
 	newTeam |= (1<<(*a)->tid);
 }
 
-int TeamIds::findTeamId(const char* n)
+int TeamIds::findTeamId(const char* n) const
 {
-	TeamEle* a = head;
+	const TeamEle* a = head;
 	
 	while (a)
 	{
@@ -276,9 +278,9 @@ int TeamIds::findTeamId(const char* n)
 	return -1;
 }
 
-int TeamIds::findTeamIdCase(const char* n)
+int TeamIds::findTeamIdCase(const char* n) const
 {
-	TeamEle* a = head;
+	const TeamEle* a = head;
 	
 	while (a)
 	{

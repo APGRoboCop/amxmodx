@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /**
  * vim: set ts=4 :
  * =============================================================================
@@ -86,7 +88,7 @@ static cell AMX_NATIVE_CALL WritePackString(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL ReadPackCell(AMX* amx, cell* params)
 {
-	CDataPack *d = DataPackHandles.lookup(params[1]);
+	const CDataPack *d = DataPackHandles.lookup(params[1]);
 
 	if (!d)
 	{
@@ -105,7 +107,7 @@ static cell AMX_NATIVE_CALL ReadPackCell(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL ReadPackFloat(AMX* amx, cell* params)
 {
-	CDataPack *d = DataPackHandles.lookup(params[1]);
+	const CDataPack *d = DataPackHandles.lookup(params[1]);
 
 	if (!d)
 	{
@@ -126,7 +128,7 @@ static cell AMX_NATIVE_CALL ReadPackFloat(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL ReadPackString(AMX* amx, cell* params)
 {
-	CDataPack *d = DataPackHandles.lookup(params[1]);
+	const CDataPack *d = DataPackHandles.lookup(params[1]);
 
 	if (!d)
 	{
@@ -168,7 +170,7 @@ static cell AMX_NATIVE_CALL ResetPack(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL GetPackPosition(AMX* amx, cell* params)
 {
-	CDataPack *d = DataPackHandles.lookup(params[1]);
+	const CDataPack *d = DataPackHandles.lookup(params[1]);
 
 	if (!d)
 	{
@@ -181,7 +183,7 @@ static cell AMX_NATIVE_CALL GetPackPosition(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL SetPackPosition(AMX* amx, cell* params)
 {
-	CDataPack *d = DataPackHandles.lookup(params[1]);
+	const CDataPack *d = DataPackHandles.lookup(params[1]);
 
 	if (!d)
 	{
@@ -200,7 +202,7 @@ static cell AMX_NATIVE_CALL SetPackPosition(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL IsPackEnded(AMX* amx, cell* params)
 {
-	CDataPack *d = DataPackHandles.lookup(params[1]);
+	const CDataPack *d = DataPackHandles.lookup(params[1]);
 
 	if (!d)
 	{
@@ -208,14 +210,14 @@ static cell AMX_NATIVE_CALL IsPackEnded(AMX* amx, cell* params)
 		return 0;
 	}
 
-	return d->IsReadable(1) ? false : true;
+	return !(d->IsReadable(1));
 }
 
 static cell AMX_NATIVE_CALL DestroyDataPack(AMX* amx, cell* params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
 
-	CDataPack *d = DataPackHandles.lookup(*ptr);
+	const CDataPack *d = DataPackHandles.lookup(*ptr);
 
 	if (!d)
 	{

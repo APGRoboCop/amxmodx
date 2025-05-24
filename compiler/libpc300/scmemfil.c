@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn compiler
  *
  *  Routines to maintain a "text file" in memory.
@@ -61,16 +63,13 @@ void mfclose(MEMFILE *mf)
 
 int mfdump(MEMFILE *mf)
 {
-  FILE *fp;
-  int okay;
-
-  assert(mf!=NULL);
+	assert(mf!=NULL);
   /* create the file */
-  fp=fopen(mf->name, "wb");
+  FILE* fp = fopen(mf->name, "wb");
   if (fp==NULL)
     return 0;
 
-  okay=1;
+  int okay = 1;
   okay = okay & (fwrite(mf->base, mf->usedoffs, 1, fp)==(size_t)mf->usedoffs);
 
   fclose(fp);
@@ -84,14 +83,12 @@ long mflength(MEMFILE *mf)
 
 long mfseek(MEMFILE *mf,long offset,int whence)
 {
-  long length;
-
-  assert(mf!=NULL);
+	assert(mf!=NULL);
   if (mf->usedoffs == 0)
     return 0L;          /* early exit: not a single byte in the file */
 
   /* find the size of the memory file */
-  length=mflength(mf);
+	const long length = mflength(mf);
 
   /* convert the offset to an absolute position */
   switch (whence) {
@@ -129,16 +126,12 @@ unsigned int mfread(MEMFILE *mf,unsigned char *buffer,unsigned int size)
 
 char *mfgets(MEMFILE *mf,char *string,unsigned int size)
 {
-  char *ptr;
-  unsigned int read;
-  long seek;
+	assert(mf!=NULL);
 
-  assert(mf!=NULL);
-
-  read=mfread(mf,(unsigned char *)string,size);
+	const unsigned int read = mfread(mf, (unsigned char*)string, size);
   if (read==0)
     return NULL;
-  seek=0L;
+  long seek = 0L;
 
   /* make sure that the string is zero-terminated */
   assert(read<=size);
@@ -150,7 +143,7 @@ char *mfgets(MEMFILE *mf,char *string,unsigned int size)
   } /* if */
 
   /* find the first '\n' */
-  ptr=strchr(string,'\n');
+  char* ptr = strchr(string, '\n');
   if (ptr!=NULL) {
     *(ptr+1)='\0';
     seek=(long)(ptr-string)+1-(long)read;
@@ -166,11 +159,9 @@ char *mfgets(MEMFILE *mf,char *string,unsigned int size)
 
 int mfputs(MEMFILE *mf,char *string)
 {
-  unsigned int written,length;
+	assert(mf!=NULL);
 
-  assert(mf!=NULL);
-
-  length=strlen(string);
-  written=mfwrite(mf,(unsigned char *)string,length);
+	const unsigned int length = strlen(string);
+	const unsigned int written = mfwrite(mf, (unsigned char*)string, length);
   return written==length;
 }

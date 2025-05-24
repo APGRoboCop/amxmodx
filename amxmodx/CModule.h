@@ -14,7 +14,7 @@
 #ifndef CMODULE_H
 #define CMODULE_H
 
-enum MODULE_STATUS
+enum MODULE_STATUS : std::uint8_t
 {
 	MODULE_NONE,			// No module loaded
 	MODULE_QUERY,			// Query failed
@@ -83,15 +83,15 @@ public:
 	inline const char* getVersion() const { return m_InfoNew.version; }
 	inline const char* getName() const { return m_InfoNew.name; }
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
-	inline int getStatusValue() { return m_Status; }
-	inline bool isReloadable() { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
+	inline int getStatusValue() const { return m_Status; }
+	inline bool isReloadable() const { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
-	inline const char *getFilename() { return m_Filename.chars(); }
-	inline bool IsMetamod() { return m_Metamod; }
+	inline const char *getFilename() const { return m_Filename.chars(); }
+	inline bool IsMetamod() const { return m_Metamod; }
 
-	void CallPluginsLoaded();
-	void CallPluginsUnloaded();
-	void CallPluginsUnloading();
+	void CallPluginsLoaded() const;
+	void CallPluginsUnloaded() const;
+	void CallPluginsUnloading() const;
 
 	ke::Vector<AMX_NATIVE_INFO*> m_Natives;
 	ke::Vector<AMX_NATIVE_INFO*> m_NewNatives; // Natives for new (AMXX, not AMX) plugins only

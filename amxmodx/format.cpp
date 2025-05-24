@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -32,7 +34,7 @@
 #define is_digit(c)		((unsigned)to_digit(c) <= 9)
 #define to_char(n)		((n) + '0')
 #define CHECK_ARGS(n) \
-	if ((arg+n) > args) { \
+	if ((arg+(n)) > args) { \
 		LogError(amx, AMX_ERR_PARAMS, "String formatted incorrectly - parameter %d (total %d)", arg, args); \
 		return 0; \
 	}
@@ -101,20 +103,20 @@ const char *translate(AMX *amx, const char *lang, const char *key)
 		pLangName = amxmodx_language->string;
 	}
 
-	auto def = g_langMngr.GetDef(pLangName, key, status);
+	const char* def = g_langMngr.GetDef(pLangName, key, status);
 
 	if (!amx_mldebug)
 	{
 		amx_mldebug = CVAR_GET_POINTER("amx_mldebug");
 	}
 
-	auto debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
+	const bool debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
 
 	if (debug)
 	{
 		int debug_status;
 		auto validlang = true;
-		auto testlang = amx_mldebug->string;
+		const char* testlang = amx_mldebug->string;
 
 		if (!g_langMngr.LangExists(testlang))
 		{
@@ -136,7 +138,7 @@ const char *translate(AMX *amx, const char *lang, const char *key)
 		{
 			ke::AString langName(pLangName);
 
-			auto &err = BadLang_Table.AltFindOrInsert(Move(langName));
+			lang_err& err = BadLang_Table.AltFindOrInsert(Move(langName));
 
 			if (err.last + 120.0f < gpGlobals->time)
 			{
@@ -163,10 +165,9 @@ template <typename U, typename S>
 void AddString(U **buf_p, size_t &maxlen, const S *string, int width, int prec)
 {
 	int		size = 0;
-	U		*buf;
 	static S nlstr[] = {'(','n','u','l','l',')','\0'};
 
-	buf = *buf_p;
+	U* buf = *buf_p;
 
 	if (string == nullptr)
 	{
@@ -186,7 +187,7 @@ void AddString(U **buf_p, size_t &maxlen, const S *string, int width, int prec)
 		size--;
 	}
 
-	if (size > (int)maxlen)
+	if (size > static_cast<int>(maxlen))
 		size = maxlen;
 
 	/* If precision is provided, make sure we don't truncate a multi-byte character */
@@ -220,7 +221,7 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int f
 	int sign = 0;				// 0: positive, 1: negative
 	int fieldlength;			// for padding
 	int significant_digits = 0;		// number of significant digits written
-	const int MAX_SIGNIFICANT_DIGITS = 16;
+	constexpr int MAX_SIGNIFICANT_DIGITS = 16;
 
 	// default precision
 	if (prec < 0)
@@ -236,7 +237,7 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int f
 	}
 
 	// compute whole-part digits count
-	digits = (int)log10(fval) + 1;
+	digits = static_cast<int>(log10(fval)) + 1;
 
 	// Only print 0.something if 0 < fval < 1
 	if (digits < 1)
@@ -282,7 +283,7 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int f
 		}
 		else
 		{
-			val = (int)(fval / tmp);
+			val = static_cast<int>(fval / tmp);
 			*buf++ = '0' + val;
 			fval -= val * tmp;
 			tmp *= 0.1;
@@ -309,7 +310,7 @@ void AddFloat(U **buf_p, size_t &maxlen, double fval, int width, int prec, int f
 		else
 		{
 			tmp *= 0.1;
-			val = (int)(fval / tmp);
+			val = static_cast<int>(fval / tmp);
 			*buf++ = '0' + val;
 			fval -= val * tmp;
 		}
@@ -548,21 +549,16 @@ void AddHex(U **buf_p, size_t &maxlen, unsigned int val, int width, int flags)
 template <typename D, typename S>
 size_t atcprintf(D *buffer, size_t maxlen, const S *format, AMX *amx, cell *params, int *param)
 {
-	int		arg;
-	int		args = params[0] / sizeof(cell);
+	const int		args = params[0] / sizeof(cell);
 	D		*buf_p;
 	D		ch;
-	int		flags;
-	int		width;
-	int		prec;
 	int		n;
 	//char	sign;
-	const S	*fmt;
 	size_t	llen = maxlen;
 
 	buf_p = buffer;
-	arg = *param;
-	fmt = format;
+	int arg = *param;
+	const S* fmt = format;
 
 	while (true)
 	{
@@ -581,9 +577,9 @@ size_t atcprintf(D *buffer, size_t maxlen, const S *format, AMX *amx, cell *para
 		++fmt;
 
 		// reset formatting state
-		flags = 0;
-		width = 0;
-		prec = -1;
+		int flags = 0;
+		int width = 0;
+		int prec = -1;
 		//sign = '\0';
 
 rflag:
@@ -685,7 +681,7 @@ reswitch:
 				if (ch == 'L')
 				{
 					CHECK_ARGS(1)
-					auto currParam = params[arg++];
+					const auto currParam = params[arg++];
 					lang = playerlang(*get_amxaddr(amx, currParam));
 					if (!lang)
 						lang = get_amxstring(amx, currParam, 2, len);
@@ -711,11 +707,11 @@ reswitch:
 		case 'N':
 			{
 				CHECK_ARGS(0)
-				cell *addr = get_amxaddr(amx, params[arg]);
+				const cell *addr = get_amxaddr(amx, params[arg]);
 				char buffer[255];
 				if (*addr)
 				{
-					CPlayer *player = nullptr;
+					const CPlayer *player = nullptr;
 
 					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
 					{
@@ -734,7 +730,7 @@ reswitch:
 						auth = "STEAM_ID_PENDING";
 					}
 
-					int userid = GETPLAYERUSERID(player->pEdict);
+					const int userid = GETPLAYERUSERID(player->pEdict);
 					ke::SafeSprintf(buffer, sizeof(buffer), "%s<%d><%s><%s>", player->name.chars(), userid, auth, player->team.chars());
 				}
 				else
@@ -749,12 +745,12 @@ reswitch:
 		case 'n':
 			{
 				CHECK_ARGS(0)
-				cell *addr = get_amxaddr(amx, params[arg]);
+				const cell *addr = get_amxaddr(amx, params[arg]);
 				const char *name = "Console";
 
 				if (*addr)
 				{
-					CPlayer *player = nullptr;
+					const CPlayer *player = nullptr;
 
 					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
 					{
@@ -786,7 +782,7 @@ reswitch:
 				goto done;
 			llen--;
 			goto done;
-			break;
+			//break;
 		default:
 			*buf_p++ = static_cast<D>(ch);
 			if (!llen)
@@ -819,10 +815,10 @@ done:
 void __WHOA_DONT_CALL_ME_PLZ_K_lol_o_O()
 {
 	//acsprintf
-	atcprintf((cell *)nullptr, 0, (const char *)nullptr, nullptr, nullptr, nullptr);
+	atcprintf(static_cast<cell*>(nullptr), 0, static_cast<const char*>(nullptr), nullptr, nullptr, nullptr);
 	//accprintf
-	atcprintf((cell *)nullptr, 0, (cell *)nullptr, nullptr, nullptr, nullptr);
+	atcprintf(static_cast<cell*>(nullptr), 0, static_cast<cell*>(nullptr), nullptr, nullptr, nullptr);
 	//ascprintf
-	atcprintf((char *)nullptr, 0, (cell *)nullptr, nullptr, nullptr, nullptr);
+	atcprintf(static_cast<char*>(nullptr), 0, static_cast<cell*>(nullptr), nullptr, nullptr, nullptr);
 }
 

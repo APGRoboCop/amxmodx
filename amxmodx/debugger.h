@@ -27,7 +27,7 @@ public:
 		
 		struct trace_info
 		{
-			trace_info() : cip(0), frm(0), next(nullptr), prev(nullptr), used(false) {};
+			trace_info() : cip(0), frm(0), next(nullptr), prev(nullptr), used(false) {}
 			
 			cell cip;
 			cell frm;
@@ -39,7 +39,7 @@ public:
 		};
 	
 	public:
-		Tracer() : m_Error(0), m_pStart(nullptr), m_pEnd(nullptr), m_Reset(true) {};
+		Tracer() : m_Error(0), m_pStart(nullptr), m_pEnd(nullptr), m_Reset(true) {}
 		~Tracer();
 	public:
 		void StepI(cell frm, cell cip);
@@ -61,7 +61,7 @@ public:
 	Debugger(AMX *pAmx, AMX_DBG *pAmxDbg) : m_pAmx(pAmx), m_pAmxDbg(pAmxDbg), m_Top(-1)
 	{
 		_CacheAmxOpcodeList();
-	};
+	}
 	~Debugger();
 public:
 	//Begin a trace for a function
@@ -78,7 +78,7 @@ public:
 	Tracer::trace_info *GetTraceStart() const;
 
 	//Get extra info about the call stack
-	bool GetTraceInfo(Tracer::trace_info *pTraceInfo, long &line, const char *&function, const char *&file);
+	bool GetTraceInfo(Tracer::trace_info *pTraceInfo, long &line, const char *&function, const char *&file) const;
 
 	//Get the next trace in the call stack, NULL if none
 	Tracer::trace_info *GetNextTrace(Tracer::trace_info *pTraceInfo);
@@ -111,8 +111,8 @@ public:
 private:
 	void _CacheAmxOpcodeList();
 	
-	int _GetOpcodeFromCip(cell cip, cell *&addr);
-	cell _CipAsVa(cell cip);
+	int _GetOpcodeFromCip(cell cip, cell *&addr) const;
+	cell _CipAsVa(cell cip) const;
 	
 	const char *_GetFilename();
 	const char *_GetVersion();
@@ -139,8 +139,9 @@ class Handler
 public:
 	Handler(AMX *pAmx) : m_pAmx(pAmx), m_iErrFunc(-1), m_iModFunc(-1), m_iNatFunc(-1), m_Handling(false),
 	                     m_InNativeFilter(false), m_pTrace(nullptr)
-	{};
-	~Handler() {};
+	{}
+
+	~Handler() = default;
 public:
 	int SetErrorHandler(const char *function);
 	int SetNativeFilter(const char *function);
@@ -148,17 +149,17 @@ public:
 public:
 	int HandleError(const char *msg);
 	int HandleNative(const char *native, int index, int trap);
-	int HandleModule(const char *module, bool isClass=false);
+	int HandleModule(const char *module, bool isClass=false) const;
 public:
 	bool IsHandling() const { return m_Handling; }
 	void SetErrorMsg(const char *msg);
 	
-	const char *GetLastMsg();
+	const char *GetLastMsg() const;
 	trace_info_t *GetTrace() const { return m_pTrace; }
 	const char *GetFmtCache() { return m_FmtCache.chars(); }
 	
-	bool IsNativeFiltering() { return (m_iNatFunc > -1); }
-	bool InNativeFilter() { return m_InNativeFilter; }
+	bool IsNativeFiltering() const { return (m_iNatFunc > -1); }
+	bool InNativeFilter() const { return m_InNativeFilter; }
 private:
 	AMX *m_pAmx;
 	

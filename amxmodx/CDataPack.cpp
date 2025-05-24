@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /**
  * vim: set ts=4 :
  * =============================================================================
@@ -29,7 +31,7 @@
 
 #include "CDataPack.h"
 
-#define DATAPACK_INITIAL_SIZE 64
+constexpr int DATAPACK_INITIAL_SIZE = 64;
 
 CDataPack::CDataPack()
 {
@@ -56,7 +58,8 @@ void CDataPack::CheckSize(size_t typesize)
 		return;
 	}
 
-	size_t pos = m_curptr - m_pBase;
+	const size_t pos = m_curptr - m_pBase;
+
 	do
 	{
 		m_capacity *= 2;
@@ -74,7 +77,7 @@ void CDataPack::ResetSize()
 size_t CDataPack::CreateMemory(size_t size, void **addr)
 {
 	CheckSize(sizeof(char) + sizeof(size_t) + size);
-	size_t pos = m_curptr - m_pBase;
+	const size_t pos = m_curptr - m_pBase;
 
 	*m_curptr = Raw;
 	m_curptr += sizeof(char);
@@ -127,8 +130,8 @@ void CDataPack::PackFloat(float val)
 
 void CDataPack::PackString(const char *string)
 {
-	size_t len = strlen(string);
-	size_t maxsize = sizeof(char) + sizeof(size_t) + len + 1;
+	const size_t len = strlen(string);
+	const size_t maxsize = sizeof(char) + sizeof(size_t) + len + 1;
 	CheckSize(maxsize);
 
 	*m_curptr = String;
@@ -195,7 +198,7 @@ cell CDataPack::ReadCell() const
 	m_curptr += sizeof(char);
 	m_curptr += sizeof(size_t);
 
-	cell val = *reinterpret_cast<cell *>(m_curptr);
+	const cell val = *reinterpret_cast<cell *>(m_curptr);
 	m_curptr += sizeof(cell);
 	return val;
 }
@@ -228,14 +231,14 @@ float CDataPack::ReadFloat() const
 	m_curptr += sizeof(char);
 	m_curptr += sizeof(size_t);
 
-	float val = *reinterpret_cast<float *>(m_curptr);
+	const float val = *reinterpret_cast<float *>(m_curptr);
 	m_curptr += sizeof(float);
 	return val;
 }
 
 bool CDataPack::IsReadable(size_t bytes) const
 {
-	return (bytes + (m_curptr - m_pBase) > m_size) ? false : true;
+	return (bytes + (m_curptr - m_pBase) <= m_size);
 }
 
 bool CDataPack::CanReadString(size_t *len) const
@@ -249,8 +252,8 @@ bool CDataPack::CanReadString(size_t *len) const
 		return false;
 	}
 
-	size_t real_len = *(size_t *)(m_curptr + sizeof(char));
-	char *str = m_curptr + sizeof(char) + sizeof(size_t);
+	const size_t real_len = *(size_t *)(m_curptr + sizeof(char));
+	const char *str = m_curptr + sizeof(char) + sizeof(size_t);
 
 	if ((strlen(str) != real_len) || !(IsReadable(sizeof(char) + sizeof(size_t) + real_len + 1)))
 	{
@@ -276,7 +279,7 @@ const char *CDataPack::ReadString(size_t *len) const
 	m_curptr += sizeof(char);
 	m_curptr += sizeof(size_t);
 
-	char *str = m_curptr;
+	const char *str = m_curptr;
 	m_curptr += real_len + 1;
 
 	if (len)
@@ -303,7 +306,7 @@ bool CDataPack::CanReadMemory(size_t *size) const
 		return false;
 	}
 
-	size_t bytecount = *(size_t *)(m_curptr + sizeof(char));
+	const size_t bytecount = *(size_t *)(m_curptr + sizeof(char));
 	if (!IsReadable(sizeof(char) + sizeof(size_t) + bytecount))
 	{
 		return false;

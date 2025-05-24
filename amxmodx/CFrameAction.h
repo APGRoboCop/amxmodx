@@ -24,7 +24,7 @@ public:
 			unregisterSPForward(m_callbackForward);
 		}
 
-		void Execute()
+		void Execute() const
 		{
 			executeForwards(m_callbackForward, m_callbackData);
 		}
@@ -47,7 +47,7 @@ public:
 		int callbacksToRun = m_requestedFrames.length();
 		while (callbacksToRun--)
 		{
-			ke::AutoPtr<CFrameAction> action = Move(m_requestedFrames.front());
+			const ke::AutoPtr<CFrameAction> action = Move(m_requestedFrames.front());
 			m_requestedFrames.popFront();
 			action->Execute();
 		}

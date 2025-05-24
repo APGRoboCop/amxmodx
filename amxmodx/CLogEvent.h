@@ -103,15 +103,15 @@ public:
 		CLogEvent(CPluginMngr::CPlugin *p, int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(nullptr), parent(ppp), m_State(FSTATE_ACTIVE), next(nullptr) {}
 		~CLogEvent();
 	public:
-		inline CPluginMngr::CPlugin *getPlugin() { return plugin; }
+		inline CPluginMngr::CPlugin *getPlugin() const { return plugin; }
 		void registerFilter(char* filter);
 		void setForwardState(ForwardState value);
-		inline int getFunction() { return func; }
+		inline int getFunction() const { return func; }
 	};
 
 private:
 	CLogEvent *logevents[MAX_LOGARGS + 1];
-	CLogEvent *getValidLogEvent(CLogEvent * a);
+	CLogEvent *getValidLogEvent(CLogEvent * a) const;
 	CLogCmp* registerCondition(char* filter);
 	
 	void clearConditions();
@@ -121,16 +121,16 @@ public:
 
 	// Interface
 	int registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos);
-	inline bool logEventsExist() { return arelogevents; } 
+	inline bool logEventsExist() const { return arelogevents; } 
 	
-	void setLogString(const char* frmt, va_list& vaptr);
+	void setLogString(const char* frmt, const va_list& vaptr);
 	void setLogString(const char* frmt, ...);
 	void parseLogString();
-	void executeLogEvents();
+	void executeLogEvents() const;
 	
-	inline const char* getLogString() { return logString; }
-	inline int getLogArgNum() { return logArgc; }
-	inline const char* getLogArg(int i) { return (i < 0 || i >= logArgc) ? "" : logArgs[i]; }
+	inline const char* getLogString() const { return logString; }
+	inline int getLogArgNum() const { return logArgc; }
+	inline const char* getLogArg(int i) const { return (i < 0 || i >= logArgc) ? "" : logArgs[i]; }
 	void clearLogEvents();
 
 	class iterator
@@ -149,7 +149,7 @@ public:
 
 		inline bool operator==(const iterator& c) const { return a == c.a; }
 		inline bool operator!=(const iterator& c) const { return !operator == (c); }
-		CLogEvent& operator*() { return *a; }
+		CLogEvent& operator*() const { return *a; }
 		operator bool () const { return a ? true : false; }
 	};
 	

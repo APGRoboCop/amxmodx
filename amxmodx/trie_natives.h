@@ -16,7 +16,7 @@
 #include "natives_handles.h"
 #include <amtl/am-uniqueptr.h>
 
-enum EntryType
+enum EntryType : std::uint8_t
 {
 	EntryType_Cell,
 	EntryType_CellArray,
@@ -36,10 +36,13 @@ class Entry
 	};
 
 public:
+	Entry(const Entry& other) = delete;
+
 	Entry()
-		: control_(0)
+		: control_(0), data_(0)
 	{
 	}
+
 	Entry(Entry &&other) noexcept
 	{
 		control_ = other.control_;
@@ -97,8 +100,6 @@ public:
 	}
 
 private:
-	Entry(const Entry &other) = delete;
-
 	ArrayInfo *ensureArray(size_t bytes) {
 		ArrayInfo *array = raw();
 		if (array && array->maxbytes >= bytes)

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -20,11 +22,11 @@ void Client_CurWeapon(void* mValue){
   static int iId;
   switch (mState++){
   case 0: 
-    iState = *(int*)mValue;
+    iState = *static_cast<int*>(mValue);
     break;
   case 1:
     if (!iState) break; 
-    iId = *(int*)mValue;
+    iId = *static_cast<int*>(mValue);
 	mPlayer->current = iId;
 	break;
   }
@@ -39,7 +41,7 @@ void Client_InitObj(void* mValue){
   switch (mState++){
   case 0:
 	  num = 0;
-	  mObjects.count = *(int*)mValue;
+	  mObjects.count = *static_cast<int*>(mValue);
 	  if ( mObjects.count == 0 )
 		  mObjects.Clear();
 	  break;
@@ -47,29 +49,29 @@ void Client_InitObj(void* mValue){
 	  mObjects.obj[num].pEdict = GETEDICT(*(int*)mValue);
 	  break;
   case 2:
-	  mObjects.obj[num].index = *(int*)mValue;
+	  mObjects.obj[num].index = *static_cast<int*>(mValue);
 	  break;
   case 3:
-	  mObjects.obj[num].default_owner = *(int*)mValue;
+	  mObjects.obj[num].default_owner = *static_cast<int*>(mValue);
 	  mObjects.obj[num].owner = mObjects.obj[num].default_owner;
 	  break;
   case 4:
-	  mObjects.obj[num].visible = *(int*)mValue; 
+	  mObjects.obj[num].visible = *static_cast<int*>(mValue); 
 	  break;
   case 5:
-	  mObjects.obj[num].icon_neutral = *(int*)mValue;
+	  mObjects.obj[num].icon_neutral = *static_cast<int*>(mValue);
 	  break;
   case 6:
-	  mObjects.obj[num].icon_allies = *(int*)mValue;
+	  mObjects.obj[num].icon_allies = *static_cast<int*>(mValue);
 	  break;
   case 7:
-	  mObjects.obj[num].icon_axis = *(int*)mValue;
+	  mObjects.obj[num].icon_axis = *static_cast<int*>(mValue);
 	  break;
   case 8:
-	  mObjects.obj[num].origin_x = *(float*)mValue;
+	  mObjects.obj[num].origin_x = *static_cast<float*>(mValue);
 	  break;
   case 9: // 8,9 coord
-	  mObjects.obj[num].origin_y = *(float*)mValue;
+	  mObjects.obj[num].origin_y = *static_cast<float*>(mValue);
 	  mState = 1;
 	  num++;
 	  if ( num == mObjects.count ){
@@ -85,10 +87,10 @@ void Client_SetObj(void* mValue){
   static int id;
   switch (mState++){
   case 0:
-	  id = *(int*)mValue; 
+	  id = *static_cast<int*>(mValue); 
      break;
   case 1:
-	  mObjects.obj[id].owner = *(int*)mValue;
+	  mObjects.obj[id].owner = *static_cast<int*>(mValue);
 	break;
   }
 }

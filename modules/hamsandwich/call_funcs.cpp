@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -87,7 +89,7 @@ inline void *_GetFunction(void *pthis, int id)
 
 cell Call_Void_Void(AMX *amx, cell *params)
 {
-	SETUP(0);
+	SETUP(0)
 
 #if defined(_WIN32)
 	reinterpret_cast<void (__fastcall *)(void*, int)>(__func)(pv, 0);
@@ -99,7 +101,7 @@ cell Call_Void_Void(AMX *amx, cell *params)
 
 cell Call_Int_Void(AMX *amx, cell *params)
 {
-	SETUP(0);
+	SETUP(0)
 
 #if defined(_WIN32)
 	return reinterpret_cast<int (__fastcall *)(void*, int)>(__func)(pv, 0);
@@ -110,11 +112,11 @@ cell Call_Int_Void(AMX *amx, cell *params)
 
 cell Call_Void_Entvar(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev1 = TypeConversion.id_to_entvars(id3);
 
@@ -129,11 +131,11 @@ cell Call_Void_Entvar(AMX *amx, cell *params)
 
 cell Call_Void_Cbase(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
@@ -147,7 +149,7 @@ cell Call_Void_Cbase(AMX *amx, cell *params)
 
 cell Call_Int_Float_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -161,7 +163,7 @@ cell Call_Int_Float_Int(AMX *amx, cell *params)
 
 cell Call_Int_Float_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -176,7 +178,7 @@ cell Call_Int_Float_Int_Int(AMX *amx, cell *params)
 
 cell Call_Bool_Float_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	float f3 = amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	int i4 = *MF_GetAmxAddr(amx, params[4]);
@@ -191,12 +193,12 @@ cell Call_Bool_Float_Int_Int(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int i4=*MF_GetAmxAddr(amx, params[4]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
@@ -210,14 +212,14 @@ cell Call_Void_Entvar_Int(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Entvar_Int(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int id4=*MF_GetAmxAddr(amx, params[4]);
 	int i5=*MF_GetAmxAddr(amx, params[5]);
 
-	CHECK_ENTITY(id3);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id3)
+	CHECK_ENTITY(id4)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 	entvars_t *ev4 = TypeConversion.id_to_entvars(id4);
@@ -233,11 +235,11 @@ cell Call_Void_Entvar_Entvar_Int(AMX *amx, cell *params)
 
 cell Call_Int_Cbase(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
@@ -250,7 +252,7 @@ cell Call_Int_Cbase(AMX *amx, cell *params)
 
 cell Call_Void_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -265,7 +267,7 @@ cell Call_Void_Int_Int(AMX *amx, cell *params)
 
 cell Call_Void_Int_Bool(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int i3  = *MF_GetAmxAddr(amx, params[3]);
 	bool i4 = *MF_GetAmxAddr(amx, params[4]) != 0;
@@ -280,7 +282,7 @@ cell Call_Void_Int_Bool(AMX *amx, cell *params)
 
 cell Call_Void_Bool_Bool(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	bool i3 = *MF_GetAmxAddr(amx, params[3]) != 0;
 	bool i4 = *MF_GetAmxAddr(amx, params[4]) != 0;
@@ -295,7 +297,7 @@ cell Call_Void_Bool_Bool(AMX *amx, cell *params)
 
 cell Call_Int_Int_Str_Int(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 	char *sz4=MF_GetAmxString(amx, params[4], 0, nullptr);
@@ -310,7 +312,7 @@ cell Call_Int_Int_Str_Int(AMX *amx, cell *params)
 
 cell Call_Int_Int_Str_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	int i3 = *MF_GetAmxAddr(amx, params[3]);
 	char *sz4 = MF_GetAmxString(amx, params[4], 0, nullptr);
@@ -326,7 +328,7 @@ cell Call_Int_Int_Str_Int_Int(AMX *amx, cell *params)
 
 cell Call_Int_Int_Str_Int_Bool(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	int i3 = *MF_GetAmxAddr(amx, params[3]);
 	char *sz4 = MF_GetAmxString(amx, params[4], 0, nullptr);
@@ -342,7 +344,7 @@ cell Call_Int_Int_Str_Int_Bool(AMX *amx, cell *params)
 
 cell Call_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 
@@ -355,7 +357,7 @@ cell Call_Int_Int(AMX *amx, cell *params)
 
 cell Call_Bool_Bool(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	bool i3 = *MF_GetAmxAddr(amx, params[3]) != 0;
 
@@ -368,11 +370,11 @@ cell Call_Bool_Bool(AMX *amx, cell *params)
 
 cell Call_Int_Entvar(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
@@ -385,15 +387,15 @@ cell Call_Int_Entvar(AMX *amx, cell *params)
 
 cell Call_Int_Entvar_Entvar_Float_Int(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int id4=*MF_GetAmxAddr(amx, params[4]);
 	float f5=amx_ctof(*MF_GetAmxAddr(amx, params[5]));
 	int i6=*MF_GetAmxAddr(amx, params[6]);
 
-	CHECK_ENTITY(id3);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id3)
+	CHECK_ENTITY(id4)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 	entvars_t *ev4 = TypeConversion.id_to_entvars(id4);
@@ -407,7 +409,7 @@ cell Call_Int_Entvar_Entvar_Float_Int(AMX *amx, cell *params)
 
 cell Call_Int_Entvar_Entvar_Float_Float_Int(AMX *amx, cell *params)
 {
-	SETUP(5);
+	SETUP(5)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int id4=*MF_GetAmxAddr(amx, params[4]);
@@ -415,8 +417,8 @@ cell Call_Int_Entvar_Entvar_Float_Float_Int(AMX *amx, cell *params)
 	float f6=amx_ctof(*MF_GetAmxAddr(amx, params[6]));
 	int i7=*MF_GetAmxAddr(amx, params[7]);
 
-	CHECK_ENTITY(id3);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id3)
+	CHECK_ENTITY(id4)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 	entvars_t *ev4 = TypeConversion.id_to_entvars(id4);
@@ -430,7 +432,7 @@ cell Call_Int_Entvar_Entvar_Float_Float_Int(AMX *amx, cell *params)
 
 cell Call_Void_Int(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 
@@ -445,13 +447,13 @@ cell Call_Void_Int(AMX *amx, cell *params)
 
 cell Call_Vector_Float_Cbase_Int(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	int id4=*MF_GetAmxAddr(amx, params[4]);
 	int i5=*MF_GetAmxAddr(amx, params[5]);
 
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id4)
 
 	void *p4 = TypeConversion.id_to_cbase(id4);
 
@@ -472,15 +474,15 @@ cell Call_Vector_Float_Cbase_Int(AMX *amx, cell *params)
 
 cell Call_Void_Cbase_Cbase_Int_Float(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int id4=*MF_GetAmxAddr(amx, params[4]);
 	int i5=*MF_GetAmxAddr(amx, params[5]);
 	float f6=amx_ctof(*MF_GetAmxAddr(amx, params[6]));
 
-	CHECK_ENTITY(id3);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id3)
+	CHECK_ENTITY(id4)
 
 	void *p3 = TypeConversion.id_to_cbase(id3);
 	void *p4 = TypeConversion.id_to_cbase(id4);
@@ -496,7 +498,7 @@ cell Call_Void_Cbase_Cbase_Int_Float(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Float_Vector_Trace_Int(AMX *amx, cell *params)
 {
-	SETUP(5);
+	SETUP(5)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -516,7 +518,7 @@ cell Call_Void_Entvar_Float_Vector_Trace_Int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 #if defined(_WIN32)
@@ -530,7 +532,7 @@ cell Call_Void_Entvar_Float_Vector_Trace_Int(AMX *amx, cell *params)
 
 cell Call_Void_Float_Vector_Trace_Int(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	Vector v4;
@@ -560,7 +562,7 @@ cell Call_Void_Float_Vector_Trace_Int(AMX *amx, cell *params)
 
 cell Call_Str_Void(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 #if defined(_WIN32)
 	char *v=reinterpret_cast<char *(__fastcall *)(void *, int)>(__func)(pv, 0);
@@ -572,7 +574,7 @@ cell Call_Str_Void(AMX *amx, cell *params)
 
 cell Call_Cbase_Void(AMX *amx, cell *params)
 {
-	SETUP(0);
+	SETUP(0)
 #if defined(_WIN32)
 	void *ret=reinterpret_cast<void *(__fastcall *)(void *, int)>(__func)(pv, 0);
 #elif defined(__linux__) || defined(__APPLE__)
@@ -583,7 +585,7 @@ cell Call_Cbase_Void(AMX *amx, cell *params)
 
 cell Call_Float_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 
@@ -599,7 +601,7 @@ cell Call_Float_Int(AMX *amx, cell *params)
 
 cell Call_Vector_Void(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 #if defined(_WIN32)
 	Vector ret;
 	reinterpret_cast<void (__fastcall *)(void *, int,Vector*)>(__func)(pv, 0,&ret);
@@ -616,7 +618,7 @@ cell Call_Vector_Void(AMX *amx, cell *params)
 
 cell Call_Vector_pVector(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	Vector v3;
 	float *fl3=(float *)MF_GetAmxAddr(amx, params[3]);
@@ -644,7 +646,7 @@ cell Call_Vector_pVector(AMX *amx, cell *params)
 
 cell Call_Int_pVector(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	Vector v3;
 	float *fl3=(float *)MF_GetAmxAddr(amx, params[3]);
@@ -667,7 +669,7 @@ cell Call_Int_pVector(AMX *amx, cell *params)
 
 cell Call_Bool_pVector(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	Vector v3;
 	float *fl3 = (float *)MF_GetAmxAddr(amx, params[3]);
@@ -690,13 +692,13 @@ cell Call_Bool_pVector(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Float_Float(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
 	float f5=amx_ctof(*MF_GetAmxAddr(amx, params[5]));
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
@@ -711,7 +713,7 @@ cell Call_Void_Entvar_Float_Float(AMX *amx, cell *params)
 
 cell Call_Void_pFloat_pFloat(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3;
 	float f4;
@@ -730,12 +732,12 @@ cell Call_Void_pFloat_pFloat(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
@@ -748,7 +750,7 @@ cell Call_Void_Entvar_Float(AMX *amx, cell *params)
 
 cell Call_Void_Int_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -764,7 +766,7 @@ cell Call_Void_Int_Int_Int(AMX *amx, cell *params)
 
 cell Call_Int_ItemInfo(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	void *ptr=reinterpret_cast<void *>(*MF_GetAmxAddr(amx, params[3]));
 
@@ -782,7 +784,7 @@ cell Call_Int_ItemInfo(AMX *amx, cell *params)
 
 cell Call_Bool_ItemInfo(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	void *ptr = reinterpret_cast<void *>(*MF_GetAmxAddr(amx, params[3]));
 
@@ -800,7 +802,7 @@ cell Call_Bool_ItemInfo(AMX *amx, cell *params)
 
 cell Call_Float_Void(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 #if defined(_WIN32)
 	float ret=reinterpret_cast<float (__fastcall *)(void*, int)>(__func)(pv, 0);
@@ -814,7 +816,7 @@ cell Call_Float_Void(AMX *amx, cell *params)
 
 cell Call_Void_Float_Int(AMX* amx, cell* params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	int i4 = *MF_GetAmxAddr(amx, params[4]);
@@ -830,11 +832,11 @@ cell Call_Void_Float_Int(AMX* amx, cell* params)
 
 cell Call_Float_Float_Cbase(AMX* amx, cell* params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	int id4=*MF_GetAmxAddr(amx, params[4]);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id4)
 	void *p4 = TypeConversion.id_to_cbase(id4);
 
 #if defined(_WIN32)
@@ -849,7 +851,7 @@ cell Call_Float_Float_Cbase(AMX* amx, cell* params)
 
 cell Call_Void_Float(AMX* amx, cell* params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 
@@ -863,7 +865,7 @@ cell Call_Void_Float(AMX* amx, cell* params)
 
 cell Call_Void_Float_Float_Float_Int(AMX* amx, cell* params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -880,7 +882,7 @@ cell Call_Void_Float_Float_Float_Int(AMX* amx, cell* params)
 
 cell Call_Vector_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 
@@ -900,12 +902,12 @@ cell Call_Vector_Float(AMX *amx, cell *params)
 
 cell Call_Void_Float_Cbase(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3])); 
 	int id4=*MF_GetAmxAddr(amx, params[4]);
 
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id4)
 
 	void *p4 = TypeConversion.id_to_cbase(id4);
 
@@ -920,7 +922,7 @@ cell Call_Void_Float_Cbase(AMX *amx, cell *params)
 
 cell Call_Int_Float_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -934,7 +936,7 @@ cell Call_Int_Float_Float(AMX *amx, cell *params)
 
 cell Call_Int_Float(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 
@@ -947,7 +949,7 @@ cell Call_Int_Float(AMX *amx, cell *params)
 
 cell Call_Int_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -961,7 +963,7 @@ cell Call_Int_Int_Int(AMX *amx, cell *params)
 
 cell Call_Bool_Bool_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	bool i3 = *MF_GetAmxAddr(amx, params[3]) != 0;
 	int i4 = *MF_GetAmxAddr(amx, params[4]);
@@ -975,7 +977,7 @@ cell Call_Bool_Bool_Int(AMX *amx, cell *params)
 
 cell Call_Int_Bool_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	bool i3 = *MF_GetAmxAddr(amx, params[3]) != 0;
 	int i4 = *MF_GetAmxAddr(amx, params[4]);
@@ -989,7 +991,7 @@ cell Call_Int_Bool_Int(AMX *amx, cell *params)
 
 cell Call_Void_Str_Float_Float_Float(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -1007,7 +1009,7 @@ cell Call_Void_Str_Float_Float_Float(AMX *amx, cell *params)
 
 cell Call_Void_Str_Float_Float_Float_Int_Cbase(AMX *amx, cell *params)
 {
-	SETUP(6);
+	SETUP(6)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -1016,7 +1018,7 @@ cell Call_Void_Str_Float_Float_Float_Int_Cbase(AMX *amx, cell *params)
 	int i7=*MF_GetAmxAddr(amx, params[7]);
 	int id8=*MF_GetAmxAddr(amx, params[8]);
 
-	CHECK_ENTITY(id8);
+	CHECK_ENTITY(id8)
 
 	void *p8 = TypeConversion.id_to_cbase(id8);
 
@@ -1031,7 +1033,7 @@ cell Call_Void_Str_Float_Float_Float_Int_Cbase(AMX *amx, cell *params)
 
 cell Call_Void_Str_Float_Float_Float_Bool_Cbase(AMX *amx, cell *params)
 {
-	SETUP(6);
+	SETUP(6)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -1040,7 +1042,7 @@ cell Call_Void_Str_Float_Float_Float_Bool_Cbase(AMX *amx, cell *params)
 	bool i7=*MF_GetAmxAddr(amx, params[7]) != 0;
 	int id8=*MF_GetAmxAddr(amx, params[8]);
 
-	CHECK_ENTITY(id8);
+	CHECK_ENTITY(id8)
 
 	void *p8 = TypeConversion.id_to_cbase(id8);
 
@@ -1055,7 +1057,7 @@ cell Call_Void_Str_Float_Float_Float_Bool_Cbase(AMX *amx, cell *params)
 
 cell Call_Int_Vector_Vector_Float_Float(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	Vector v3;
 	Vector v4;
@@ -1082,7 +1084,7 @@ cell Call_Int_Vector_Vector_Float_Float(AMX *amx, cell *params)
 
 cell Call_Int_Short(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	short s3=*MF_GetAmxAddr(amx, params[3]);
 
@@ -1095,7 +1097,7 @@ cell Call_Int_Short(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(5);
+	SETUP(5)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int id4=*MF_GetAmxAddr(amx, params[4]);
@@ -1103,8 +1105,8 @@ cell Call_Void_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 	int i6=*MF_GetAmxAddr(amx, params[6]);
 	int i7=*MF_GetAmxAddr(amx, params[7]);
 
-	CHECK_ENTITY(id3);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id3)
+	CHECK_ENTITY(id4)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 	entvars_t *ev4 = TypeConversion.id_to_entvars(id4);
@@ -1120,7 +1122,7 @@ cell Call_Void_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 
 cell Call_Void_Vector_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 {
-	SETUP(6);
+	SETUP(6)
 
 	Vector v3;
 
@@ -1135,8 +1137,8 @@ cell Call_Void_Vector_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 	int i7=*MF_GetAmxAddr(amx, params[7]);
 	int i8=*MF_GetAmxAddr(amx, params[8]);
 
-	CHECK_ENTITY(id4);
-	CHECK_ENTITY(id5);
+	CHECK_ENTITY(id4)
+	CHECK_ENTITY(id5)
 
 	entvars_t *ev4 = TypeConversion.id_to_entvars(id4);
 	entvars_t *ev5 = TypeConversion.id_to_entvars(id5);
@@ -1152,7 +1154,7 @@ cell Call_Void_Vector_Entvar_Entvar_Float_Int_Int(AMX *amx, cell *params)
 
 cell Call_Float_Int_Float(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -1169,7 +1171,7 @@ cell Call_Float_Int_Float(AMX *amx, cell *params)
 
 cell Call_Int_Str(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 
@@ -1182,10 +1184,10 @@ cell Call_Int_Str(AMX *amx, cell *params)
 
 cell Call_Void_Edict(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	edict_t *ed3 = TypeConversion.id_to_edict(id3);
 
@@ -1200,7 +1202,7 @@ cell Call_Void_Edict(AMX *amx, cell *params)
 
 cell Call_Void_Int_Str_Bool(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	char* sz4 = new char[48];
 	int i3=*MF_GetAmxAddr(amx, params[3]);
@@ -1219,7 +1221,7 @@ cell Call_Void_Int_Str_Bool(AMX *amx, cell *params)
 
 cell Call_Void_Vector_Vector(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	Vector v3;
 	Vector v4;
@@ -1245,7 +1247,7 @@ cell Call_Void_Vector_Vector(AMX *amx, cell *params)
 
 cell Call_Void_Str_Bool(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	const char *sz3=STRING(ALLOC_STRING(MF_GetAmxString(amx, params[3], 0, nullptr)));
 	bool b4=*MF_GetAmxAddr(amx, params[4]) ? true : false;
@@ -1261,7 +1263,7 @@ cell Call_Void_Str_Bool(AMX *amx, cell *params)
 
 cell Call_Int_Str_Str_Int_Str_Int_Int(AMX* amx, cell* params)
 {
-	SETUP(6);
+	SETUP(6)
 
 	const char *sz3=STRING(ALLOC_STRING(MF_GetAmxString(amx, params[3], 0, nullptr)));
 	const char *sz4=STRING(ALLOC_STRING(MF_GetAmxString(amx, params[4], 1, nullptr)));
@@ -1280,7 +1282,7 @@ cell Call_Int_Str_Str_Int_Str_Int_Int(AMX* amx, cell* params)
 
 cell Call_Int_Int_Int_Float_Int(AMX* amx, cell* params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	int i3=*MF_GetAmxAddr(amx, params[3]);
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -1296,7 +1298,7 @@ cell Call_Int_Int_Int_Float_Int(AMX* amx, cell* params)
 
 cell Call_Void_Str_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	int i4=*MF_GetAmxAddr(amx, params[4]);
@@ -1312,10 +1314,10 @@ cell Call_Void_Str_Int(AMX *amx, cell *params)
 
 cell Call_Bool_Cbase_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3 = *MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *p8 = TypeConversion.id_to_cbase(id3);
 
@@ -1330,10 +1332,10 @@ cell Call_Bool_Cbase_Int(AMX *amx, cell *params)
 
 cell Call_Void_Cbase_Int(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *p8 = TypeConversion.id_to_cbase(id3);
 
@@ -1350,10 +1352,10 @@ cell Call_Void_Cbase_Int(AMX *amx, cell *params)
 
 cell Call_Void_Cbase_Int_Float(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int id3 = *MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *p8 = TypeConversion.id_to_cbase(id3);
 
@@ -1371,7 +1373,7 @@ cell Call_Void_Cbase_Int_Float(AMX *amx, cell *params)
 
 cell Call_Void_Str(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 
@@ -1386,7 +1388,7 @@ cell Call_Void_Str(AMX *amx, cell *params)
 
 cell Call_Void_Vector(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	Vector v3;
 
@@ -1406,7 +1408,7 @@ cell Call_Void_Vector(AMX *amx, cell *params)
 
 cell Call_Int_Str_Vector_Str(AMX* amx, cell* params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	char *sz5=MF_GetAmxString(amx, params[5], 1, nullptr);
@@ -1427,7 +1429,7 @@ cell Call_Int_Str_Vector_Str(AMX* amx, cell* params)
 
 cell Call_Int_Str_Str(AMX* amx, cell* params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	char *sz4=MF_GetAmxString(amx, params[4], 1, nullptr);
@@ -1441,7 +1443,7 @@ cell Call_Int_Str_Str(AMX* amx, cell* params)
 
 cell Call_Void_Float_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 	float f4=amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -1457,7 +1459,7 @@ cell Call_Void_Float_Float(AMX *amx, cell *params)
 
 cell Call_Void_Str_Str_Int(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 	char *sz4=MF_GetAmxString(amx, params[4], 1, nullptr);
@@ -1474,7 +1476,7 @@ cell Call_Void_Str_Str_Int(AMX *amx, cell *params)
 
 cell Call_Int_pVector_pVector_Cbase_pFloat(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	Vector v3;
 	Vector v4;
@@ -1491,7 +1493,7 @@ cell Call_Int_pVector_pVector_Cbase_pFloat(AMX *amx, cell *params)
 	v4.z=fl4[2];
 
 	int id5=*MF_GetAmxAddr(amx, params[5]);
-	CHECK_ENTITY(id5);
+	CHECK_ENTITY(id5)
 	void *p5 = TypeConversion.id_to_cbase(id5);
 
 	float f6;
@@ -1517,10 +1519,10 @@ cell Call_Int_pVector_pVector_Cbase_pFloat(AMX *amx, cell *params)
 
 cell Call_Void_Cbase_pVector_Float(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *i3 = TypeConversion.id_to_cbase(id3);
 
@@ -1547,7 +1549,7 @@ cell Call_Void_Cbase_pVector_Float(AMX *amx, cell *params)
 
 cell Call_Int_pVector_pVector_Float_Cbase_pVector(AMX *amx, cell *params)
 {
-	SETUP(5);
+	SETUP(5)
 
 	Vector v3;
 	Vector v4;
@@ -1566,7 +1568,7 @@ cell Call_Int_pVector_pVector_Float_Cbase_pVector(AMX *amx, cell *params)
 	float f5=amx_ctof(*MF_GetAmxAddr(amx, params[5]));
 
 	int id6=*MF_GetAmxAddr(amx, params[6]);
-	CHECK_ENTITY(id6);
+	CHECK_ENTITY(id6)
 	void *p6 = TypeConversion.id_to_cbase(id6);
 
 	Vector v7;
@@ -1599,11 +1601,11 @@ cell Call_Int_pVector_pVector_Float_Cbase_pVector(AMX *amx, cell *params)
 
 cell Call_Int_Cbase_Bool(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
@@ -1618,11 +1620,11 @@ cell Call_Int_Cbase_Bool(AMX *amx, cell *params)
 
 cell Call_Bool_Cbase_Bool(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3 = *MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
@@ -1637,7 +1639,7 @@ cell Call_Bool_Cbase_Bool(AMX *amx, cell *params)
 
 cell Call_Int_Vector_Vector(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	Vector v3;
 	Vector v4;
@@ -1661,7 +1663,7 @@ cell Call_Int_Vector_Vector(AMX *amx, cell *params)
 
 cell Call_Int_pVector_pVector(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	Vector v3;
 	Vector v4;
@@ -1685,7 +1687,7 @@ cell Call_Int_pVector_pVector(AMX *amx, cell *params)
 
 cell Call_Bool_pVector_pVector(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	Vector v3;
 	Vector v4;
@@ -1709,11 +1711,11 @@ cell Call_Bool_pVector_pVector(AMX *amx, cell *params)
 
 cell Call_Int_Entvar_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
@@ -1728,11 +1730,11 @@ cell Call_Int_Entvar_Float(AMX *amx, cell *params)
 
 cell Call_Bool_Entvar_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3 = *MF_GetAmxAddr(amx, params[3]);
 
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
@@ -1747,7 +1749,7 @@ cell Call_Bool_Entvar_Float(AMX *amx, cell *params)
 
 cell Call_Float_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	float f3=amx_ctof(*MF_GetAmxAddr(amx, params[3]));
 
@@ -1763,14 +1765,14 @@ cell Call_Float_Float(AMX *amx, cell *params)
 
 cell Call_Void_Entvar_Entvar_Float(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 	int id4=*MF_GetAmxAddr(amx, params[4]);
 	float f5=amx_ctof(*MF_GetAmxAddr(amx, params[5]));
 
-	CHECK_ENTITY(id3);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id3)
+	CHECK_ENTITY(id4)
 
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 	entvars_t *ev4 = TypeConversion.id_to_entvars(id4);
@@ -1786,7 +1788,7 @@ cell Call_Void_Entvar_Entvar_Float(AMX *amx, cell *params)
 
 cell Call_Bool_Void(AMX *amx, cell *params)
 {
-	SETUP(0);
+	SETUP(0)
 
 #if defined(_WIN32)
 	return reinterpret_cast<bool (__fastcall *)(void*, int)>(__func)(pv, 0) ? TRUE : FALSE;
@@ -1797,7 +1799,7 @@ cell Call_Bool_Void(AMX *amx, cell *params)
 
 cell Call_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool(AMX *amx, cell *params)
 {
-	SETUP(7);
+	SETUP(7)
 
 	Vector v3;
 	Vector v4;
@@ -1816,7 +1818,7 @@ cell Call_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool(AMX *amx, cell *p
 	float f5=amx_ctof(*MF_GetAmxAddr(amx, params[5]));
 
 	int id6=*MF_GetAmxAddr(amx, params[6]);
-	CHECK_ENTITY(id6);
+	CHECK_ENTITY(id6)
 	void *p6 = TypeConversion.id_to_cbase(id6);
 
 	Vector v7;
@@ -1862,7 +1864,7 @@ cell Call_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool(AMX *amx, cell *p
 
 cell Call_Int_Vector_Cbase(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	Vector v3;
 	float *fl3=(float *)MF_GetAmxAddr(amx, params[3]);
@@ -1871,7 +1873,7 @@ cell Call_Int_Vector_Cbase(AMX *amx, cell *params)
 	v3.z=fl3[2];
 
 	int id4=*MF_GetAmxAddr(amx, params[4]);
-	CHECK_ENTITY(id4);
+	CHECK_ENTITY(id4)
 	void *p4 = TypeConversion.id_to_cbase(id4);
 
 #if defined(_WIN32)
@@ -1889,7 +1891,7 @@ cell Call_Int_Vector_Cbase(AMX *amx, cell *params)
 
 cell Call_Int_Vector(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	Vector v3;
 	Vector v4;
@@ -1908,10 +1910,10 @@ cell Call_Int_Vector(AMX *amx, cell *params)
 
 cell Call_Int_Cbase_pVector(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
 	Vector v4;
@@ -1935,7 +1937,7 @@ cell Call_Int_Cbase_pVector(AMX *amx, cell *params)
 
 cell Call_Void_Bool(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	bool b3=*MF_GetAmxAddr(amx, params[3]) ? true : false;
 
@@ -1950,10 +1952,10 @@ cell Call_Void_Bool(AMX *amx, cell *params)
 
 cell Call_Bool_Cbase(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
 #if defined(_WIN32)
@@ -1965,7 +1967,7 @@ cell Call_Bool_Cbase(AMX *amx, cell *params)
 
 cell Call_Bool_Int(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
@@ -1978,10 +1980,10 @@ cell Call_Bool_Int(AMX *amx, cell *params)
 
 cell Call_Bool_Entvar(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	int id3 = *MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
 #if defined(_WIN32)
@@ -1993,10 +1995,10 @@ cell Call_Bool_Entvar(AMX *amx, cell *params)
 
 cell Call_Void_Cbase_Float(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *p8 = TypeConversion.id_to_cbase(id3);
 	float f4 = amx_ctof(*MF_GetAmxAddr(amx, params[4]));
@@ -2012,10 +2014,10 @@ cell Call_Void_Cbase_Float(AMX *amx, cell *params)
 
 cell Call_Void_Cbase_Bool(AMX *amx, cell *params)
 {
-	SETUP(2);
+	SETUP(2)
 
 	int id3=*MF_GetAmxAddr(amx, params[3]);
-	CHECK_ENTITY(id3);
+	CHECK_ENTITY(id3)
 
 	void *p8 = TypeConversion.id_to_cbase(id3);
 	bool b4 = *MF_GetAmxAddr(amx, params[4]) != 0;
@@ -2031,7 +2033,7 @@ cell Call_Void_Cbase_Bool(AMX *amx, cell *params)
 
 cell Call_Vector_Vector_Vector_Vector(AMX *amx, cell *params)
 {
-	SETUP(4);
+	SETUP(4)
 
 	Vector v3;
 	float *fl3=(float *)MF_GetAmxAddr(amx, params[3]);
@@ -2079,7 +2081,7 @@ cell Call_Vector_Vector_Vector_Vector(AMX *amx, cell *params)
 
 cell Call_Str_Str(AMX *amx, cell *params)
 {
-	SETUP(3);
+	SETUP(3)
 
 	char *sz3=MF_GetAmxString(amx, params[3], 0, nullptr);
 
@@ -2093,7 +2095,7 @@ cell Call_Str_Str(AMX *amx, cell *params)
 
 cell Call_Void_Short(AMX *amx, cell *params)
 {
-	SETUP(1);
+	SETUP(1)
 
 	short i3=*MF_GetAmxAddr(amx, params[3]);
 

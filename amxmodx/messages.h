@@ -146,7 +146,7 @@ public:
 		return m_Forwards.length() != 0;
 	}
 };
-enum msgtype
+enum msgtype : std::uint8_t
 {
 	arg_byte = 1,
 	arg_char,
@@ -182,13 +182,13 @@ public:
 	void SetParam(size_t index, const char *data);
 	const char *GetParamString(size_t index);
 	float GetParamFloat(size_t index);
-	bool Ready();
+	bool Ready() const;
 	void Init();
 	int GetParamInt(size_t index);
 	msgtype GetParamType(size_t index);
 	void Reset();
 	void Send();
-	size_t Params();
+	size_t Params() const;
 private:
 	msgparam *AdvPtr();
 private:

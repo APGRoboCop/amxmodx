@@ -502,7 +502,7 @@ struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 3*sizeof(int) >
         // Finally we can add the three components together. Phew!
         return reinterpret_cast<GenericClass *>(
 			reinterpret_cast<char *>(pthis) + u.s.delta + virtual_delta);
-	};
+	}
 };
 #endif // MSVC 7 and greater
 
@@ -576,7 +576,7 @@ public:
 		m_pthis=0; m_pFunction=0; m_pStaticFunction=0;
 	}
 #else
-	DelegateMemento() : m_pthis(nullptr), m_pFunction(nullptr) {};
+	DelegateMemento() : m_pthis(nullptr), m_pFunction(nullptr) {}
 	void clear() {	m_pthis=nullptr; m_pFunction=nullptr;	}
 #endif
 public:

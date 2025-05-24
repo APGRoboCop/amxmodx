@@ -1,4 +1,6 @@
-﻿// vim: set ts=4 sw=4 tw=99 noet:
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+// vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
 // Copyright (C) The AMX Mod X Development Team.
@@ -15,9 +17,9 @@
 
 const char* stristr(const char* str, const char* substr)
 {
-	char *needle = (char *)substr;
-	char *prevloc = (char *)str;
-	char *haystack = (char *)str;
+	const char *needle = const_cast<char*>(substr);
+	const char *prevloc = const_cast<char*>(str);
+	const char *haystack = const_cast<char*>(str);
 
 	while (*haystack)
 	{
@@ -68,11 +70,11 @@ cell* get_amxaddr(AMX *amx, cell amx_addr)
 
 int set_amxstring_simple(cell *dest, const char *source, int max)
 {
-	cell* start = dest;
+	const cell* start = dest;
 
 	while (max-- && *source)
 	{
-		*dest++ = (unsigned char)*source++;
+		*dest++ = static_cast<unsigned char>(*source++);
 	}
 
 	*dest = 0;
@@ -83,7 +85,7 @@ int set_amxstring_simple(cell *dest, const char *source, int max)
 int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 {
 	cell* dest = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
-	cell* start = dest;
+	const cell* start = dest;
 
 #if defined BINLOG_ENABLED
 	if (g_binlog_level & 2)
@@ -95,7 +97,7 @@ int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 #endif
 	
 	while (max-- && *source)
-		*dest++ = (unsigned char)*source++;
+		*dest++ = static_cast<unsigned char>(*source++);
 	
 	*dest = 0;
 	
@@ -149,12 +151,12 @@ int set_amxstring_utf8_cell(AMX *amx, cell amx_addr, const cell *source, size_t 
 
 extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, int maxlen)
 {
-	cell *source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	const cell *source = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
 	char *dest = destination;
-	char *start = dest;
+	const char *start = dest;
 
 	while (maxlen-- && *source)
-		*dest++=(char)(*source++);
+		*dest++=static_cast<char>(*source++);
 
 	*dest = '\0';
 
@@ -178,7 +180,7 @@ char *get_amxbuffer(int id)
 
 char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 {
-	auto buffer = get_amxbuffer(id);
+	char* buffer = get_amxbuffer(id);
 	len = get_amxstring_r(amx, amx_addr, buffer, MAX_BUFFER_LENGTH - 1);
 	return buffer;
 }
@@ -273,14 +275,14 @@ bool fastcellcmp(cell *a, cell *b, cell len)
 static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 {
 	cell *text = get_amxaddr(amx, params[1]);
-	cell len = params[2];
+	const cell len = params[2];
 	cell *what = get_amxaddr(amx, params[3]);
 	cell *with = get_amxaddr(amx, params[4]);
 	cell *textptr = text;
 
-	int withLen = amxstring_len(with);
-	int whatLen = amxstring_len(what);
-	int textLen = amxstring_len(text);
+	const int withLen = amxstring_len(with);
+	const int whatLen = amxstring_len(what);
+	const int textLen = amxstring_len(text);
 
 	if (whatLen > textLen)
 		return 0;
@@ -304,8 +306,8 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 		{
 			if (fastcellcmp(text, what, whatLen))
 			{
-				cell *saveptr = text + whatLen;
-				cell restlen = textLen - (browsed + whatLen);
+				const cell *saveptr = text + whatLen;
+				const cell restlen = textLen - (browsed + whatLen);
 				textptr = text + withLen;
 				memmove(textptr, saveptr, (restlen + 1) * sizeof(cell));
 				memcpy(text, with, withLen * sizeof(cell));
@@ -322,18 +324,18 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 // native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive = true);
 static cell AMX_NATIVE_CALL replace_string(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_casesensitive };
+	enum args : std::uint8_t { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_casesensitive };
 
-	auto textLength    = 0;
-	auto searchLength  = 0;
-	auto replaceLength = 0;
+	int textLength = 0;
+	int searchLength = 0;
+	int replaceLength = 0;
 
-	auto text    = get_amxstring(amx, params[arg_text]   , 0, textLength);
-	auto search  = get_amxstring(amx, params[arg_search] , 1, searchLength);
-	auto replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
+	char* text = get_amxstring(amx, params[arg_text], 0, textLength);
+	const char* search = get_amxstring(amx, params[arg_search], 1, searchLength);
+	const char* replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
 
-	auto textMaxLength = params[arg_maxlength];
-	auto caseSensitive = params[arg_casesensitive] != 0;
+	const cell textMaxLength = params[arg_maxlength];
+	const bool caseSensitive = params[arg_casesensitive] != 0;
 
 	if (!*search)
 	{
@@ -341,7 +343,8 @@ static cell AMX_NATIVE_CALL replace_string(AMX *amx, cell *params)
 		return -1;
 	}
 
-	auto count = UTIL_ReplaceAll(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
+	const size_t count = UTIL_ReplaceAll(text, textMaxLength + 1, search, searchLength, replace, replaceLength,
+	                                     caseSensitive); // + EOS
 
 	set_amxstring(amx, params[arg_text], text, textMaxLength);
 
@@ -351,18 +354,18 @@ static cell AMX_NATIVE_CALL replace_string(AMX *amx, cell *params)
 // native replace_stringex(text[], maxlength, const search[], const replace[], searchLen = -1, replaceLen = -1, bool:caseSensitive = true);
 static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_searchlen, arg_replacelen, arg_casesensitive };
+	enum args : std::uint8_t { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_searchlen, arg_replacelen, arg_casesensitive };
 
-	auto textLength    = 0;
-	auto searchLength  = 0;
-	auto replaceLength = 0;
+	int textLength = 0;
+	int searchLength = 0;
+	int replaceLength = 0;
 
-	auto text    = get_amxstring(amx, params[arg_text]   , 0, textLength);
-	auto search  = get_amxstring(amx, params[arg_search] , 1, searchLength);
-	auto replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
+	char* text = get_amxstring(amx, params[arg_text], 0, textLength);
+	const char* search = get_amxstring(amx, params[arg_search], 1, searchLength);
+	const char* replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
 
-	auto textMaxLength = params[arg_maxlength];
-	auto caseSensitive = params[arg_casesensitive] != 0;
+	const cell textMaxLength = params[arg_maxlength];
+	const bool caseSensitive = params[arg_casesensitive] != 0;
 
 	if (params[arg_searchlen]  != -1) { searchLength  = params[arg_searchlen]; }
 	if (params[arg_replacelen] != -1) { replaceLength = params[arg_replacelen]; }
@@ -373,7 +376,7 @@ static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
 		return -1;
 	}
 
-	auto ptr = UTIL_ReplaceEx(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
+	const auto ptr = UTIL_ReplaceEx(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
 
 	if (!ptr)
 	{
@@ -388,9 +391,9 @@ static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
 {
 	cell *a = get_amxaddr(amx, params[2]);
-	cell *b = get_amxaddr(amx, params[1]);
-	cell *c = b;
-	cell* str = b;
+	const cell *b = get_amxaddr(amx, params[1]);
+	const cell *c = b;
+	const cell* str = b;
 	cell* substr = a;
 	
 	while (*c)
@@ -412,18 +415,18 @@ static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
 // native containi(const source[], const string[]);
 static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_source, arg_search };
+	enum args : std::uint8_t { arg_count, arg_source, arg_search };
 
-	auto sourceLength = 0;
-	auto searchLength = 0;
+	int sourceLength = 0;
+	int searchLength = 0;
 
-	auto source = get_amxstring(amx, params[arg_source], 0, sourceLength);
-	auto search = get_amxstring(amx, params[arg_search], 1, searchLength);
+	const char* source = get_amxstring(amx, params[arg_source], 0, sourceLength);
+	const char* search = get_amxstring(amx, params[arg_search], 1, searchLength);
 
 	if (sourceLength && searchLength)
 	{
-		auto sourceFolded = get_amxbuffer(2);
-		auto searchFolded = get_amxbuffer(3);
+		char* sourceFolded = get_amxbuffer(2);
+		char* searchFolded = get_amxbuffer(3);
 
 		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
@@ -431,7 +434,7 @@ static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params)
 		sourceFolded[sourceLength] = '\0';
 		searchFolded[searchLength] = '\0';
 
-		auto result = strstr(sourceFolded, searchFolded);
+		const char* result = strstr(sourceFolded, searchFolded);
 
 		if (result)
 		{
@@ -456,11 +459,11 @@ static cell AMX_NATIVE_CALL amx_strtol(AMX *amx, cell *params) /* 3 param */
 	if (base != 0 && (base < 2 || base > 36))
 		base = 0;
 
-	char *pString = get_amxstring(amx, params[1], 0, len);
+	const char *pString = get_amxstring(amx, params[1], 0, len);
 	cell *endPos = get_amxaddr(amx, params[2]);
 
 	char *pEnd = nullptr;
-	long result = strtol(pString, &pEnd, base);
+	const long result = strtol(pString, &pEnd, base);
 
 	*endPos = pEnd - pString;
 
@@ -470,11 +473,11 @@ static cell AMX_NATIVE_CALL amx_strtol(AMX *amx, cell *params) /* 3 param */
 static cell AMX_NATIVE_CALL amx_strtof(AMX *amx, cell *params) /* 2 param */
 {
 	int len;
-	char *pString = get_amxstring(amx, params[1], 0, len);
+	const char *pString = get_amxstring(amx, params[1], 0, len);
 	cell *endPos = get_amxaddr(amx, params[2]);
 
 	char *pEnd = nullptr;
-	float result = strtod(pString, &pEnd);
+	float result = static_cast<float>(strtod(pString, &pEnd));
 
 	*endPos = pEnd - pString;
 
@@ -484,14 +487,14 @@ static cell AMX_NATIVE_CALL amx_strtof(AMX *amx, cell *params) /* 2 param */
 static cell AMX_NATIVE_CALL numtostr(AMX *amx, cell *params) /* 3 param */
 {
 	char szTemp[32];
-	sprintf(szTemp, "%d", (int)params[1]);
+	snprintf(szTemp, sizeof(szTemp), "%d", params[1]);
 
 	return set_amxstring(amx, params[2], szTemp, params[3]);
 }
 
 static cell AMX_NATIVE_CALL str_to_float(AMX *amx, cell *params)
 {
-	cell *str = get_amxaddr(amx, params[1]);
+	const cell *str = get_amxaddr(amx, params[1]);
 
 	bool neg = false;
 	unsigned long part1 = 0;
@@ -549,16 +552,16 @@ static cell AMX_NATIVE_CALL str_to_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL float_to_str(AMX *amx, cell *params)
 {
 	char szTemp[32];
-	sprintf(szTemp, "%f", amx_ctof(params[1]));
+	snprintf(szTemp, sizeof(szTemp), "%f", amx_ctof(params[1]));
 	
 	return set_amxstring(amx, params[2], szTemp, params[3]);
 }
 
 static cell AMX_NATIVE_CALL add(AMX *amx, cell *params) /* 4 param */
 {
-	cell *src = get_amxaddr(amx, params[3]);
+	const cell *src = get_amxaddr(amx, params[3]);
 	cell *dest = get_amxaddr(amx, params[1]);
-	cell *start = dest;
+	const cell *start = dest;
 	int c = params[2], d = params[4];
 	
 	while (*dest && c--)
@@ -582,11 +585,11 @@ static cell AMX_NATIVE_CALL add(AMX *amx, cell *params) /* 4 param */
 
 static cell AMX_NATIVE_CALL copy(AMX *amx, cell *params) /* 4 param */
 {
-	cell *src = get_amxaddr(amx, params[3]);
+	const cell *src = get_amxaddr(amx, params[3]);
 	int c = params[2];
 
 	cell *dest = get_amxaddr(amx, params[1]);
-	cell *start = dest;
+	const cell *start = dest;
 
 	while (c-- && *src)
 	{
@@ -599,11 +602,11 @@ static cell AMX_NATIVE_CALL copy(AMX *amx, cell *params) /* 4 param */
 
 static cell AMX_NATIVE_CALL copyc(AMX *amx, cell *params) /* 4 param */
 {
-	cell *src = get_amxaddr(amx, params[3]);
+	const cell *src = get_amxaddr(amx, params[3]);
 	cell *dest = get_amxaddr(amx, params[1]);
-	cell *start = dest;
+	const cell *start = dest;
 	int c = params[2];
-	cell ch = params[4];
+	const cell ch = params[4];
 	
 	while (c-- && *src && *src != ch)
 		*dest++ =* src++;
@@ -616,7 +619,7 @@ static cell AMX_NATIVE_CALL setc(AMX *amx, cell *params) /* 4 param */
 {
 	cell *src = get_amxaddr(amx, params[1]);
 	int c = params[2];
-	cell ch = params[3];
+	const cell ch = params[3];
 	
 	while (c--)
 		*src++ = ch;
@@ -648,16 +651,16 @@ static cell AMX_NATIVE_CALL equal(AMX *amx, cell *params) /* 3 param */
 // native equali(const a[], const b[], c = 0);
 static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_string1, arg_string2, arg_numbytes };
+	enum args : std::uint8_t { arg_count, arg_string1, arg_string2, arg_numbytes };
 
-	auto string1Length = 0;
-	auto string2Length = 0;
+	int string1Length = 0;
+	int string2Length = 0;
 
-	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
-	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+	const char* string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	const char* string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
 
-	auto string1Folded = get_amxbuffer(2);
-	auto string2Folded = get_amxbuffer(3);
+	char* string1Folded = get_amxbuffer(2);
+	char* string2Folded = get_amxbuffer(3);
 
 	string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 	string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
@@ -680,18 +683,18 @@ static cell g_cpbuf[4096];
 static cell AMX_NATIVE_CALL formatex(AMX *amx, cell *params)
 {
 	cell *buf = get_amxaddr(amx, params[1]);
-	size_t maxlen = static_cast<size_t>(params[2]);
-    cell *fmt = get_amxaddr(amx, params[3]);
+	const size_t maxlen = static_cast<size_t>(params[2]);
+	const cell *fmt = get_amxaddr(amx, params[3]);
 	int param = 4;
-	size_t total = atcprintf(buf, maxlen, fmt, amx, params, &param);
+	const size_t total = atcprintf(buf, maxlen, fmt, amx, params, &param);
 	return static_cast<cell>(total);
 }
 
 static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 {
 	cell *buf = get_amxaddr(amx, params[1]);
-	cell *fmt = get_amxaddr(amx, params[3]);
-	size_t maxlen = params[2];
+	const cell *fmt = get_amxaddr(amx, params[3]);
+	const size_t maxlen = params[2];
 	/** 
 	 * SPECIAL CASE - check if the buffers overlap.
 	 *  some users, for whatever reason, do things like:
@@ -699,9 +702,9 @@ static cell AMX_NATIVE_CALL format(AMX *amx, cell *params) /* 3 param */
 	 *  this is considered "deprecated" but we have to support it.
 	 * we do this by checking to see if reading from buf will overlap
 	 */
-	cell addr_start = params[1];
-	cell addr_end = params[1] + maxlen * sizeof(cell);
-	cell max = params[0] / sizeof(cell);
+	const cell addr_start = params[1];
+	const cell addr_end = params[1] + maxlen * sizeof(cell);
+	const cell max = params[0] / sizeof(cell);
 	bool copy = false;
 	for (cell i = 3; i <= max; i++)
 	{
@@ -748,7 +751,7 @@ static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 			c = *get_amxaddr(amx, params[iarg++]);
 			
 			while (c-- && *arg)
-				*cptr++ = (unsigned char)*arg++;
+				*cptr++ = static_cast<unsigned char>(*arg++);
 			*cptr = 0;
 		}
 	}
@@ -759,7 +762,7 @@ static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params) /* 1 param */
 {
 	cell *cptr = get_amxaddr(amx, params[1]);
-	cell *begin = cptr;
+	const cell *begin = cptr;
 	
 	while (*cptr)
 	{
@@ -773,10 +776,10 @@ static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params) /* 1 param */
 // native mb_strtolower(source[], maxlength = 0);
 static cell AMX_NATIVE_CALL mb_strtolower(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_string, arg_maxlength };
+	enum args : std::uint8_t { arg_count, arg_string, arg_maxlength };
 
-	auto sourceLength = 0;
-	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+	int sourceLength = 0;
+	const char* source = get_amxstring(amx, params[arg_string], 0, sourceLength);
 
 	auto outputMaxLength = params[arg_maxlength];
 
@@ -785,8 +788,9 @@ static cell AMX_NATIVE_CALL mb_strtolower(AMX *amx, cell *params)
 		outputMaxLength = sourceLength;
 	}
 
-	auto output = get_amxbuffer(1);
-	auto outputLength = utf8tolower(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	char* output = get_amxbuffer(1);
+	const size_t outputLength = utf8tolower(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr,
+	                                        TRUE);
 	
 	output[outputLength] = '\0';
 
@@ -796,7 +800,7 @@ static cell AMX_NATIVE_CALL mb_strtolower(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
 {
 	cell *cptr = get_amxaddr(amx, params[1]);
-	cell *begin = cptr;
+	const cell *begin = cptr;
 	
 	while (*cptr)
 	{
@@ -813,7 +817,7 @@ static cell AMX_NATIVE_CALL mb_strtoupper(AMX *amx, cell *params)
 	enum args { arg_count, arg_string, arg_maxlength };
 
 	auto sourceLength = 0;
-	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+	const auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
 	
 	auto outputMaxLength = params[arg_maxlength];
 
@@ -822,8 +826,8 @@ static cell AMX_NATIVE_CALL mb_strtoupper(AMX *amx, cell *params)
 		outputMaxLength = sourceLength;
 	}
 
-	auto output = get_amxbuffer(1);
-	auto outputLength = utf8toupper(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	const auto output = get_amxbuffer(1);
+	const auto outputLength = utf8toupper(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 	output[outputLength] = '\0';
 
@@ -833,32 +837,32 @@ static cell AMX_NATIVE_CALL mb_strtoupper(AMX *amx, cell *params)
 int fo_numargs(AMX *amx)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
-	cell bytes= *(cell *)(data + (int)amx->frm + 2 * sizeof(cell));
+	const cell bytes= *(cell *)(data + (int)amx->frm + 2 * sizeof(cell));
 	
-	return (int)(bytes / sizeof(cell));
+	return static_cast<int>(bytes / sizeof(cell));
 }
 
 int fo_getargnum(AMX *amx, int pos)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
-	cell value = *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
+	const cell value = *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
 	
-	return *(cell *)(data + (int)value);
+	return *(cell *)(data + static_cast<int>(value));
 }
 
 float fo_getargfloat(AMX *amx, int pos)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
-	cell value = *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
-	cell number = *(cell *)(data + (int)value);
+	const cell value = *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
+	cell number = *(cell *)(data + static_cast<int>(value));
 	
-	return *(REAL *)((void *)&number);
+	return *static_cast<float*>((void*)&number);
 }
 
 char* fo_getargstr(AMX *amx, int swap, int pos)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
-	cell src_value= *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
+	const cell src_value= *(cell *)(data + (int)amx->frm + (pos + 3) * sizeof(cell));
 	cell value;
 	static char buffer[2][3072];
 	char* b = buffer[swap];
@@ -879,8 +883,8 @@ char* format_arguments(AMX *amx, int parm, int& len)
 	static char buffer[2][3072];
 	static char format[16];
 	char *ptr, *arg, *dest = *buffer;
-	char *src = fo_getargstr(amx, 0, parm++);
-	int numparam = fo_numargs(amx);
+	const char *src = fo_getargstr(amx, 0, parm++);
+	const int numparam = fo_numargs(amx);
 
 	while (*src)
 	{
@@ -933,23 +937,23 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	int len = 0;
 
 	//string[]
-	char *string = get_amxstring(amx, params[1], 0, len);
+	const char *string = get_amxstring(amx, params[1], 0, len);
 	//left[]
 	char *left = new char[len + 1];
 	//right[]
 	char *right = new char[len + 1];
-	int leftMax = params[3];
-	int rightMax = params[5];
+	const int leftMax = params[3];
+	const int rightMax = params[5];
 	//token
-	char token = static_cast<char>(params[6]);
+	const char token = static_cast<char>(params[6]);
 	//trim
-	int trim = params[7];
+	const int trim = params[7];
 	
-	for (i = 0; i < (unsigned int)len; i++)
+	for (i = 0; i < static_cast<unsigned int>(len); i++)
 	{
 		if (trim && !done_flag)
 		{
-			if ((spaces = utf8getspaces(string + i) > 0))
+			if ((spaces = utf8getspaces(string + i)) > 0)
 			{
 				i += spaces;
 				done_flag = true;
@@ -987,10 +991,10 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	unsigned int i = 0;
 	size_t spaces;
 
-	char *string = get_amxstring(amx, params[1], 0, len);
+	const char *string = get_amxstring(amx, params[1], 0, len);
 	char *left = new char[len + 1], *right = new char[len + 1];
 	int left_max = params[3], right_max = params[5];
-	char token = static_cast<char>(params[6]);
+	const char token = static_cast<char>(params[6]);
 	
 	/*	Trim flags:
 			1 - ltrim left
@@ -998,7 +1002,7 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 			4 - ltrim right
 			8 - rtrim right
 	*/
-	int trim = params[7];
+	const int trim = params[7];
 
 	// ltrim left
 	if (trim & 1 && (spaces = utf8getspaces(string)) > 0)
@@ -1006,7 +1010,7 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 		i += spaces;
 	}
 
-	for (; i < (unsigned int) len; ++i)
+	for (; i < static_cast<unsigned int>(len); ++i)
 	{
 		if (string[i] == token)
 		{
@@ -1032,7 +1036,7 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 		i += spaces;
 	}
 
-	for (; i < (unsigned int) len; ++i)
+	for (; i < static_cast<unsigned int>(len); ++i)
 	{
 		right[right_pos++] = string[i];	
 	}
@@ -1062,11 +1066,11 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 {
 	int temp;
 	const char *input = get_amxstring(amx, params[1], 0, temp);
-	size_t input_len = size_t(temp);
-	size_t start_pos = size_t(params[2]);
+	const size_t input_len = static_cast<size_t>(temp);
+	const size_t start_pos = static_cast<size_t>(params[2]);
 
 	cell *buffer = get_amxaddr(amx, params[3]);
-	size_t buflen = size_t(params[4]);
+	const size_t buflen = static_cast<size_t>(params[4]);
 
 	// Strip all left-hand whitespace.
 	size_t i = start_pos;
@@ -1097,8 +1101,8 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 		if (utf8isspace(input + i) && !in_quote)
 			break;
 
-		if (size_t(bufpos - buffer) < buflen)
-			*bufpos++ = (unsigned char)input[i];
+		if (static_cast<size_t>(bufpos - buffer) < buflen)
+			*bufpos++ = static_cast<unsigned char>(input[i]);
 	}
 
 	*bufpos = '\0';
@@ -1116,12 +1120,12 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	size_t i = 0;
 	size_t beg = 0;
 
-	char *string = get_amxstring(amx, params[1], 0, _len);
+	const char *string = get_amxstring(amx, params[1], 0, _len);
 	cell *right = get_amxaddr(amx, params[4]);
-	int LeftMax = params[3];
-	int RightMax = params[5];
+	const int LeftMax = params[3];
+	const int RightMax = params[5];
 
-	size_t len = (size_t)_len;
+	const size_t len = static_cast<size_t>(_len);
 	size_t spaces;
 
 	if ((spaces = utf8getspaces(string)) > 0)
@@ -1143,28 +1147,28 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 			if (!in_quote && (spaces = utf8getspaces(string + i)) > 0)
 			{
 do_copy:
-				size_t pos = i;
+	const size_t pos = i;
 				i += spaces;
 
 				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
-				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
-				size_t end = (pos - _end > (size_t)LeftMax) ? (size_t)LeftMax : pos - _end;
+	const size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
+				size_t end = (pos - _end > static_cast<size_t>(LeftMax)) ? static_cast<size_t>(LeftMax) : pos - _end;
 				
 				// If there is anything to copy, make sure we copy min(maxlen, slicelen).
-				size_t copylen = end >= beg
-				                 ? ((end - beg > size_t(LeftMax))
-				                    ? size_t(LeftMax)
-				                    : end - beg
-				                   )
-				                 : 0;
+	const size_t copylen = end >= beg
+		                       ? ((end - beg > static_cast<size_t>(LeftMax))
+			                          ? static_cast<size_t>(LeftMax)
+			                          : end - beg
+		                       )
+		                       : 0;
 				set_amxstring_utf8(amx, params[2], start, strlen(start), copylen);
 
-				end = (len-i+1 > (size_t)RightMax) ? (size_t)RightMax : len-i+1;
+				end = (len-i+1 > static_cast<size_t>(RightMax)) ? static_cast<size_t>(RightMax) : len-i+1;
 				if (end)
 				{
 					start = &(string[i]);
 					while (end--)
-						*right++ = (unsigned char)*start++;
+						*right++ = static_cast<unsigned char>(*start++);
 				}
 				*right = '\0';
 				return 1;
@@ -1183,7 +1187,7 @@ do_copy:
 static cell AMX_NATIVE_CALL split_string(AMX *amx, cell *params)
 {
 	int textLen, splitLen;
-	char *text = get_amxstring(amx, params[1], 0, textLen);
+	const char *text = get_amxstring(amx, params[1], 0, textLen);
 	const char *split = get_amxstring(amx, params[2], 1, splitLen);
 
 	if (splitLen > textLen)
@@ -1191,7 +1195,7 @@ static cell AMX_NATIVE_CALL split_string(AMX *amx, cell *params)
 		return -1;
 	}
 
-	int maxLen = params[4];
+	const int maxLen = params[4];
 
 	/**
 	* Note that it's <= ... you could also just add 1,
@@ -1220,7 +1224,7 @@ static cell AMX_NATIVE_CALL split_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 {
 	int len;
-	int pos = params[3];
+	const int pos = params[3];
 	
 	if (pos < 0)
 	{
@@ -1228,14 +1232,14 @@ static cell AMX_NATIVE_CALL format_args(AMX *amx, cell *params)
 		return 0;
 	}
 
-	char* string = format_arguments(amx, pos, len); // indexed from 0
+	const char* string = format_arguments(amx, pos, len); // indexed from 0
 	
 	return set_amxstring_utf8(amx, params[1], string, len, params[2]);
 }
 
 static cell AMX_NATIVE_CALL is_digit(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
 	if (UTIL_GetUTF8CharBytes(&chr) != 1)
 	{
@@ -1247,7 +1251,7 @@ static cell AMX_NATIVE_CALL is_digit(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_alnum(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
 	if (UTIL_GetUTF8CharBytes(&chr) != 1)
 	{
@@ -1259,7 +1263,7 @@ static cell AMX_NATIVE_CALL is_alnum(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_space(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
 	if (UTIL_GetUTF8CharBytes(&chr) != 1)
 	{
@@ -1271,7 +1275,7 @@ static cell AMX_NATIVE_CALL is_space(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
 	if (UTIL_GetUTF8CharBytes(&chr) != 1)
 	{
@@ -1283,7 +1287,7 @@ static cell AMX_NATIVE_CALL is_alpha(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_char_upper(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
 	if (UTIL_GetUTF8CharBytes(&chr) != 1)
 	{
@@ -1295,7 +1299,7 @@ static cell AMX_NATIVE_CALL is_char_upper(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_char_lower(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
 	if (UTIL_GetUTF8CharBytes(&chr) != 1)
 	{
@@ -1307,9 +1311,9 @@ static cell AMX_NATIVE_CALL is_char_lower(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL is_char_mb(AMX *amx, cell *params)
 {
-	char chr = params[1];
+	const char chr = params[1];
 
-	unsigned int bytes = UTIL_GetUTF8CharBytes(&chr);
+	const unsigned int bytes = UTIL_GetUTF8CharBytes(&chr);
 	if (bytes == 1)
 	{
 		return 0;
@@ -1321,7 +1325,7 @@ static cell AMX_NATIVE_CALL is_char_mb(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_char_bytes(AMX *amx, cell *params)
 {
 	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
+	const char *str = get_amxstring(amx, params[1], 0, len);
 
 	return UTIL_GetUTF8CharBytes(str);
 };
@@ -1330,7 +1334,7 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 {
 	cell *str = get_amxaddr(amx, params[1]);
 	
-	if (!isalpha((char)str[0]) || !(str[0] & (1<<5)))
+	if (!isalpha(static_cast<char>(str[0])) || !(str[0] & (1<<5)))
 		return 0;
 	str[0] &= ~(1<<5);
 	
@@ -1340,12 +1344,12 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 // native mb_ucfirst(string[], maxlength = 0);
 static cell AMX_NATIVE_CALL mb_ucfirst(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_string, arg_maxlength };
+	enum args : std::uint8_t { arg_count, arg_string, arg_maxlength };
 
-	auto sourceLength = 0;
-	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+	int sourceLength = 0;
+	char* source = get_amxstring(amx, params[arg_string], 0, sourceLength);
 
-	auto outputMaxLength = params[arg_maxlength];
+	cell outputMaxLength = params[arg_maxlength];
 
 	if (outputMaxLength <= 0)
 	{
@@ -1353,13 +1357,14 @@ static cell AMX_NATIVE_CALL mb_ucfirst(AMX *amx, cell *params)
 	}
 
 	// Retrieves the first character length in bytes.
-	int firstChLength = utf8seek(source, sourceLength, source, 1, SEEK_CUR) - source;
+	const size_t firstChLength = utf8seek(source, sourceLength, source, 1, SEEK_CUR) - source;
 
 	if (firstChLength)
 	{
 		char output[8] = {};
 		// int allowed not unsigned? [APG]RoboCop[CL]
-		auto outputLength = utf8toupper(source, firstChLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		const size_t outputLength = utf8toupper(source, firstChLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT,
+		                                        nullptr, TRUE);
 
 		// The converted character is either larger or smaller in bytes.
 		if (firstChLength != outputLength)
@@ -1381,7 +1386,7 @@ static cell AMX_NATIVE_CALL mb_ucfirst(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 {
 	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
+	const char *str = get_amxstring(amx, params[1], 0, len);
 
 	return strlen(str);
 }
@@ -1389,14 +1394,14 @@ static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
 	int length;
-	auto string = get_amxstring(amx, params[1], 0, length);
+	const char* string = get_amxstring(amx, params[1], 0, length);
 
-	auto leftSpaces  = utf8getspaces(string);
-	auto rightSpaces = 0u;
+	const size_t leftSpaces = utf8getspaces(string);
+	unsigned rightSpaces = 0u;
 
-	auto originalLength = length;
+	const int originalLength = length;
 
-	if (leftSpaces < size_t(length))
+	if (leftSpaces < static_cast<size_t>(length))
 	{
 		while (--length >= 0 && utf8isspace(string + length))
 		{
@@ -1404,7 +1409,7 @@ static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 		}
 	}
 
-	auto totalSpaces = leftSpaces + rightSpaces;
+	const unsigned totalSpaces = leftSpaces + rightSpaces;
 
 	set_amxstring(amx, params[1], string + leftSpaces, originalLength - totalSpaces);
 
@@ -1441,18 +1446,18 @@ static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)
 // native strcmp(const string1[], const string2[], bool:ignorecase = false);
 static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_string1, arg_string2, arg_ignorecase };
+	enum args : std::uint8_t { arg_count, arg_string1, arg_string2, arg_ignorecase };
 
-	auto string1Length = 0;
-	auto string2Length = 0;
+	int string1Length = 0;
+	int string2Length = 0;
 
-	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
-	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+	const char* string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	const char* string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
 
 	if (params[arg_ignorecase] != 0)
 	{
-		auto string1Folded = get_amxbuffer(2);
-		auto string2Folded = get_amxbuffer(3);
+		char* string1Folded = get_amxbuffer(2);
+		char* string2Folded = get_amxbuffer(3);
 
 		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
@@ -1470,18 +1475,18 @@ static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 // native strncmp(const string1[], const string2[], num, bool:ignorecase = false);
 static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_string1, arg_string2, arg_numbytes, arg_ignorecase };
+	enum args : std::uint8_t { arg_count, arg_string1, arg_string2, arg_numbytes, arg_ignorecase };
 
-	auto string1Length = 0;
-	auto string2Length = 0;
+	int string1Length = 0;
+	int string2Length = 0;
 
-	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
-	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+	const char* string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	const char* string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
 
 	if (params[arg_ignorecase] != 0)
 	{
-		auto string1Folded = get_amxbuffer(2);
-		auto string2Folded = get_amxbuffer(3);
+		char* string1Folded = get_amxbuffer(2);
+		char* string2Folded = get_amxbuffer(3);
 
 		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
@@ -1499,18 +1504,18 @@ static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 // native strfind(const string[], const sub[], bool:ignorecase = false, pos = 0);
 static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_source, arg_search, arg_ignorecase, arg_startpos };
+	enum args : std::uint8_t { arg_count, arg_source, arg_search, arg_ignorecase, arg_startpos };
 
-	auto sourceLength = 0;
-	auto searchLength = 0;
+	int sourceLength = 0;
+	int searchLength = 0;
 
-	auto source = get_amxstring(amx, params[arg_source], 0, sourceLength);
-	auto search = get_amxstring(amx, params[arg_search], 1, searchLength);
+	char* source = get_amxstring(amx, params[arg_source], 0, sourceLength);
+	const char* search = get_amxstring(amx, params[arg_search], 1, searchLength);
 
 	if (params[arg_ignorecase] != 0)
 	{
-		auto sourceFolded = get_amxbuffer(2);
-		auto searchFolded = get_amxbuffer(3);
+		char* sourceFolded = get_amxbuffer(2);
+		char* searchFolded = get_amxbuffer(3);
 
 		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
@@ -1522,14 +1527,14 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 		search = searchFolded;
 	}
 
-	auto position = params[arg_startpos];
+	const cell position = params[arg_startpos];
 	
 	if (position < 0 || position > sourceLength)
 	{
 		return -1;
 	}
 
-	auto find = strstr(source + position, search);
+	const char* find = strstr(source + position, search);
 
 	if (!find)
 	{
@@ -1544,14 +1549,14 @@ static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
 	int vargPos = static_cast<int>(params[4]);
 
 	/** get the parent parameter array */
-	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
+	const AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
 	cell *local_params = (cell *)(
-		(char *)amx->base + (cell)hdr->dat +
+		(char *)amx->base + static_cast<cell>(hdr->dat) +
 		(cell)amx->frm + (2 * sizeof(cell))
 		);
 
-	cell max = local_params[0] / sizeof(cell);
-	if (vargPos > (int)max + 1)
+	const cell max = local_params[0] / sizeof(cell);
+	if (vargPos > static_cast<int>(max) + 1)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid vararg parameter passed: %d", vargPos);
 		return 0;
@@ -1560,8 +1565,8 @@ static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
 	/**
 	 * check for bounds clipping
 	 */
-	cell addr_start = params[1];
-	cell addr_end = addr_start + params[2];
+	const cell addr_start = params[1];
+	const cell addr_end = addr_start + params[2];
 	bool copy = false;
 	for (int i = vargPos; i <= max; i++)
 	{
@@ -1575,9 +1580,9 @@ static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
 	}
 
 	/* get destination info */
-	cell *fmt = get_amxaddr(amx, params[3]);
+	const cell *fmt = get_amxaddr(amx, params[3]);
 	cell *realdest = get_amxaddr(amx, params[1]);
-	size_t maxlen = static_cast<size_t>(params[2]);
+	const size_t maxlen = static_cast<size_t>(params[2]);
 	cell *dest = realdest;
 
 	/* if this is necessary... */
@@ -1586,7 +1591,7 @@ static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
 		dest = cpbuf;
 
 	/* perform format */
-	size_t total = atcprintf(dest, maxlen, fmt, amx, local_params, &vargPos);
+	const size_t total = atcprintf(dest, maxlen, fmt, amx, local_params, &vargPos);
 
 	/* copy back */
 	if (copy)
@@ -1606,7 +1611,7 @@ static cell AMX_NATIVE_CALL fmt(AMX *amx, cell *params)
 	int length;
 	const char *string = format_amxstring(amx, params, 1, length);
 
-	size_t num_params = *params / sizeof(cell);
+	const size_t num_params = *params / sizeof(cell);
 
 	set_amxstring_utf8_char(amx, params[num_params + 1], string, length, MAX_FMT_LENGTH - 1);
 
@@ -1616,10 +1621,10 @@ static cell AMX_NATIVE_CALL fmt(AMX *amx, cell *params)
 // native mb_strtotitle(source[], maxlength = 0);
 static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_string, arg_maxlength };
+	enum args : std::uint8_t { arg_count, arg_string, arg_maxlength };
 
-	auto sourceLength = 0;
-	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+	int sourceLength = 0;
+	const char* source = get_amxstring(amx, params[arg_string], 0, sourceLength);
 
 	auto outputMaxLength = params[arg_maxlength];
 
@@ -1628,8 +1633,9 @@ static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
 		outputMaxLength = sourceLength;
 	}
 
-	auto output = get_amxbuffer(1);
-	auto outputLength = utf8totitle(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	char* output = get_amxbuffer(1);
+	const size_t outputLength = utf8totitle(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr,
+	                                        TRUE);
 
 	output[outputLength] = '\0';
 
@@ -1639,13 +1645,13 @@ static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
 // native bool:is_string_category(const input[], input_size, flags, &output_size = 0);
 static cell AMX_NATIVE_CALL is_string_category(AMX *amx, cell *params)
 {
-	enum args { arg_count, arg_input, arg_inputsize, arg_flags, arg_outputsize };
+	enum args : std::uint8_t { arg_count, arg_input, arg_inputsize, arg_flags, arg_outputsize };
 
-	auto inputLength = 0;
-	auto input = get_amxstring(amx, params[arg_input], 0, inputLength);
+	int inputLength = 0;
+	const char* input = get_amxstring(amx, params[arg_input], 0, inputLength);
 
-	auto inputMaxLength = ke::Min(params[arg_inputsize], inputLength);
-	auto outputSize = get_amxaddr(amx, params[arg_outputsize]);
+	int inputMaxLength = ke::Min(params[arg_inputsize], inputLength);
+	cell* outputSize = get_amxaddr(amx, params[arg_outputsize]);
 
 	// User wants to check only one character whatever its size.
 	if (inputMaxLength <= 1)

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -17,14 +19,14 @@
 // native any:get_ent_data(entity, const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Integer);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Integer)
 
 	return PvData::GetInt(entity, data, element);
 }
@@ -32,14 +34,14 @@ static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 // native set_ent_data(entity, const class[], const member[], any:value, element = 0);
 static cell AMX_NATIVE_CALL set_ent_data(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::Integer);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::Integer)
 
 	if (data.fieldType == FieldType::FIELD_STRUCTURE || data.fieldType == FieldType::FIELD_CLASS)
 	{
@@ -56,14 +58,14 @@ static cell AMX_NATIVE_CALL set_ent_data(AMX *amx, cell *params)
 // native Float:get_ent_data_float(entity, const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_ent_data_float(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Float);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Float)
 
 	return PvData::GetFloat(entity, data, element);
 }
@@ -71,14 +73,14 @@ static cell AMX_NATIVE_CALL get_ent_data_float(AMX *amx, cell *params)
 // native set_ent_data_float(entity, const classname[], const member[], Float:value, element = 0);
 static cell AMX_NATIVE_CALL set_ent_data_float(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::Float);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::Float)
 
 	PvData::SetFloat(entity, data, amx_ctof(params[4]), element);
 
@@ -89,14 +91,14 @@ static cell AMX_NATIVE_CALL set_ent_data_float(AMX *amx, cell *params)
 // native get_ent_data_vector(entity, const class[], const member[], Float:value[3], element = 0);
 static cell AMX_NATIVE_CALL get_ent_data_vector(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::Vector);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::Vector)
 
 	PvData::GetVector(entity, data, MF_GetAmxAddr(amx, params[4]), element);
 
@@ -106,14 +108,14 @@ static cell AMX_NATIVE_CALL get_ent_data_vector(AMX *amx, cell *params)
 // native set_ent_data_vector(entity, const class[], const member[], Float:value[3], element = 0);
 static cell AMX_NATIVE_CALL set_ent_data_vector(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::Vector);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::Vector)
 
 	PvData::SetVector(entity, data, MF_GetAmxAddr(amx, params[4]), element);
 
@@ -124,14 +126,14 @@ static cell AMX_NATIVE_CALL set_ent_data_vector(AMX *amx, cell *params)
 // native get_ent_data_entity(entity, const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_ent_data_entity(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[4];
-	CHECK_DATA(data, element, BaseFieldType::Entity);
+	const int element = params[4];
+	CHECK_DATA(data, element, BaseFieldType::Entity)
 
 	return PvData::GetEntity(entity, data, element);
 }
@@ -139,21 +141,21 @@ static cell AMX_NATIVE_CALL get_ent_data_entity(AMX *amx, cell *params)
 // native set_ent_data_entity(entity, const class[], const member[], value, element = 0);
 static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	int value = params[4];
+	const int entity = params[1];
+	const int value = params[4];
 
-	CHECK_ENTITY_PDATA(entity);
+	CHECK_ENTITY_PDATA(entity)
 
 	if (value != -1)
 	{
-		CHECK_ENTITY(value);
+		CHECK_ENTITY(value)
 	}
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::Entity);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::Entity)
 
 	PvData::SetEntity(entity, data, value, element);
 
@@ -164,19 +166,19 @@ static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 // native get_ent_data_string(entity, const class[], const member[], value[], maxlen, element = 0);
 static cell AMX_NATIVE_CALL get_ent_data_string(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[6];
-	CHECK_DATA(data, element, BaseFieldType::String);
+	const int element = params[6];
+	CHECK_DATA(data, element, BaseFieldType::String)
 
-	auto buffer = params[4];
+	const auto buffer = params[4];
 	auto maxlen = params[5];
 
-	auto string = PvData::GetString(entity, data, element);
+	const auto string = PvData::GetString(entity, data, element);
 
 	if (data.fieldSize)
 	{
@@ -189,14 +191,14 @@ static cell AMX_NATIVE_CALL get_ent_data_string(AMX *amx, cell *params)
 // native set_ent_data_string(entity, const class[], const member[], const value[], element = 0);
 static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 {
-	int entity = params[1];
-	CHECK_ENTITY_PDATA(entity);
+	const int entity = params[1];
+	CHECK_ENTITY_PDATA(entity)
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig)
 
-	int element = params[5];
-	CHECK_DATA(data, element, BaseFieldType::String);
+	const int element = params[5];
+	CHECK_DATA(data, element, BaseFieldType::String)
 
 	int length;
 	const char *value = MF_GetAmxString(amx, params[4], 0, &length);
@@ -209,7 +211,7 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 {
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(1, data, CommonConfig)
 
 	return data.fieldSize;
 }
@@ -218,7 +220,7 @@ static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL find_ent_data_info(AMX *amx, cell *params)
 {
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, CommonConfig);
+	GET_TYPE_DESCRIPTION(1, data, CommonConfig)
 
 	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
 	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);

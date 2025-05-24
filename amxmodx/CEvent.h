@@ -12,8 +12,8 @@
 
 #include "natives_handles.h"
 
-#define MAX_AMX_REG_MSG MAX_REG_MSGS + 16
- 
+#define MAX_AMX_REG_MSG (MAX_REG_MSGS + 16)
+
 enum
 {
 	CS_DEATHMSG = MAX_REG_MSGS,
@@ -87,8 +87,8 @@ public:
 		ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags);
 		~ClEvent();
 
-		inline CPluginMngr::CPlugin* getPlugin();
-		inline int getFunction();
+		inline CPluginMngr::CPlugin* getPlugin() const;
+		inline int getFunction() const;
 		void registerFilter(char* filter);			// add a condition
 		void setForwardState(ForwardState value);
 	};
@@ -140,7 +140,7 @@ public:
 	float getArgFloat(int a) const;
 	void clearEvents();
 	static int getEventId(const char* msg);
-	int getCurrentMsgType();
+	int getCurrentMsgType() const;
 };
 
 struct EventHook

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -61,7 +63,7 @@ uint32_t FireModes[6] = {
 	TSE_FM_FREEFULL
 };
 
-uint32_t GetFiremodeByMask(uint32_t mask)
+int GetFiremodeByMask(uint32_t mask)
 {
 	for (int i = 0; i < 6; i++)
 		if (mask == FireModes[i])

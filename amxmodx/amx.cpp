@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn Abstract Machine (for the Pawn language)
  *
  *  Copyright (c) ITB CompuPhase, 1997-2005
@@ -128,7 +130,7 @@
   #undef AMX_UTF8XXX            /* no UTF-8 support in ANSI/ASCII-only version */
 #endif
 
-typedef enum {
+typedef enum : std::uint8_t {
   OP_NONE,              /* invalid opcode */
   OP_LOAD_PRI,
   OP_LOAD_ALT,
@@ -283,7 +285,7 @@ typedef enum {
 #define NUMENTRIES(hdr,field,nextfield) \
                         (unsigned)(((hdr)->nextfield - (hdr)->field) / (hdr)->defsize)
 #define GETENTRY(hdr,table,index) \
-                        (AMX_FUNCSTUB *)((unsigned char*)(hdr) + (unsigned)(hdr)->table + (unsigned)index*(hdr)->defsize)
+                        (AMX_FUNCSTUB *)((unsigned char*)(hdr) + (unsigned)(hdr)->table + (unsigned)(index)*(hdr)->defsize)
 #define GETENTRYNAME(hdr,entry) \
                         ( USENAMETABLE(hdr) \
                            ? (char *)((unsigned char*)(hdr) + (unsigned)((AMX_FUNCSTUBNT*)(entry))->nameofs) \
@@ -325,11 +327,10 @@ typedef enum {
   static void swap32(uint32_t *v)
   {
     unsigned char *s = (unsigned char *)v;
-    unsigned char t;
 
     assert(sizeof(*v)==4);
     /* swap outer two bytes */
-    t=s[0];
+    unsigned char t = s[0];
     s[0]=s[3];
     s[3]=t;
     /* swap inner two bytes */
@@ -412,12 +413,10 @@ uint64_t * AMXAPI amx_Align64(uint64_t *v)
 #if defined AMX_FLAGS
 int AMXAPI amx_Flags(AMX *amx,uint16_t *flags)
 {
-  AMX_HEADER *hdr;
-
-  *flags=0;
+	*flags=0;
   if (amx== nullptr)
     return AMX_ERR_FORMAT;
-  hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   if (hdr->magic!=AMX_MAGIC)
     return AMX_ERR_FORMAT;
   if (hdr->file_version>CUR_FILE_VERSION || hdr->amx_version<MIN_FILE_VERSION)
@@ -430,11 +429,10 @@ int AMXAPI amx_Flags(AMX *amx,uint16_t *flags)
 #if defined AMX_INIT
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
 {
-  AMX_HEADER *hdr;
-  AMX_FUNCSTUB *func;
+	AMX_FUNCSTUB *func;
   AMX_NATIVE f;
 
-  hdr=(AMX_HEADER *)amx->base;
+  AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr->natives<=hdr->libraries);
 #if defined AMX_NATIVETABLE
   if (index<0) {
@@ -509,7 +507,6 @@ static int amx_BrowseRelocate(AMX *amx)
 {
   AMX_HEADER *hdr;
   unsigned char *code;
-  cell cip;
   long codesize;
   OPCODE op;
   BROWSEHOOK hook = nullptr;
@@ -549,7 +546,7 @@ static int amx_BrowseRelocate(AMX *amx)
      */
     if ((amx->flags & AMX_FLAG_JITC)==0 && sizeof(AMX_NATIVE)<=sizeof(cell))
       amx->sysreq_d=opcode_list[OP_SYSREQ_D];
-	amx->userdata[UD_OPCODELIST] = (void *)opcode_list;
+	amx->userdata[UD_OPCODELIST] = static_cast<void*>(opcode_list);
   #else
     /* ANSI C
      * to use direct system requests, a function pointer must fit in a cell;
@@ -561,10 +558,10 @@ static int amx_BrowseRelocate(AMX *amx)
   #endif
 
   /* start browsing code */
-  for (cip=0; cip<codesize; ) {
-    op=(OPCODE) *(ucell *)(code+(int)cip);
+  for (cell cip = 0; cip<codesize; ) {
+    op=static_cast<OPCODE>(*(ucell*)(code + (int)cip));
     assert(op>0 && op<OP_NUM_OPCODES);
-    if ((int)op>=256) {
+    if (static_cast<int>(op)>=256) {
       amx->flags &= ~AMX_FLAG_BROWSE;
       return AMX_ERR_INVINSTR;
     } /* if */
@@ -757,9 +754,8 @@ static int amx_BrowseRelocate(AMX *amx)
       break;
     case OP_CASETBL: {
       cell num;
-      int i;
       DBGPARAM(num);    /* number of records follows the opcode */
-      for (i=0; i<=num; i++) {
+      for (int i = 0; i<=num; i++) {
         RELOC_ABS(code, cip+2*i*sizeof(cell));
         #if defined JIT
           reloc_count++;
@@ -788,46 +784,44 @@ static int amx_BrowseRelocate(AMX *amx)
 #if AMX_COMPACTMARGIN > 2
 static void expand(unsigned char *code, long codesize, long memsize)
 {
-  ucell c;
-  struct {
+	struct {
     long memloc;
     ucell c;
   } spare[AMX_COMPACTMARGIN];
   int sh=0,st=0,sc=0;
-  int shift;
 
-  /* for in-place expansion, move from the end backward */
+	/* for in-place expansion, move from the end backward */
   assert(memsize % sizeof(cell) == 0);
   while (codesize>0) {
-    c=0;
-    shift=0;
+    ucell c = 0;
+    int shift = 0;
     do {
       codesize--;
       /* no input byte should be shifted out completely */
       assert(shift<static_cast<int>(8*sizeof(cell)));
       /* we work from the end of a sequence backwards; the final code in
        * a sequence may not have the continuation bit set */
-      assert(shift>0 || (code[(size_t)codesize] & 0x80)==0);
-      c|=(ucell)(code[(size_t)codesize] & 0x7f) << shift;
+      assert(shift>0 || (code[static_cast<size_t>(codesize)] & 0x80)==0);
+      c|=static_cast<ucell>(code[static_cast<size_t>(codesize)] & 0x7f) << shift;
       shift+=7;
-    } while (codesize>0 && (code[(size_t)codesize-1] & 0x80)!=0);
+    } while (codesize>0 && (code[static_cast<size_t>(codesize)-1] & 0x80)!=0);
     /* sign expand */
-    if ((code[(size_t)codesize] & 0x40)!=0) {
-      while (shift < (int)(8*sizeof(cell))) {
-        c|=(ucell)0xff << shift;
+    if ((code[static_cast<size_t>(codesize)] & 0x40)!=0) {
+      while (shift < static_cast<int>(8 * sizeof(cell))) {
+        c|=static_cast<ucell>(0xff) << shift;
         shift+=8;
       } /* while */
     } /* if */
     /* store */
     while (sc && (spare[sh].memloc>codesize)) {
-      *(ucell *)(code+(int)spare[sh].memloc)=spare[sh].c;
+      *(ucell *)(code+static_cast<int>(spare[sh].memloc))=spare[sh].c;
       sh=(sh+1)%AMX_COMPACTMARGIN;
       sc--;
     } /* while */
     memsize -= sizeof(cell);
     assert(memsize>=0);
     if ((memsize>codesize)||((memsize==codesize)&&(memsize==0))) {
-      *(ucell *)(code+(size_t)memsize)=c;
+      *(ucell *)(code+static_cast<size_t>(memsize))=c;
     } else {
       assert(sc<AMX_COMPACTMARGIN);
       spare[st].memloc=memsize;
@@ -843,13 +837,12 @@ static void expand(unsigned char *code, long codesize, long memsize)
 
 int AMXAPI amx_Init(AMX *amx, void *program)
 {
-  AMX_HEADER *hdr;
-  BROWSEHOOK hook = nullptr;
+	BROWSEHOOK hook = nullptr;
 
   if ((amx->flags & AMX_FLAG_RELOC)!=0)
     return AMX_ERR_INIT;  /* already initialized (may not do so twice) */
 
-  hdr=(AMX_HEADER *)program;
+  AMX_HEADER* hdr = static_cast<AMX_HEADER*>(program);
   /* the header is in Little Endian, on a Big Endian machine, swap all
    * multi-byte words
    */
@@ -862,12 +855,11 @@ int AMXAPI amx_Init(AMX *amx, void *program)
   if (hdr->defsize!=sizeof(AMX_FUNCSTUB) && hdr->defsize!=sizeof(AMX_FUNCSTUBNT))
     return AMX_ERR_FORMAT;
   if (USENAMETABLE(hdr)) {
-    uint16_t *namelength;
-    /* when there is a separate name table, check the maximum name length
+	  /* when there is a separate name table, check the maximum name length
      * in that table
      */
     amx_Align32((uint32_t*)&hdr->nametable);
-    namelength=(uint16_t*)((unsigned char*)program + (unsigned)hdr->nametable);
+    uint16_t* namelength = (uint16_t*)(static_cast<unsigned char*>(program) + static_cast<unsigned>(hdr->nametable));
     amx_Align16(namelength);
     if (*namelength>sNAMEMAX)
       return AMX_ERR_FORMAT;
@@ -878,14 +870,14 @@ int AMXAPI amx_Init(AMX *amx, void *program)
   assert((hdr->flags & AMX_FLAG_COMPACT)!=0 || hdr->hea == hdr->size);
   if ((hdr->flags & AMX_FLAG_COMPACT)!=0) {
     #if AMX_COMPACTMARGIN > 2
-      expand((unsigned char *)program+(int)hdr->cod,
+      expand(static_cast<unsigned char*>(program)+(int)hdr->cod,
              hdr->size - hdr->cod, hdr->hea - hdr->cod);
     #else
       return AMX_ERR_FORMAT;
     #endif
   } /* if */
 
-  amx->base=(unsigned char *)program;
+  amx->base=static_cast<unsigned char*>(program);
 
   /* Set a zero cell at the top of the stack, which functions
    * as a sentinel for strings.
@@ -951,7 +943,6 @@ int AMXAPI amx_Init(AMX *amx, void *program)
 int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
 {
   int res;
-  AMX_HEADER *hdr;
 
   if ((amx->flags & AMX_FLAG_JITC)==0)
   {
@@ -972,7 +963,7 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
 
   /* copy the prefix */
   memcpy(native_code, amx->base, ((AMX_HEADER *)(amx->base))->cod);
-  hdr = (AMX_HEADER *)native_code;
+  const AMX_HEADER* hdr = static_cast<AMX_HEADER*>(native_code);
 
   
 
@@ -985,10 +976,10 @@ int AMXAPI amx_InitJIT(AMX *amx, void *reloc_table, void *native_code)
      * used for destinations within the generated code and absoulute
      * addresses for jumps into the runtime, which is fixed in memory.
      */
-    amx->base = (unsigned char*) native_code;
+    amx->base = static_cast<unsigned char*>(native_code);
     amx->cip = hdr->cip;
 	/* also put a sentinel for strings at the top the stack */
-	*(cell *)((char*)native_code + hdr->dat + amx->stp - sizeof(cell)) = 0;
+	*(cell *)(static_cast<char*>(native_code) + hdr->dat + amx->stp - sizeof(cell)) = 0;
 	/* update the required memory size (the previous value was a
 	 * conservative estimate, now we know the exact size)
 	 */
@@ -1063,16 +1054,13 @@ int AMXAPI amx_Cleanup(AMX *amx)
 #if defined AMX_CLONE
 int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data)
 {
-  AMX_HEADER *hdr;
-  unsigned char _FAR *dataSource;
-
-  if (amxSource== nullptr)
+	if (amxSource== nullptr)
     return AMX_ERR_FORMAT;
   if (amxClone== nullptr)
     return AMX_ERR_PARAMS;
   if ((amxSource->flags & AMX_FLAG_RELOC)==0)
     return AMX_ERR_INIT;
-  hdr=(AMX_HEADER *)amxSource->base;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amxSource->base;
   if (hdr->magic!=AMX_MAGIC)
     return AMX_ERR_FORMAT;
   if (hdr->file_version>CUR_FILE_VERSION || hdr->amx_version<MIN_FILE_VERSION)
@@ -1092,9 +1080,9 @@ int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data)
 
   /* copy the data segment; the stack and the heap can be left uninitialized */
   assert(data!= nullptr);
-  amxClone->data=(unsigned char _FAR *)data;
-  dataSource=(amxSource->data!= nullptr) ? amxSource->data : amxSource->base+(int)hdr->dat;
-  memcpy(amxClone->data,dataSource,(size_t)(hdr->hea-hdr->dat));
+  amxClone->data=static_cast<unsigned char*>(data);
+	const unsigned char* dataSource = (amxSource->data != nullptr) ? amxSource->data : amxSource->base + static_cast<int>(hdr->dat);
+  memcpy(amxClone->data,dataSource,static_cast<size_t>(hdr->hea - hdr->dat));
 
   /* Set a zero cell at the top of the stack, which functions
    * as a sentinel for strings.
@@ -1108,11 +1096,9 @@ int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data)
 #if defined AMX_MEMINFO
 int AMXAPI amx_MemInfo(AMX *amx, long *codesize, long *datasize, long *stackheap)
 {
-  AMX_HEADER *hdr;
-
-  if (amx== nullptr)
+	if (amx== nullptr)
     return AMX_ERR_FORMAT;
-  hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   if (hdr->magic!=AMX_MAGIC)
     return AMX_ERR_FORMAT;
   if (hdr->file_version>CUR_FILE_VERSION || hdr->amx_version<MIN_FILE_VERSION)
@@ -1132,11 +1118,11 @@ int AMXAPI amx_MemInfo(AMX *amx, long *codesize, long *datasize, long *stackheap
 #if defined AMX_NAMELENGTH
 int AMXAPI amx_NameLength(AMX *amx, int *length)
 {
-  AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   if (USENAMETABLE(hdr)) {
-    uint16_t *namelength=(uint16_t*)(amx->base + (unsigned)hdr->nametable);
+	  const uint16_t *namelength=(uint16_t*)(amx->base + static_cast<unsigned>(hdr->nametable));
     *length=*namelength;
     assert(hdr->file_version>=7); /* name table exists only for file version 7+ */
   } else {
@@ -1149,7 +1135,7 @@ int AMXAPI amx_NameLength(AMX *amx, int *length)
 #if defined AMX_XXXNATIVES
 int AMXAPI amx_NumNatives(AMX *amx, int *number)
 {
-  AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
@@ -1159,31 +1145,28 @@ int AMXAPI amx_NumNatives(AMX *amx, int *number)
 
 int AMXAPI amx_GetNative(AMX *amx, int index, char *funcname)
 {
-  AMX_HEADER *hdr;
-  AMX_FUNCSTUB *func;
-
-  hdr=(AMX_HEADER *)amx->base;
+	AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
-  if (index>=(cell)NUMENTRIES(hdr,natives,libraries))
+  if (index>=static_cast<cell>(NUMENTRIES(hdr, natives, libraries)))
     return AMX_ERR_INDEX;
 
-  func=GETENTRY(hdr,natives,index);
+  AMX_FUNCSTUB* func = GETENTRY(hdr, natives, index);
   strcpy(funcname,GETENTRYNAME(hdr,func));
   return AMX_ERR_NONE;
 }
 
 int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index)
 {
-  int last,mid;
+  int last;
   char pname[sNAMEMAX+1];
 
   amx_NumNatives(amx, &last);
   last--;       /* last valid index is 1 less than the number of functions */
 
   /* normal search */
-  for (mid=0; mid<=last; mid++)
+  for (int mid = 0; mid<=last; mid++)
   {
     amx_GetNative(amx, mid, pname);
     if (strcmp(pname, name)==0)
@@ -1200,7 +1183,7 @@ int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index)
 #if defined AMX_XXXPUBLICS
 int AMXAPI amx_NumPublics(AMX *amx, int *number)
 {
-  AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->publics<=hdr->natives);
@@ -1210,34 +1193,31 @@ int AMXAPI amx_NumPublics(AMX *amx, int *number)
 
 int AMXAPI amx_GetPublic(AMX *amx, int index, char *funcname)
 {
-  AMX_HEADER *hdr;
-  AMX_FUNCSTUB *func;
-
-  hdr=(AMX_HEADER *)amx->base;
+	AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->publics<=hdr->natives);
-  if (index>=(cell)NUMENTRIES(hdr,publics,natives))
+  if (index>=static_cast<cell>(NUMENTRIES(hdr, publics, natives)))
     return AMX_ERR_INDEX;
 
-  func=GETENTRY(hdr,publics,index);
+  AMX_FUNCSTUB* func = GETENTRY(hdr, publics, index);
   strcpy(funcname,GETENTRYNAME(hdr,func));
   return AMX_ERR_NONE;
 }
 
 int AMXAPI amx_FindPublic(AMX *amx, const char *name, int *index)
 {
-  int first,last,mid,result;
+  int last;
   char pname[sNAMEMAX+1];
 
   amx_NumPublics(amx, &last);
   last--;       /* last valid index is 1 less than the number of functions */
-  first=0;
+  int first = 0;
   /* binary search */
   while (first<=last) {
-    mid=(first+last)/2;
+	  const int mid = (first + last) / 2;
     amx_GetPublic(amx, mid, pname);
-    result=strcmp(pname,name);
+	  const int result = strcmp(pname, name);
     if (result>0) {
       last=mid-1;
     } else if (result<0) {
@@ -1256,7 +1236,7 @@ int AMXAPI amx_FindPublic(AMX *amx, const char *name, int *index)
 #if defined AMX_XXXPUBVARS
 int AMXAPI amx_NumPubVars(AMX *amx, int *number)
 {
-  AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->pubvars<=hdr->tags);
@@ -1266,17 +1246,14 @@ int AMXAPI amx_NumPubVars(AMX *amx, int *number)
 
 int AMXAPI amx_GetPubVar(AMX *amx, int index, char *varname, cell *amx_addr)
 {
-  AMX_HEADER *hdr;
-  AMX_FUNCSTUB *var;
-
-  hdr=(AMX_HEADER *)amx->base;
+	AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->pubvars<=hdr->tags);
-  if (index>=(cell)NUMENTRIES(hdr,pubvars,tags))
+  if (index>=static_cast<cell>(NUMENTRIES(hdr, pubvars, tags)))
     return AMX_ERR_INDEX;
 
-  var=GETENTRY(hdr,pubvars,index);
+  AMX_FUNCSTUB* var = GETENTRY(hdr, pubvars, index);
   strcpy(varname,GETENTRYNAME(hdr,var));
   *amx_addr=var->address;
   return AMX_ERR_NONE;
@@ -1284,18 +1261,18 @@ int AMXAPI amx_GetPubVar(AMX *amx, int index, char *varname, cell *amx_addr)
 
 int AMXAPI amx_FindPubVar(AMX *amx, const char *varname, cell *amx_addr)
 {
-  int first,last,mid,result;
+  int last;
   char pname[sNAMEMAX+1];
   cell paddr;
 
   amx_NumPubVars(amx, &last);
   last--;       /* last valid index is 1 less than the number of functions */
-  first=0;
+  int first = 0;
   /* binary search */
   while (first<=last) {
-    mid=(first+last)/2;
+	  const int mid = (first + last) / 2;
     amx_GetPubVar(amx, mid, pname, &paddr);
-    result=strcmp(pname,varname);
+	  const int result = strcmp(pname, varname);
     if (result>0) {
       last=mid-1;
     } else if (result<0) {
@@ -1314,7 +1291,7 @@ int AMXAPI amx_FindPubVar(AMX *amx, const char *varname, cell *amx_addr)
 #if defined AMX_XXXTAGS
 int AMXAPI amx_NumTags(AMX *amx, int *number)
 {
-  AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
+	const AMX_HEADER *hdr=(AMX_HEADER *)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   if (hdr->file_version<5) {    /* the tagname table appeared in file format 5 */
@@ -1333,10 +1310,7 @@ int AMXAPI amx_NumTags(AMX *amx, int *number)
 
 int AMXAPI amx_GetTag(AMX *amx, int index, char *tagname, cell *tag_id)
 {
-  AMX_HEADER *hdr;
-  AMX_FUNCSTUB *tag;
-
-  hdr=(AMX_HEADER *)amx->base;
+	AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   if (hdr->file_version<5) {    /* the tagname table appeared in file format 5 */
@@ -1347,15 +1321,15 @@ int AMXAPI amx_GetTag(AMX *amx, int index, char *tagname, cell *tag_id)
 
   if (hdr->file_version<7) {
     assert(hdr->tags<=hdr->cod);
-    if (index>=(cell)NUMENTRIES(hdr,tags,cod))
+    if (index>=static_cast<cell>(NUMENTRIES(hdr, tags, cod)))
       return AMX_ERR_INDEX;
   } else {
     assert(hdr->tags<=hdr->nametable);
-    if (index>=(cell)NUMENTRIES(hdr,tags,nametable))
+    if (index>=static_cast<cell>(NUMENTRIES(hdr, tags, nametable)))
       return AMX_ERR_INDEX;
   } /* if */
 
-  tag=GETENTRY(hdr,tags,index);
+  AMX_FUNCSTUB* tag = GETENTRY(hdr, tags, index);
   strcpy(tagname,GETENTRYNAME(hdr,tag));
   *tag_id=tag->address;
 
@@ -1414,33 +1388,33 @@ int AMXAPI amx_SetUserData(AMX *amx, long tag, void *ptr)
 #endif /* AMX_XXXUSERDATA */
 
 #if defined AMX_REGISTER || defined AMX_EXEC || defined AMX_INIT
-static AMX_NATIVE findfunction(const char *name, const AMX_NATIVE_INFO *list, int number)
+static AMX_NATIVE findfunction(const char* name, const AMX_NATIVE_INFO* list, int number)
 {
-  int i;
-
-  assert(list!= nullptr);
-  for (i=0; list[i].name!= nullptr && (i<number || number==-1); i++)
-    if (strcmp(name,list[i].name)==0)
-      return list[i].func;
-  return nullptr;
+    assert(list != nullptr);
+    for (int i = 0; (i < number || number == -1) && list[i].name != nullptr; i++)
+    {
+        if (strcmp(name, list[i].name) == 0)
+        {
+            return list[i].func;
+        }
+    }
+    return nullptr;
 }
 
 const char *no_function;
 
 int AMXAPI amx_CheckNatives(AMX *amx, AMX_NATIVE_FILTER nf)
 {
-  AMX_FUNCSTUB *func;
-  AMX_HEADER *hdr;
-  int i,numnatives,res=0;
+	int res=0;
 
-  hdr=(AMX_HEADER *)amx->base;
+  AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
-  numnatives=NUMENTRIES(hdr,natives,libraries);
+	const int numnatives = NUMENTRIES(hdr, natives, libraries);
 
-  func=GETENTRY(hdr,natives,0);
-  for (i=0; i<numnatives; i++) {
+  AMX_FUNCSTUB* func = GETENTRY(hdr, natives, 0);
+  for (int i = 0; i<numnatives; i++) {
     if (func->address==0) {
       /* this function is not yet located */
       res=nf(amx,i);
@@ -1457,49 +1431,42 @@ int AMXAPI amx_CheckNatives(AMX *amx, AMX_NATIVE_FILTER nf)
 
 int AMXAPI amx_RegisterToAny(AMX *amx, AMX_NATIVE f)
 {
-  AMX_FUNCSTUB *func;
-  AMX_HEADER *hdr;
-  int i,numnatives,err;
-
-  hdr=(AMX_HEADER *)amx->base;
+	AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
-  numnatives=NUMENTRIES(hdr,natives,libraries);
+	const int numnatives = NUMENTRIES(hdr, natives, libraries);
 
-  err=AMX_ERR_NONE;
-  func=GETENTRY(hdr,natives,0);
-  for (i=0; i<numnatives; i++) {
+	constexpr int err = AMX_ERR_NONE;
+  AMX_FUNCSTUB* func = GETENTRY(hdr, natives, 0);
+  for (int i = 0; i<numnatives; i++) {
     if (func->address==0) {
       /* this function is not yet located */
       func->address=(ucell)f;
     } /* if */
     func=(AMX_FUNCSTUB*)((unsigned char*)func+hdr->defsize);
   } /* for */
-  if (err==AMX_ERR_NONE)
+  if constexpr (err==AMX_ERR_NONE)
     amx->flags|=AMX_FLAG_NTVREG;
   return err;
 }
 
 int AMXAPI amx_Reregister(AMX *amx, const AMX_NATIVE_INFO *list, int number)
 {
-  AMX_FUNCSTUB *func;
-  AMX_HEADER *hdr;
-  int i,numnatives,count=0;
-  AMX_NATIVE funcptr;
+	int count=0;
 
-  hdr=(AMX_HEADER *)amx->base;
+  AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
-  numnatives=NUMENTRIES(hdr,natives,libraries);
+	const int numnatives = NUMENTRIES(hdr, natives, libraries);
 
   count=0;
-  func=GETENTRY(hdr,natives,0);
-  for (i=0; i<numnatives; i++) {
+  AMX_FUNCSTUB* func = GETENTRY(hdr, natives, 0);
+  for (int i = 0; i<numnatives; i++) {
     if (func->address!=0) {
       /* this function is located */
-      funcptr=(list!= nullptr) ? findfunction(GETENTRYNAME(hdr,func),list,number) : nullptr;
+      AMX_NATIVE funcptr = (list != nullptr) ? findfunction(GETENTRYNAME(hdr, func), list, number) : nullptr;
       if (funcptr!= nullptr)
       {
         func->address=(ucell)funcptr;
@@ -1513,23 +1480,18 @@ int AMXAPI amx_Reregister(AMX *amx, const AMX_NATIVE_INFO *list, int number)
 
 int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *list, int number)
 {
-  AMX_FUNCSTUB *func;
-  AMX_HEADER *hdr;
-  int i,numnatives,err;
-  AMX_NATIVE funcptr;
-
-  hdr=(AMX_HEADER *)amx->base;
+	AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
   assert(hdr->natives<=hdr->libraries);
-  numnatives=NUMENTRIES(hdr,natives,libraries);
+	const int numnatives = NUMENTRIES(hdr, natives, libraries);
 
-  err=AMX_ERR_NONE;
-  func=GETENTRY(hdr,natives,0);
-  for (i=0; i<numnatives; i++) {
+  int err = AMX_ERR_NONE;
+  AMX_FUNCSTUB* func = GETENTRY(hdr, natives, 0);
+  for (int i = 0; i<numnatives; i++) {
     if (func->address==0) {
       /* this function is not yet located */
-      funcptr=(list!= nullptr) ? findfunction(GETENTRYNAME(hdr,func),list,number) : nullptr;
+      AMX_NATIVE funcptr = (list != nullptr) ? findfunction(GETENTRYNAME(hdr, func), list, number) : nullptr;
       if (funcptr!= nullptr)
       {
         func->address=(ucell)funcptr;
@@ -1562,13 +1524,10 @@ AMX_NATIVE_INFO * AMXAPI amx_NativeInfo(const char *name, AMX_NATIVE func)
 
 int AMXAPI amx_Push(AMX *amx, cell value)
 {
-  AMX_HEADER *hdr;
-  unsigned char *data;
-
-  if (amx->hea+STKMARGIN>amx->stk)
+	if (amx->hea+STKMARGIN>amx->stk)
     return AMX_ERR_STACKERR;
-  hdr=(AMX_HEADER *)amx->base;
-  data=(amx->data!= nullptr) ? amx->data : amx->base+(int)hdr->dat;
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
+  unsigned char* data = (amx->data != nullptr) ? amx->data : amx->base + static_cast<int>(hdr->dat);
   amx->stk-=sizeof(cell);
   amx->paramcount+=1;
   *(cell *)(data+(int)amx->stk)=value;
@@ -1578,13 +1537,12 @@ int AMXAPI amx_Push(AMX *amx, cell value)
 int AMXAPI amx_PushArray(AMX *amx, cell *amx_addr, cell **phys_addr, const cell array[], int numcells)
 {
   cell *paddr;
-  int err;
 
   assert(amx!= nullptr);
   assert(amx_addr!= nullptr);
   assert(array!= nullptr);
 
-  err=amx_Allot(amx,numcells,amx_addr,&paddr);
+  int err = amx_Allot(amx, numcells, amx_addr, &paddr);
   if (err==AMX_ERR_NONE) {
     if (phys_addr!= nullptr)
       *phys_addr=paddr;
@@ -1620,10 +1578,10 @@ int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char
   return err;
 }
 
-#define GETPARAM(v)     ( v=*(cell *)cip++ )
+#define GETPARAM(v)     ( (v)=*(cell *)cip++ )
 #define SKIPPARAM(n)    ( cip=(cell *)cip+(n) )
-#define PUSH(v)         ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=v )
-#define POP(v)          ( v=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
+#define PUSH(v)         ( stk-=sizeof(cell), *(cell *)(data+(int)stk)=(v) )
+#define POP(v)          ( (v)=*(cell *)(data+(int)stk), stk+=sizeof(cell) )
 #define ABORT(amx,v)    { (amx)->stk=reset_stk; \
 						  (amx)->hea=reset_hea; \
 						  (amx)->cip=(cell)cip; \
@@ -2569,7 +2527,7 @@ static const void * const amx_opcodelist[] = {
     offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
     fnum = amx_ctof(offs);
     if (!offs2)
-       fnum = floor(fnum + 0.5);
+       fnum = floor(fnum + 0.5f);
 	else  if (offs2 == 1)
        fnum = floor(fnum);
 	else
@@ -2662,7 +2620,6 @@ op_break:
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
 {
   AMX_HEADER *hdr;
-  AMX_FUNCSTUB *func;
   unsigned char *code, *data;
   cell pri,alt,stk,frm,hea;
   cell reset_stk, reset_hea, *cip;
@@ -2710,7 +2667,7 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
   /* set up the registers */
   hdr=(AMX_HEADER *)amx->base;
   assert(hdr->magic==AMX_MAGIC);
-  codesize=(ucell)(hdr->dat-hdr->cod);
+  codesize=static_cast<ucell>(hdr->dat - hdr->cod);
   code=amx->base+(int)hdr->cod;
   data=(amx->data!= nullptr) ? amx->data : amx->base+(int)hdr->dat;
   hea=amx->hea;
@@ -2737,10 +2694,10 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
   } else if (index<0) {
     return AMX_ERR_INDEX;
   } else {
-    if (index>=(cell)NUMENTRIES(hdr,publics,natives))
+	  if (index>=static_cast<cell>(NUMENTRIES(hdr, publics, natives)))
       return AMX_ERR_INDEX;
-    func=GETENTRY(hdr,publics,index);
-    cip=(cell *)(code + (int)func->address);
+	  const AMX_FUNCSTUB* func = GETENTRY(hdr, publics, index);
+    cip=(cell *)(code + static_cast<int>(func->address));
   } /* if */
   /* check values just copied */
   CHKSTACK();
@@ -2792,7 +2749,7 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
   parms[5] = frm;
   parms[6] = (cell)amx;
   parms[7] = (cell)code;
-  parms[8] = (cell)codesize;
+  parms[8] = static_cast<cell>(codesize);
 
   #if defined ASM32 && defined JIT
     if ((amx->flags & AMX_FLAG_JITC)!=0)
@@ -3598,7 +3555,7 @@ int AMXAPI amx_Exec(AMX *amx, cell *retval, int index)
       offs2 = *(cell *)(data + (int)stk + sizeof(cell)*2);
       fnum = amx_ctof(offs);
       if (!offs2)
-         fnum = (REAL)floor(fnum + 0.5);
+         fnum = (REAL)floor(fnum + 0.5f);
       else  if (offs2 == 1)
          fnum = floor(fnum);
 	  else
@@ -3686,14 +3643,11 @@ int AMXAPI amx_RaiseError(AMX *amx, int error)
 #if defined AMX_GETADDR
 int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr)
 {
-  AMX_HEADER *hdr;
-  unsigned char *data;
-
-  assert(amx!= nullptr);
-  hdr=(AMX_HEADER *)amx->base;
+	assert(amx!= nullptr);
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
-  data=(amx->data!= nullptr) ? amx->data : amx->base+(int)hdr->dat;
+  unsigned char* data = (amx->data != nullptr) ? amx->data : amx->base + static_cast<int>(hdr->dat);
 
   assert(phys_addr!= nullptr);
   if ((amx_addr>=amx->hea && amx_addr<amx->stk) || amx_addr<0 || amx_addr>=amx->stp) {
@@ -3709,14 +3663,11 @@ int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr)
 #if defined AMX_ALLOT || defined AMX_EXEC
 int AMXAPI amx_Allot(AMX *amx,int cells,cell *amx_addr,cell **phys_addr)
 {
-  AMX_HEADER *hdr;
-  unsigned char *data;
-
-  assert(amx!= nullptr);
-  hdr=(AMX_HEADER *)amx->base;
+	assert(amx!= nullptr);
+	const AMX_HEADER* hdr = (AMX_HEADER*)amx->base;
   assert(hdr!= nullptr);
   assert(hdr->magic==AMX_MAGIC);
-  data=(amx->data!= nullptr) ? amx->data : amx->base+(int)hdr->dat;
+  unsigned char* data = (amx->data != nullptr) ? amx->data : amx->base + static_cast<int>(hdr->dat);
 
   if (amx->stk - amx->hea - cells*sizeof(cell) < STKMARGIN)
     return AMX_ERR_MEMORY;
@@ -3762,7 +3713,7 @@ int AMXAPI amx_StrLen(const cell *cstr, int *length)
     return AMX_ERR_PARAMS;
   } /* if */
 
-  if ((ucell)*cstr>UNPACKEDMAX) {
+  if (static_cast<ucell>(*cstr)>UNPACKEDMAX) {
     /* packed string */
     assert(sizeof(char)==1);
     len=strlen((char *)cstr);           /* find '\0' */
@@ -3799,7 +3750,7 @@ int AMXAPI amx_SetString(cell *dest,const char *source,int pack,int use_wchar,si
   #endif
   if (pack) {
     /* create a packed string */
-    if (size<UNLIMITED/sizeof(cell) && (size_t)len>=size*sizeof(cell))
+    if (size<UNLIMITED/sizeof(cell) && static_cast<size_t>(len)>=size*sizeof(cell))
       len=size*sizeof(cell)-1;
     dest[len/sizeof(cell)]=0;   /* clear last bytes of last (semi-filled) cell*/
     #if defined AMX_ANSIONLY
@@ -3824,11 +3775,11 @@ int AMXAPI amx_SetString(cell *dest,const char *source,int pack,int use_wchar,si
 
   } else {
     /* create an unpacked string */
-    if (size<UNLIMITED && (size_t)len>=size)
+    if (size<UNLIMITED && static_cast<size_t>(len)>=size)
       len=size-1;
     #if defined AMX_ANSIONLY
       for (i=0; i<len; i++)
-        dest[i]=(cell)source[i];
+        dest[i]=static_cast<cell>(source[i]);
     #else
       if (use_wchar) {
         for (i=0; i<len; i++)
@@ -3851,15 +3802,15 @@ int AMXAPI amx_GetString(char *dest,const cell *source,int use_wchar,size_t size
   #if defined AMX_ANSIONLY
     (void)use_wchar;
   #endif
-  if ((ucell)*source>UNPACKEDMAX) {
+  if (static_cast<ucell>(*source)>UNPACKEDMAX) {
     /* source string is packed */
     cell c = 0;         /* to avoid a compiler warning */
     int i=sizeof(cell)-1;
-    while ((size_t)len<size) {
+    while (static_cast<size_t>(len)<size) {
       if (i==sizeof(cell)-1)
         c=*source++;
       #if defined AMX_ANSIONLY
-        dest[len++]=(char)(c >> i*CHARBITS);
+        dest[len++]=static_cast<char>(c >> i * CHARBITS);
       #else
         if (use_wchar)
           ((wchar_t*)dest)[len++]=(char)(c >> i*CHARBITS);
@@ -3873,8 +3824,8 @@ int AMXAPI amx_GetString(char *dest,const cell *source,int use_wchar,size_t size
   } else {
     /* source string is unpacked */
     #if defined AMX_ANSIONLY
-      while (*source!=0 && (size_t)len<size)
-        dest[len++]=(char)*source++;
+      while (*source!=0 && static_cast<size_t>(len)<size)
+        dest[len++]=static_cast<char>(*source++);
     #else
       if (use_wchar) {
         while (*source!=0 && (size_t)len<size)
@@ -3885,7 +3836,7 @@ int AMXAPI amx_GetString(char *dest,const cell *source,int use_wchar,size_t size
       } /* if */
     #endif
   } /* if */
-  if ((size_t)len>=size)
+  if (static_cast<size_t>(len)>=size)
     len=size-1;
   if (len>=0)
     dest[len]='\0';   /* store terminator */
@@ -4089,8 +4040,8 @@ int AMXAPI amx_UTF8Len(const cell *cstr, int *length)
 
 int AMXAPI amx_GetLibraries(AMX *amx)
 {
-	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
-	int numLibraries = NUMENTRIES(hdr, libraries, pubvars);
+	const AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
+	const int numLibraries = NUMENTRIES(hdr, libraries, pubvars);
 
 	return numLibraries;
 }
@@ -4098,9 +4049,8 @@ int AMXAPI amx_GetLibraries(AMX *amx)
 const char *AMXAPI amx_GetLibrary(AMX *amx, int index, char *buffer, int len)
 {
 	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;
-	AMX_FUNCSTUB *lib;
 
-	lib = GETENTRY(hdr, libraries, index);
+	AMX_FUNCSTUB* lib = GETENTRY(hdr, libraries, index);
 	_snprintf(buffer, len, "%s", GETENTRYNAME(hdr,lib));
 	
 	return buffer;
@@ -4135,10 +4085,10 @@ int AMXAPI amx_SetStringOld(cell *dest,const char *source,int pack,int use_wchar
     /* create an unpacked string */
     if (use_wchar) {
       for (i=0; i<len; i++)
-        dest[i]=(cell)(((wchar_t*)source)[i]);
+        dest[i]=static_cast<cell>(((wchar_t*)source)[i]);
     } else {
       for (i=0; i<len; i++)
-        dest[i]=(unsigned char)source[i];
+        dest[i]=static_cast<unsigned char>(source[i]);
     } /* if */
     dest[len]=0;
   } /* if */
@@ -4148,7 +4098,7 @@ int AMXAPI amx_SetStringOld(cell *dest,const char *source,int pack,int use_wchar
 int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
 {
   int len=0;
-  if ((ucell)*source>UNPACKEDMAX) {
+  if (static_cast<ucell>(*source)>UNPACKEDMAX) {
     /* source string is packed */
     cell c = 0;         /* to avoid a compiler warning */
     int i=sizeof(cell)-1;
@@ -4156,9 +4106,9 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
       if (i==sizeof(cell)-1)
         c=*source++;
       if (use_wchar)
-        ((wchar_t*)dest)[len++]=(char)(c >> i*CHARBITS);
+        ((wchar_t*)dest)[len++]=static_cast<char>(c >> i * CHARBITS);
       else
-        dest[len++]=(char)(c >> i*CHARBITS);
+        dest[len++]=static_cast<char>(c >> i * CHARBITS);
       if (dest[len-1]=='\0')
         break;          /* terminating zero character found */
       i=(i+sizeof(cell)-1) % sizeof(cell);
@@ -4167,10 +4117,10 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
     /* source string is unpacked */
     if (use_wchar) {
       while (*source!=0)
-        ((wchar_t*)dest)[len++]=(wchar_t)*source++;
+        ((wchar_t*)dest)[len++]=static_cast<wchar_t>(*source++);
     } else {
       while (*source!=0)
-        dest[len++]=(char)*source++;
+        dest[len++]=static_cast<char>(*source++);
     } /* if */
   } /* if */
   dest[len]='\0';     /* store terminator */
@@ -4202,7 +4152,7 @@ int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
 
         const duration<long long, std::ratio<1, 1000000>> ms_int = duration_cast<
 	        microseconds>(steady_clock::now() - t1);
-        float ms_float = ms_int.count() / 1000.0f;
+        const float ms_float = ms_int.count() / 1000.0f;
         if (ms_float >= amxmodx_perflog->value)
         {
             AMXXLOG_Log("[%s] performance issue. Function %s executed more than %.*fms.", perf_plugname, perf_funcname, 1, ms_float);

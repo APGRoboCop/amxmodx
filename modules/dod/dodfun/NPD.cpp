@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -14,6 +16,7 @@
 
 #include "amxxmodule.h"
 #include "dodfun.h"
+#include "HLTypeConversion.h"
 
 static cell AMX_NATIVE_CALL set_user_class(AMX *amx, cell *params){
 	int index = params[1];
@@ -25,11 +28,11 @@ static cell AMX_NATIVE_CALL set_user_class(AMX *amx, cell *params){
 		return 0;
 
 	if (iClass){
-		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_CLASS) = iClass;
-		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_RCLASS) = 0; // disable random class
+		*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_CLASS) = iClass;
+		*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_RCLASS) = 0; // disable random class
 	}
 	else {
-		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_RCLASS) = 1; // set random class
+		*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_RCLASS) = 1; // set random class
 
 	}
 
@@ -38,7 +41,7 @@ static cell AMX_NATIVE_CALL set_user_class(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	int iTeam = params[2];
 	if ( iTeam<1 || iTeam>3 ){
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid team id %d", iTeam);
@@ -61,7 +64,7 @@ static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 			break;
 		}
 
-		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_RCLASS) = 1; // set random class
+		*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_RCLASS) = 1; // set random class
 
 		if ( params[3] ){
 			MESSAGE_BEGIN(MSG_ALL,gmsgPTeam);
@@ -77,11 +80,11 @@ static cell AMX_NATIVE_CALL set_user_team(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_nextclass(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->ingame ){
-		return *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_CLASS);
+		return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_CLASS);
 	}
 
 	return 0;
@@ -89,37 +92,37 @@ static cell AMX_NATIVE_CALL get_user_nextclass(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL is_randomclass(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if ( pPlayer->ingame ){
-		return *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_RCLASS);
+		return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_RCLASS);
 	}
 	return 0;
 }
 
 static cell AMX_NATIVE_CALL get_user_deaths(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
-		return *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS );
+		return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_DEATHS );
 	}
 	return -1;
 }
 
 static cell AMX_NATIVE_CALL set_user_deaths(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
-		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_DEATHS ) = params[2];
+		*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_DEATHS ) = params[2];
 		if ( params[3]){
 			//ScoreShort message
 			MESSAGE_BEGIN(MSG_ALL,gmsgScoreShort);
 			WRITE_BYTE(pPlayer->index);
-			WRITE_SHORT( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_SCORE ) );
-			WRITE_SHORT((int)pPlayer->pEdict->v.frags);
+			WRITE_SHORT( *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_SCORE ) );
+			WRITE_SHORT(static_cast<int>(pPlayer->pEdict->v.frags));
 			WRITE_SHORT(params[2]);
 			WRITE_BYTE(1);
 			MESSAGE_END();
@@ -130,11 +133,11 @@ static cell AMX_NATIVE_CALL set_user_deaths(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame){
-		*( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_SCORE ) = params[2];
+		*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_SCORE ) = params[2];
 
 		if ( params[3]){
 		/*
@@ -159,11 +162,11 @@ static cell AMX_NATIVE_CALL set_user_score(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame){
-		pPlayer->pEdict->v.frags = (float)params[2];
+		pPlayer->pEdict->v.frags = static_cast<float>(params[2]);
 
 		if ( params[3]){
 		/*
@@ -179,7 +182,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
 		*/
 			MESSAGE_BEGIN(MSG_ALL, gmsgFrags);
 			WRITE_BYTE(pPlayer->index);
-			WRITE_SHORT((int)pPlayer->pEdict->v.frags);
+			WRITE_SHORT(static_cast<int>(pPlayer->pEdict->v.frags));
 			MESSAGE_END();
 		}
 	}
@@ -188,25 +191,25 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (pPlayer->ingame)
-		return (int)pPlayer->pEdict->v.frags;
+		return static_cast<int>(pPlayer->pEdict->v.frags);
 
 	return -1;
 }
 
 static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( pPlayer->ingame ){
 		
 		int iLen;
-		char *szTeamName = MF_GetAmxString(amx, params[2], 0, &iLen);
+		const char *szTeamName = MF_GetAmxString(amx, params[2], 0, &iLen);
 
 		pPlayer->setTeamName(szTeamName);
 	
@@ -217,7 +220,7 @@ static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_teamname(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
@@ -235,10 +238,10 @@ static cell AMX_NATIVE_CALL get_user_teamname(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL is_weapon_deployed(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	CHECK_PLAYER(index)
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	if (pPlayer->ingame){
-		if ( *( (int*)pPlayer->pEdict->pvPrivateData + STEAM_PDOFFSET_WDEPLOY) == 1 )
+		if ( *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + STEAM_PDOFFSET_WDEPLOY) == 1 )
 			return 1;
 	}
 	return 0;
@@ -247,7 +250,7 @@ static cell AMX_NATIVE_CALL is_weapon_deployed(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( !pPlayer->ingame )
@@ -259,9 +262,9 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_COLT:
 		case DODW_LUGER:
 		case DODW_WEBLEY:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 53+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 284+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 316+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 53+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 284+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 316+LINUXOFFSET ) = params[3];
 			break;
 
 		//54,283,315
@@ -270,9 +273,9 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_SCOPED_KAR:
 		case DODW_ENFIELD:
 		case DODW_SCOPED_ENFIELD:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 54+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 283+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 315+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 54+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 283+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 315+LINUXOFFSET ) = params[3];
 			break;
 
 		//57,286,318
@@ -281,9 +284,9 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_FG42:
 		case DODW_BREN:
 		case DODW_SCOPED_FG42:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 57+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 286+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 318+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 57+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 286+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 318+LINUXOFFSET ) = params[3];
 			break;
 
 		//56,281,313
@@ -291,9 +294,9 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_GREASEGUN:
 		case DODW_MP40:
 		case DODW_STEN:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 56+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 281+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 313+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 56+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 281+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 313+LINUXOFFSET ) = params[3];
 			break;
 
 		//58,282,314
@@ -301,52 +304,52 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 		case DODW_M1_CARBINE:
 		case DODW_MG34:
 		case DODW_FOLDING_CARBINE:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 58+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 282+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 314+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 58+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 282+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 314+LINUXOFFSET ) = params[3];
 			break;
 
 		//55,285,317
 		case DODW_SPRINGFIELD:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 55+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 285+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 317+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 55+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 285+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 317+LINUXOFFSET ) = params[3];
 			break;
 
 		//59,289,321
 		case DODW_HANDGRENADE:
 		case DODW_MILLS_BOMB:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 59+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 289+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 321+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 59+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 289+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 321+LINUXOFFSET ) = params[3];
 			break;
 
 		//61,291,323
 		case DODW_STICKGRENADE:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 61+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 291+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 323+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 61+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 291+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 323+LINUXOFFSET ) = params[3];
 			break;
 
 		//287,319
 		case DODW_MG42:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 287+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 319+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 287+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 319+LINUXOFFSET ) = params[3];
 			break;
 
 		//288,320
 		case DODW_30_CAL:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 288+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 320+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 288+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 320+LINUXOFFSET ) = params[3];
 			break;
 
 		//49,293,325
 		case DODW_BAZOOKA:
 		case DODW_PANZERSCHRECK:
 		case DODW_PIAT:
-			*( (int*)pPlayer->pEdict->pvPrivateData + 49+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 293+LINUXOFFSET ) = params[3];
-			*( (int*)pPlayer->pEdict->pvPrivateData + 325+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 49+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 293+LINUXOFFSET ) = params[3];
+			*( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 325+LINUXOFFSET ) = params[3];
 			break;
 	}
 
@@ -355,7 +358,7 @@ static cell AMX_NATIVE_CALL set_user_ammo(AMX *amx, cell *params){
 
 static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 	int index = params[1];
-	CHECK_PLAYER(index);
+	CHECK_PLAYER(index)
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if ( !pPlayer->ingame )
@@ -367,15 +370,15 @@ static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 		case DODW_COLT:
 		case DODW_LUGER:
 		case DODW_WEBLEY:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 53+LINUXOFFSET );
-			break;		
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 53+LINUXOFFSET );
+			//break;		
 
 		//49,293,325
 		case DODW_BAZOOKA:
 		case DODW_PANZERSCHRECK:
 		case DODW_PIAT:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 49+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 49+LINUXOFFSET );
+			//break;
 
 		//54,283,315
 		case DODW_GARAND:
@@ -383,21 +386,21 @@ static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 		case DODW_SCOPED_KAR:
 		case DODW_ENFIELD:
 		case DODW_SCOPED_ENFIELD:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 54+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 54+LINUXOFFSET );
+			//break;
 
 		//55,285,317
 		case DODW_SPRINGFIELD:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 55+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 55+LINUXOFFSET );
+			//break;
 
 		//56,281,313
 		case DODW_THOMPSON:
 		case DODW_GREASEGUN:
 		case DODW_MP40:
 		case DODW_STEN:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 56+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 56+LINUXOFFSET );
+			//break;
 
 		//57,286,318
 		case DODW_STG44:
@@ -405,37 +408,37 @@ static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params){
 		case DODW_FG42:
 		case DODW_BREN:
 		case DODW_SCOPED_FG42:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 57+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 57+LINUXOFFSET );
+			//break;
 
 		//58,282,314
 		case DODW_K43:
 		case DODW_M1_CARBINE:
 		case DODW_MG34:
 		case DODW_FOLDING_CARBINE:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 58+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 58+LINUXOFFSET );
+			//break;
 
 		//59,289,321
 		case DODW_HANDGRENADE:
 		case DODW_MILLS_BOMB:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 59+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 59+LINUXOFFSET );
+			//break;
 
 		//61,291,323
 		case DODW_STICKGRENADE:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 61+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 61+LINUXOFFSET );
+			//break;
 
 		//287,319
 		case DODW_MG42:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 287+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 287+LINUXOFFSET );
+			//break;
 
 		//288,320
 		case DODW_30_CAL:
-			return *( (int*)pPlayer->pEdict->pvPrivateData + 288+LINUXOFFSET );
-			break;
+			return *( static_cast<int*>(pPlayer->pEdict->pvPrivateData) + 288+LINUXOFFSET );
+			//break;
 
 	}
 
@@ -454,8 +457,8 @@ static cell AMX_NATIVE_CALL objective_set_data(AMX *amx, cell *params){ // index
 	int iLen;
 	int ivalue = params[3];
 	char *szValue = MF_GetAmxString(amx, params[4], 0, &iLen);
-	
-	CP_VALUE key = (CP_VALUE)params[2];
+
+	const CP_VALUE key = static_cast<CP_VALUE>(params[2]);
 	switch ( key ){
 		case CP_owner :
 			mObjects.UpdateOwner( index, ivalue );
@@ -481,11 +484,11 @@ static cell AMX_NATIVE_CALL objective_set_data(AMX *amx, cell *params){ // index
 			GET_CP_PD(pent).icon_axis = ivalue;
 			return 1;
 		case CP_origin_x :
-			mObjects.obj[index].origin_x = (float)ivalue;
+			mObjects.obj[index].origin_x = static_cast<float>(ivalue);
 			// reinit
 			return 1;
 		case CP_origin_y :
-			mObjects.obj[index].origin_y = (float)ivalue;
+			mObjects.obj[index].origin_y = static_cast<float>(ivalue);
 			// reinit
 			return 1;
 		case CP_can_touch :
@@ -556,8 +559,8 @@ static cell AMX_NATIVE_CALL objective_get_data(AMX *amx, cell *params){ // flagi
 		MF_LogError(amx, AMX_ERR_NATIVE, "Index out of range (%d)", index);
 		return 0;
 	}
-	int len = params[4];
-	CP_VALUE key = (CP_VALUE)params[2];
+	const int len = params[4];
+	const CP_VALUE key = static_cast<CP_VALUE>(params[2]);
 	
 	switch ( key ){
 		case CP_edict :
@@ -578,9 +581,9 @@ static cell AMX_NATIVE_CALL objective_get_data(AMX *amx, cell *params){ // flagi
 		case CP_icon_axis :
 			return mObjects.obj[index].icon_axis;
 		case CP_origin_x :
-			return (int)mObjects.obj[index].origin_x;
+			return static_cast<int>(mObjects.obj[index].origin_x);
 		case CP_origin_y :
-			return (int)mObjects.obj[index].origin_y;
+			return static_cast<int>(mObjects.obj[index].origin_y);
 		case CP_can_touch :
 			return GET_CP_PD( mObjects.obj[index].pEdict ).can_touch;
 		case CP_pointvalue :
@@ -662,7 +665,7 @@ static cell AMX_NATIVE_CALL objectives_reinit(AMX *amx, cell *params){ // index
 		MF_LogError(amx, AMX_ERR_NATIVE, "Index out of range (%d)", player);
 		return 0;
 	}
-	mObjects.InitObj( player == 0 ? MSG_ALL:MSG_ONE, player == 0 ? NULL: GETEDICT(player) );
+	mObjects.InitObj( player == 0 ? MSG_ALL:MSG_ONE, player == 0 ? nullptr : GETEDICT(player) );
 
 	return 1;
 }
@@ -673,8 +676,8 @@ static cell AMX_NATIVE_CALL area_get_data(AMX *amx, cell *params){ // flagid, ke
 		MF_LogError(amx, AMX_ERR_NATIVE, "Index out of range (%d)", index);
 		return 0;
 	}
-	int len = params[4];
-	CA_VALUE key = (CA_VALUE)params[2];
+	const int len = params[4];
+	const CA_VALUE key = (CA_VALUE)params[2];
 
 	GET_CAPTURE_AREA(index)
 
@@ -714,8 +717,8 @@ static cell AMX_NATIVE_CALL area_set_data(AMX *amx, cell *params){ // index, key
 	int iLen;
 	int ivalue = params[3];
 	char *szValue = MF_GetAmxString(amx, params[4], 0, &iLen);
-	
-	CA_VALUE key = (CA_VALUE)params[2];
+
+	const CA_VALUE key = (CA_VALUE)params[2];
 
 	GET_CAPTURE_AREA(index)
 

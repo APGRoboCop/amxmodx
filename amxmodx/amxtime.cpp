@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Date/time module for the Small AMX
  *
  *  Copyright (c) ITB CompuPhase, 2001-2002
@@ -31,7 +33,6 @@
 static cell AMX_NATIVE_CALL _time(AMX *amx, cell *params)
 {
   time_t sec1970;
-  struct tm gtm;
   cell *cptr;
 
   assert(params[0]==3*sizeof(cell));
@@ -41,7 +42,7 @@ static cell AMX_NATIVE_CALL _time(AMX *amx, cell *params)
   /* on DOS/Windows, the timezone is usually not set for the C run-time
    * library; in that case gmtime() and localtime() return the same value
    */
-  gtm=*localtime(&sec1970);
+  struct tm gtm = *localtime(&sec1970);
   if (amx_GetAddr(amx,params[1],&cptr)==AMX_ERR_NONE)
     *cptr=gtm.tm_hour;
   if (amx_GetAddr(amx,params[2],&cptr)==AMX_ERR_NONE)
@@ -52,7 +53,7 @@ static cell AMX_NATIVE_CALL _time(AMX *amx, cell *params)
   /* the time() function returns the number of seconds since January 1 1970
    * in Universal Coordinated Time (the successor to Greenwich Mean Time)
    */
-  return (cell)sec1970;
+  return static_cast<cell>(sec1970);
 }
 
 #if defined __BORLANDC__ || defined __WATCOMC__
@@ -61,14 +62,13 @@ static cell AMX_NATIVE_CALL _time(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL _date(AMX *amx, cell *params)
 {
   time_t sec1970;
-  struct tm gtm;
   cell *cptr;
 
   assert(params[0]==3*sizeof(cell));
 
   time(&sec1970);
 
-  gtm=*localtime(&sec1970);
+  struct tm gtm = *localtime(&sec1970);
   if (amx_GetAddr(amx,params[1],&cptr)==AMX_ERR_NONE)
     *cptr=gtm.tm_year+1900;
   if (amx_GetAddr(amx,params[2],&cptr)==AMX_ERR_NONE)
@@ -87,9 +87,8 @@ static cell AMX_NATIVE_CALL _tickcount(AMX *amx, cell *params)
  // #if defined __WIN32__ || defined _WIN32
  //   static int timerset = 0;
  // #endif
-  cell value;
 
-  assert(params[0]==sizeof(cell));
+ assert(params[0]==sizeof(cell));
 
   //#if defined __WIN32__ || defined _WIN32
   //  if (!timerset) {
@@ -99,9 +98,9 @@ static cell AMX_NATIVE_CALL _tickcount(AMX *amx, cell *params)
   //  } /* if */
   //  value=timeGetTime();        /* this value is already in milliseconds */
  // #else
-    value=(cell)clock();
+    cell value = static_cast<cell>(clock());
     /* convert to milliseconds */
-    value=(cell)((1000L * (value+CLK_TCK/2)) / CLK_TCK);
+    value=static_cast<cell>((1000L * (value + CLK_TCK / 2)) / CLK_TCK);
   //#endif
   return value;
 }

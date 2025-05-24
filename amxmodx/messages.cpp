@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -35,7 +37,7 @@ Message::Message()
 	m_CurParam = 0;
 }
 
-bool Message::Ready()
+bool Message::Ready() const
 {
 	if (!m_Params.length())
 		return false;
@@ -160,14 +162,14 @@ void Message::Reset()
 	m_CurParam = 0;
 }
 
-size_t Message::Params()
+size_t Message::Params() const
 {
 	return m_CurParam;
 }
 
 void Message::Send()
 {
-	msgparam *pParam = nullptr;
+	const msgparam *pParam = nullptr;
 
 	for (size_t i=1; i<=m_CurParam; i++)
 	{
@@ -327,8 +329,6 @@ void C_WriteEntity(int iValue)
 
 void C_MessageEnd()
 {
-	int mres = 0;
-	
 	if (inblock)
 	{
 		inblock = false;
@@ -338,8 +338,7 @@ void C_MessageEnd()
 		}
 		RETURN_META(MRES_SUPERCEDE);
 	} else if (inhook) {
-
-		mres = msgHooks[msgType].Execute((cell)msgType, (cell)msgDest, (cell)ENTINDEX(msgpEntity));
+		const int mres = msgHooks[msgType].Execute((cell)msgType, (cell)msgDest, (cell)ENTINDEX(msgpEntity));
 
 		/*
 		for (i=0; i<msgHooks[msgType].size(); i++)
@@ -372,7 +371,7 @@ void C_MessageEnd()
 
 static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 {
-	int numparam = *params / sizeof(cell);
+	const unsigned int numparam = *params / sizeof(cell);
 	float vecOrigin[3];
 	cell *cpOrigin;
 
@@ -518,7 +517,7 @@ static cell AMX_NATIVE_CALL register_message(AMX *amx, cell *params)
 
 	if (params[1]>0 && params[1] < 256)
 	{
-		int id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		const int id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 		if (id != -1)
 		{
 			msgHooks[params[1]].AddHook(id);
@@ -540,7 +539,7 @@ static cell AMX_NATIVE_CALL unregister_message(AMX *amx, cell *params)
 
 	if (params[1]>0 && params[1] < 256)
 	{
-		int id = params[2];
+		const int id = params[2];
 		if (id != -1)
 		{
 			msgHooks[params[1]].RemoveHook(id);
@@ -557,8 +556,8 @@ static cell AMX_NATIVE_CALL unregister_message(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params)
 {
-	int msgid = params[1];
-	int block = params[2];
+	const int msgid = params[1];
+	const int block = params[2];
 
 	if (msgid < 1 || msgid > 255)
 	{
@@ -573,7 +572,7 @@ static cell AMX_NATIVE_CALL set_msg_block(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_block(AMX *amx, cell *params)
 {
-	int msgid = params[1];
+	const int msgid = params[1];
 
 	if (msgid < 1 || msgid > 255)
 	{
@@ -591,7 +590,7 @@ static cell AMX_NATIVE_CALL get_msg_args(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 
 	if (!inhook || argn > Msg.Params())
 	{
@@ -604,7 +603,7 @@ static cell AMX_NATIVE_CALL get_msg_argtype(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 
 	if (!inhook || argn > Msg.Params())
 	{
@@ -617,7 +616,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_int(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 
 	if (!inhook || argn > Msg.Params())
 	{
@@ -632,7 +631,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_int(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 
 	if (!inhook || argn > Msg.Params())
 	{
@@ -646,7 +645,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_float(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 
 	if (!inhook || argn > Msg.Params())
 	{
@@ -663,7 +662,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_float(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 
 	if (!inhook || argn > Msg.Params())
 	{
@@ -678,7 +677,7 @@ static cell AMX_NATIVE_CALL get_msg_arg_string(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 {
-	size_t argn = static_cast<size_t>(params[1]);
+	const size_t argn = static_cast<size_t>(params[1]);
 	int iLen;
 
 	if (!inhook || argn > Msg.Params())
@@ -687,7 +686,7 @@ static cell AMX_NATIVE_CALL set_msg_arg_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	char *szVal = get_amxstring(amx, params[2], 0, iLen);
+	const char *szVal = get_amxstring(amx, params[2], 0, iLen);
 
 	Msg.SetParam(argn, szVal);
 
@@ -721,7 +720,7 @@ static cell AMX_NATIVE_CALL get_msg_origin(AMX *amx, cell *params)
 
 static cell _emessage_begin(AMX *amx, cell *params, bool useFloat)
 {
-	int numparam = *params / sizeof(cell);
+	const unsigned int numparam = *params / sizeof(cell);
 	float vecOrigin[3];
 	cell *cpOrigin;
 

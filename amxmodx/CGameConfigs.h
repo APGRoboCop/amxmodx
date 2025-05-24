@@ -39,17 +39,17 @@ class CGameConfig
 
 	public: // ITextListener_SMC
 
-		SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name);
-		SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value);
-		SMCResult ReadSMC_LeavingSection(const SMCStates *states);
+		SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name) override;
+		SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value) override;
+		SMCResult ReadSMC_LeavingSection(const SMCStates *states) override;
 
 	public: // IGameConfig
 
-		const char* GetKeyValue(const char *key);
-		bool        GetOffset(const char *key, TypeDescription *value);
-		bool        GetOffsetByClass(const char *classname, const char *key, TypeDescription *value);
-		bool        GetMemSig(const char *key, void **addr);
-		bool        GetAddress(const char *key, void **addr);
+		const char* GetKeyValue(const char *key) override;
+		bool        GetOffset(const char *key, TypeDescription *value) override;
+		bool        GetOffsetByClass(const char *classname, const char *key, TypeDescription *value) override;
+		bool        GetMemSig(const char *key, void **addr) override;
+		bool        GetAddress(const char *key, void **addr) override;
 
 	public: // NameHashSet
 
@@ -102,7 +102,7 @@ class CGameConfig
 			int     m_ReadBytes[8];
 
 			AddressConf(const char *sigName, size_t sigLength, size_t readCount, int *read);
-			AddressConf() {}
+			AddressConf() = default;
 		};
 
 		char m_Address[64];
@@ -118,11 +118,11 @@ class CGameMasterReader : public ITextListener_SMC
 {
 	public:
 
-		void ReadSMC_ParseStart();
+		void ReadSMC_ParseStart() override;
 
-		SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name);
-		SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value);
-		SMCResult ReadSMC_LeavingSection(const SMCStates *states);
+		SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name) override;
+		SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value) override;
+		SMCResult ReadSMC_LeavingSection(const SMCStates *states) override;
 
 	public:
 
@@ -148,10 +148,10 @@ class CGameConfigManager : public IGameConfigManager
 
 	public: // IGameConfigManager
 
-		bool LoadGameConfigFile(const char *file, IGameConfig **pConfig, char *error, size_t maxlength);
-		void CloseGameConfigFile(IGameConfig *cfg);
-		void AddUserConfigHook(const char *sectionname, ITextListener_SMC *listener);
-		void RemoveUserConfigHook(const char *sectionname, ITextListener_SMC *listener);
+		bool LoadGameConfigFile(const char *file, IGameConfig **pConfig, char *error, size_t maxlength) override;
+		void CloseGameConfigFile(IGameConfig *cfg) override;
+		void AddUserConfigHook(const char *sectionname, ITextListener_SMC *listener) override;
+		void RemoveUserConfigHook(const char *sectionname, ITextListener_SMC *listener) override;
 
 	public:
 
@@ -169,7 +169,7 @@ class CGameConfigManager : public IGameConfigManager
 
 #define GET_OFFSET(classname, member)												\
 	static int member = -1;															\
-	if (member == -1)																\
+	if ((member) == -1)																\
 	{                                                                               \
 		TypeDescription type;                                                       \
 		if (!CommonConfig->GetOffsetByClass(classname, #member, &type) || type.fieldOffset < 0)\
@@ -177,19 +177,19 @@ class CGameConfigManager : public IGameConfigManager
 			LogError(amx, AMX_ERR_NATIVE, "Invalid %s offset. Native %s is disabled", #member, __FUNCTION__);\
 			return 0;																\
 		}																			\
-		member = type.fieldOffset;                                                  \
+		(member) = type.fieldOffset;                                                \
 	}
 
 #define GET_OFFSET_NO_ERROR(classname, member)                                      \
 	static int member = -1;                                                         \
-	if (member == -1)                                                               \
+	if ((member) == -1)                                                             \
 	{                                                                               \
 		TypeDescription type;                                                       \
 		if (!CommonConfig->GetOffsetByClass(classname, #member, &type) || type.fieldOffset < 0)\
 		{                                                                           \
 			return;                                                                 \
 		}                                                                           \
-		member = type.fieldOffset;                                                  \
+		(member) = type.fieldOffset;                                                \
 	}
 
 extern CGameConfigManager ConfigManager;

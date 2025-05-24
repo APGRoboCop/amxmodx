@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -15,13 +17,13 @@
 
 static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	const cell *cpVec1 = get_amxaddr(amx, params[1]);
+	const cell *cpVec2 = get_amxaddr(amx, params[2]);
 
-	Vector vec1 = Vector((float)cpVec1[0], (float)cpVec1[1], (float)cpVec1[2]);
-	Vector vec2 = Vector((float)cpVec2[0], (float)cpVec2[1], (float)cpVec2[2]);
+	const Vector vec1 = Vector(static_cast<float>(cpVec1[0]), static_cast<float>(cpVec1[1]), static_cast<float>(cpVec1[2]));
+	const Vector vec2 = Vector(static_cast<float>(cpVec2[0]), static_cast<float>(cpVec2[1]), static_cast<float>(cpVec2[2]));
 
-	int iDist = (int)((vec1 - vec2).Length());
+	const int iDist = static_cast<int>((vec1 - vec2).Length());
 
 	return iDist;
 }
@@ -31,8 +33,8 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	cell *cpVec1 = get_amxaddr(amx, params[1]);
 	cell *cpVec2 = get_amxaddr(amx, params[2]);
 
-	Vector vec1 = Vector(amx_ctof(cpVec1[0]), amx_ctof(cpVec1[1]), amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector(amx_ctof(cpVec2[0]), amx_ctof(cpVec2[1]), amx_ctof(cpVec2[2]));
+	const Vector vec1 = Vector(amx_ctof(cpVec1[0]), amx_ctof(cpVec1[1]), amx_ctof(cpVec1[2]));
+	const Vector vec2 = Vector(amx_ctof(cpVec2[0]), amx_ctof(cpVec2[1]), amx_ctof(cpVec2[2]));
 
 	REAL fDist = (vec1 - vec2).Length();
 
@@ -41,8 +43,8 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int iVelocity = params[2];
+	const int iEnt = params[1];
+	const int iVelocity = params[2];
 	cell *vRet = get_amxaddr(amx, params[3]);
 	Vector vVector = Vector(0, 0, 0);
 	edict_t *pEnt = nullptr;
@@ -163,8 +165,8 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	REAL fY2 = amx_ctof(cAddr2[1]);
 	REAL fZ2 = amx_ctof(cAddr2[2]);
 
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vVector2 = Vector(fX2, fY2, fZ2);
+	const Vector vVector = Vector(fX, fY, fZ);
+	const Vector vVector2 = Vector(fX2, fY2, fZ2);
 
 	REAL fLength = (vVector - vVector2).Length();
 

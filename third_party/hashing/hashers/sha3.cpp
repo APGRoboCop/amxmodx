@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // //////////////////////////////////////////////////////////
 // sha3.cpp
 // Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
@@ -98,7 +100,7 @@ void SHA3::processBlock(const void* data)
 #define LITTLEENDIAN(x) (x)
 #endif
 
-  const uint64_t* data64 = (const uint64_t*) data;
+  const uint64_t* data64 = static_cast<const uint64_t*>(data);
   // mix data into state
   for (unsigned int i = 0; i < m_blockSize / 8; i++)
     m_hash[i] ^= LITTLEENDIAN(data64[i]);
@@ -113,7 +115,7 @@ void SHA3::processBlock(const void* data)
 
     for (unsigned int i = 0; i < 5; i++)
     {
-      uint64_t one = coefficients[mod5(i + 4)] ^ rotateLeft(coefficients[mod5(i + 1)], 1);
+	    const uint64_t one = coefficients[mod5(i + 4)] ^ rotateLeft(coefficients[mod5(i + 1)], 1);
       m_hash[i     ] ^= one;
       m_hash[i +  5] ^= one;
       m_hash[i + 10] ^= one;
@@ -155,8 +157,8 @@ void SHA3::processBlock(const void* data)
     for (unsigned int j = 0; j < 25; j += 5)
     {
       // temporaries
-      uint64_t one = m_hash[j];
-      uint64_t two = m_hash[j + 1];
+      const uint64_t one = m_hash[j];
+      const uint64_t two = m_hash[j + 1];
 
       m_hash[j]     ^= m_hash[j + 2] & ~two;
       m_hash[j + 1] ^= m_hash[j + 3] & ~m_hash[j + 2];
@@ -174,7 +176,7 @@ void SHA3::processBlock(const void* data)
 /// add arbitrary number of bytes
 void SHA3::add(const void* data, size_t numBytes)
 {
-  const uint8_t* current = (const uint8_t*) data;
+  const uint8_t* current = static_cast<const uint8_t*>(data);
 
   // copy data to buffer
   if (m_bufferSize > 0)
@@ -244,7 +246,7 @@ const char* SHA3::getHash()
   static const char dec2hex[16 + 1] = "0123456789abcdef";
 
   // number of significant elements in hash (uint64_t)
-  unsigned int hashLength = m_bits / 64;
+  const unsigned int hashLength = m_bits / 64;
 
   static char result[128+1];
   size_t written = 0;
@@ -252,18 +254,18 @@ const char* SHA3::getHash()
     for (unsigned int j = 0; j < 8; j++) // 64 bits => 8 bytes
     {
       // convert a byte to hex
-      unsigned char oneByte = (unsigned char) (m_hash[i] >> (8 * j));
+      const unsigned char oneByte = static_cast<unsigned char>(m_hash[i] >> (8 * j));
       result[written++] = dec2hex[oneByte >> 4];
       result[written++] = dec2hex[oneByte & 15];
     }
 
   // SHA3-224's last entry in m_hash provides only 32 bits instead of 64 bits
-  unsigned int remainder = m_bits - hashLength * 64;
+  const unsigned int remainder = m_bits - hashLength * 64;
   unsigned int processed = 0;
   while (processed < remainder)
   {
     // convert a byte to hex
-    unsigned char oneByte = (unsigned char) (m_hash[hashLength] >> processed);
+    const unsigned char oneByte = static_cast<unsigned char>(m_hash[hashLength] >> processed);
     result[written++] = dec2hex[oneByte >> 4];
     result[written++] = dec2hex[oneByte & 15];
 

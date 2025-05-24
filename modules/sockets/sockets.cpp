@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -85,17 +87,16 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 	#define ERROR_EHOSTUNREACH          113  // libc error code: No route to host
 
 	int hostname_length = 0;
-	char *hostname = MF_GetAmxString(amx, params[1], 0, &hostname_length);
+	const char *hostname = MF_GetAmxString(amx, params[1], 0, &hostname_length);
 
 	cell *error = MF_GetAmxAddr(amx, params[4]);
 	*error = 0;
 
-	unsigned int flags = 0;
 	bool libc_errors = false, nonblocking_socket = false;
 
 	if((*params / sizeof(cell)) == 5)
 	{
-		flags = params[5];
+		const unsigned int flags = params[5];
 
 		nonblocking_socket = (flags & SOCK_NON_BLOCKING) != 0;
 		libc_errors = (flags & SOCK_LIBC_ERRORS) != 0;
@@ -112,7 +113,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 
 	int sockfd = -1, getaddrinfo_status = -1, connect_status = -1;
 	bool setnonblocking_status = false, connect_inprogress = false;
-	struct addrinfo hints, *server_info, *server;
+	struct addrinfo hints, *server_info;
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
@@ -124,7 +125,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 		return -1;
 	}
 
-	server = server_info;
+	const struct addrinfo* server = server_info;
 
 	do
 	{
@@ -180,8 +181,8 @@ static cell AMX_NATIVE_CALL socket_close(AMX *amx, cell *params)
 // native socket_recv(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)
 {
-	int sockfd = params[1];
-	int length = params[3];
+	const int sockfd = params[1];
+	const int length = params[3];
 
 	char *recv_buffer = new char[length];
 
@@ -223,10 +224,10 @@ static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)
 // native socket_send(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_send(AMX *amx, cell *params)
 {
-	int sockfd = params[1];
+	const int sockfd = params[1];
 	int length = 0;
-	
-	char *data = MF_GetAmxString(amx, params[2], 0, &length);
+
+	const char *data = MF_GetAmxString(amx, params[2], 0, &length);
 
 	return send(sockfd, data, length, 0);
 }
@@ -234,7 +235,7 @@ static cell AMX_NATIVE_CALL socket_send(AMX *amx, cell *params)
 // native socket_send2(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)
 {
-	int sockfd = params[1];
+	const int sockfd = params[1];
 	int length = params[3];
 	
 	if(length > g_send2_buffer_length)
@@ -252,11 +253,11 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)
 		g_send2_buffer_length = length;
 	}
 
-	cell *data = MF_GetAmxAddr(amx, params[2]);
+	const cell *data = MF_GetAmxAddr(amx, params[2]);
 	char *buffer = g_send2_buffer;
 
 	while(length--)
-		*buffer++ = (char)*data++;
+		*buffer++ = static_cast<char>(*data++);
 
 	return send(sockfd, g_send2_buffer, params[3], 0);
 }
@@ -264,8 +265,8 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)
 // native socket_change(_socket, _timeout = 100000);
 static cell AMX_NATIVE_CALL socket_change(AMX *amx, cell *params)
 {
-	int sockfd = params[1];
-	unsigned int timeout = params[2];
+	const int sockfd = params[1];
+	const unsigned int timeout = params[2];
 
 	struct timeval tv;
 	tv.tv_sec = 0;
@@ -287,8 +288,8 @@ static cell AMX_NATIVE_CALL socket_is_readable(AMX *amx, cell *params)
 // native socket_is_writable(_socket, _timeout = 100000);
 static cell AMX_NATIVE_CALL socket_is_writable(AMX *amx, cell *params)
 {
-	int sockfd = params[1];
-	unsigned int timeout = params[2];
+	const int sockfd = params[1];
+	const unsigned int timeout = params[2];
 
 	struct timeval tv;
 	tv.tv_sec = 0;
@@ -323,7 +324,7 @@ void OnAmxxAttach()
 {
 #ifdef _WIN32  
 	WSADATA WSAData;
-	int errorcode = WSAStartup(MAKEWORD(2, 2), &WSAData);
+	const int errorcode = WSAStartup(MAKEWORD(2, 2), &WSAData);
 
 	if(errorcode != 0)
 	{

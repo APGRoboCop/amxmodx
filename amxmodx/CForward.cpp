@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -11,11 +13,11 @@
 #include "debugger.h"
 #include "binlog.h"
 
-CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
-{
-	m_FuncName = name;
-	m_ExecType = et;
-	m_NumParams = numParams;
+CForward::CForward(const char* name, ForwardExecType et, int numParams, const ForwardParam* paramTypes)
+	: m_FuncName(name),
+	m_ExecType(et),
+	m_NumParams(numParams),
+	m_Name(name){
 	
 	memcpy((void *)m_ParamTypes, paramTypes, numParams * sizeof(ForwardParam));
 	
@@ -33,8 +35,6 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 			m_Funcs.append(tmp);
 		}
 	}
-
-	m_Name = name;
 }
 
 cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
@@ -42,19 +42,17 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	cell realParams[FORWARD_MAX_PARAMS];
 	cell *physAddrs[FORWARD_MAX_PARAMS];
 
-	const int STRINGEX_MAXLENGTH = 128;
-
 	cell globRetVal = 0;
 
 	for (size_t i = 0; i < m_Funcs.length(); ++i)
 	{
-		auto iter = &m_Funcs[i];
+		AMXForward* iter = &m_Funcs[i];
 
 		if (iter->pPlugin->isExecutable(iter->func))
 		{
 			// Get debug info
 			AMX *amx = iter->pPlugin->getAMX();
-			Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
+			Debugger *pDebugger = static_cast<Debugger*>(amx->userdata[UD_DEBUGGER]);
 			
 			if (pDebugger)
 				pDebugger->BeginExec();
@@ -66,6 +64,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			{
 				if (m_ParamTypes[i] == FP_STRING || m_ParamTypes[i] == FP_STRINGEX)
 				{
+					constexpr int STRINGEX_MAXLENGTH = 128;
 					const char *str = reinterpret_cast<const char*>(params[i]);
 					cell *tmp;
 					if (!str)
@@ -84,7 +83,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					{
 						memcpy(tmp, preparedArrays[params[i]].ptr, preparedArrays[params[i]].size * sizeof(cell));
 					} else {
-						char *data = (char*)preparedArrays[params[i]].ptr;
+						const char *data = static_cast<char*>(preparedArrays[params[i]].ptr);
 						
 						for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 							*tmp++ = (static_cast<cell>(*data++)) & 0xFF;
@@ -162,12 +161,12 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					// copy back
 					if (preparedArrays[params[i]].copyBack)
 					{
-						cell *tmp = physAddrs[i];
+						const cell *tmp = physAddrs[i];
 						if (preparedArrays[params[i]].type == Type_Cell)
 						{
 							memcpy(preparedArrays[params[i]].ptr, tmp, preparedArrays[params[i]].size * sizeof(cell));
 						} else {
-							char *data = (char*)preparedArrays[params[i]].ptr;
+							char *data = static_cast<char*>(preparedArrays[params[i]].ptr);
 							
 							for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 								*data++ = static_cast<char>(*tmp++ & 0xFF);
@@ -178,7 +177,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				else if (m_ParamTypes[i] == FP_CELL_BYREF || m_ParamTypes[i] == FP_FLOAT_BYREF)
 				{
 					//copy back
-					cell *tmp = physAddrs[i];
+					const cell *tmp = physAddrs[i];
 					if (m_ParamTypes[i] == FP_CELL_BYREF)
 					{
 						memcpy(reinterpret_cast<cell *>(params[i]), tmp, sizeof(cell));
@@ -248,8 +247,6 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 {
 	if (isFree)
 		return 0;
-	
-	const int STRINGEX_MAXLENGTH = 128;
 
 	cell realParams[FORWARD_MAX_PARAMS];
 	cell *physAddrs[FORWARD_MAX_PARAMS];
@@ -263,7 +260,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	m_InExec = true;
 
-	Debugger *pDebugger = (Debugger *)m_Amx->userdata[UD_DEBUGGER];
+	Debugger *pDebugger = static_cast<Debugger*>(m_Amx->userdata[UD_DEBUGGER]);
 	if (pDebugger)
 		pDebugger->BeginExec();
 
@@ -274,6 +271,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	{
 		if (m_ParamTypes[i] == FP_STRING || m_ParamTypes[i] == FP_STRINGEX)
 		{
+			constexpr int STRINGEX_MAXLENGTH = 128;
 			const char *str = reinterpret_cast<const char*>(params[i]);
 			if (!str)
 				str = "";
@@ -292,7 +290,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			{
 				memcpy(tmp, preparedArrays[params[i]].ptr, preparedArrays[params[i]].size * sizeof(cell));
 			} else {
-				char *data = (char*)preparedArrays[params[i]].ptr;
+				const char *data = static_cast<char*>(preparedArrays[params[i]].ptr);
 				
 				for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 					*tmp++ = (static_cast<cell>(*data++)) & 0xFF;
@@ -366,12 +364,12 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			// copy back
 			if (preparedArrays[params[i]].copyBack)
 			{
-				cell *tmp = physAddrs[i];
+				const cell *tmp = physAddrs[i];
 				if (preparedArrays[params[i]].type == Type_Cell)
 				{
 					memcpy(preparedArrays[params[i]].ptr, tmp, preparedArrays[params[i]].size * sizeof(cell));
 				} else {
-					char *data = (char*)preparedArrays[params[i]].ptr;
+					char *data = static_cast<char*>(preparedArrays[params[i]].ptr);
 					
 					for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 						*data++ = static_cast<char>(*tmp++ & 0xFF);
@@ -382,7 +380,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		else if (m_ParamTypes[i] == FP_CELL_BYREF || m_ParamTypes[i] == FP_FLOAT_BYREF)
 		{
 			//copy back
-			cell *tmp = physAddrs[i];
+			const cell *tmp = physAddrs[i];
 			if (m_ParamTypes[i] == FP_CELL_BYREF)
 			{
 				memcpy(reinterpret_cast<cell *>(params[i]), tmp, sizeof(cell));
@@ -402,7 +400,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam * paramTypes)
 {
-	int retVal = m_Forwards.length() << 1;
+	const size_t retVal = m_Forwards.length() << 1;
 	CForward *tmp = new CForward(funcName, et, numParams, paramTypes);
 	
 	if (!tmp)
@@ -417,7 +415,7 @@ int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int 
 
 int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const ForwardParam *paramTypes)
 {
-	int retVal = -1;
+	size_t retVal = -1;
 	CSPForward *pForward;
 	
 	if (!m_FreeSPForwards.empty())
@@ -453,7 +451,7 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 
 int CForwardMngr::registerSPForward(const char *funcName, AMX *amx, int numParams, const ForwardParam *paramTypes)
 {
-	int retVal = (m_SPForwards.length() << 1) | 1;
+	size_t retVal = (m_SPForwards.length() << 1) | 1;
 	CSPForward *pForward;
 	
 	if (!m_FreeSPForwards.empty())
@@ -571,7 +569,7 @@ void CForwardMngr::clear()
 
 bool CForwardMngr::isSPForward(int id) const
 {
-	return ((id & 1) == 0) ? false : true;
+	return ((id & 1) != 0);
 }
 
 void CForwardMngr::unregisterSPForward(int id)
@@ -600,7 +598,7 @@ int CForwardMngr::duplicateSPForward(int id)
 		return -1;
 	}
 
-	CSPForward *fwd = m_SPForwards.at(id >> 1);
+	const CSPForward *fwd = m_SPForwards.at(id >> 1);
 	
 	return registerSPForward(fwd->m_Func, fwd->m_Amx, fwd->m_NumParams, fwd->m_ParamTypes);
 }
@@ -612,8 +610,8 @@ int CForwardMngr::isSameSPForward(int id1, int id2)
 		return false;
 	}
 
-	CSPForward *fwd1 = m_SPForwards.at(id1 >> 1);
-	CSPForward *fwd2 = m_SPForwards.at(id2 >> 1);
+	const CSPForward *fwd1 = m_SPForwards.at(id1 >> 1);
+	const CSPForward *fwd2 = m_SPForwards.at(id2 >> 1);
 
 	if (fwd1->isFree || fwd2->isFree)
 	{
@@ -645,14 +643,13 @@ int registerForward(const char *funcName, ForwardExecType et, ...)
 	va_start(argptr, et);
 	
 	ForwardParam params[FORWARD_MAX_PARAMS];
-	ForwardParam tmp;
-	
+
 	while (true)
 	{
 		if (curParam == FORWARD_MAX_PARAMS)
 			break;
-		
-		tmp = (ForwardParam)va_arg(argptr, int);
+
+		const ForwardParam tmp = static_cast<ForwardParam>(va_arg(argptr, int));
 		
 		if (tmp == FP_DONE)
 			break;
@@ -684,14 +681,13 @@ int registerSPForwardByName(AMX *amx, const char *funcName, ...)
 	va_start(argptr, funcName);
 	
 	ForwardParam params[FORWARD_MAX_PARAMS];
-	ForwardParam tmp;
-	
+
 	while (true)
 	{
 		if (curParam == FORWARD_MAX_PARAMS)
 			break;
-		
-		tmp = (ForwardParam)va_arg(argptr, int);
+
+		const ForwardParam tmp = static_cast<ForwardParam>(va_arg(argptr, int));
 		
 		if (tmp == FP_DONE)
 			break;
@@ -713,14 +709,13 @@ int registerSPForward(AMX *amx, int func, ...)
 	va_start(argptr, func);
 	
 	ForwardParam params[FORWARD_MAX_PARAMS];
-	ForwardParam tmp;
-	
+
 	while (true)
 	{
 		if (curParam == FORWARD_MAX_PARAMS)
 			break;
-		
-		tmp = (ForwardParam)va_arg(argptr, int);
+
+		const ForwardParam tmp = static_cast<ForwardParam>(va_arg(argptr, int));
 		
 		if (tmp == FP_DONE)
 			break;
@@ -740,20 +735,18 @@ cell executeForwards(int id, ...)
 		return -1;
 
 	cell params[FORWARD_MAX_PARAMS];
-	
-	int paramsNum = g_forwards.getParamsNum(id);
+
+	const int paramsNum = g_forwards.getParamsNum(id);
 	
 	va_list argptr;
 	va_start(argptr, id);
 
-	ForwardParam param_type;
-	
 	for (int i = 0; i < paramsNum && i < FORWARD_MAX_PARAMS; ++i)
 	{
-		param_type = g_forwards.getParamType(id, i);
+		const ForwardParam param_type = g_forwards.getParamType(id, i);
 		if (param_type == FP_FLOAT)
 		{
-			REAL tmp = (REAL)va_arg(argptr, double);			// floats get converted to doubles
+			REAL tmp = static_cast<float>(va_arg(argptr, double));			// floats get converted to doubles
 			params[i] = amx_ftoc(tmp);
 		}
 		else if(param_type == FP_FLOAT_BYREF)

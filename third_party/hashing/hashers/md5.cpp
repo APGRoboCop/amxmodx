@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // //////////////////////////////////////////////////////////
 // md5.cpp
 // Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
@@ -94,40 +96,40 @@ void MD5::processBlock(const void* data)
 #endif
 
   // first round
-  uint32_t word0  = LITTLEENDIAN(words[ 0]);
+  const uint32_t word0  = LITTLEENDIAN(words[ 0]);
   a = rotate(a + f1(b,c,d) + word0  + 0xd76aa478,  7) + b;
-  uint32_t word1  = LITTLEENDIAN(words[ 1]);
+  const uint32_t word1  = LITTLEENDIAN(words[ 1]);
   d = rotate(d + f1(a,b,c) + word1  + 0xe8c7b756, 12) + a;
-  uint32_t word2  = LITTLEENDIAN(words[ 2]);
+  const uint32_t word2  = LITTLEENDIAN(words[ 2]);
   c = rotate(c + f1(d,a,b) + word2  + 0x242070db, 17) + d;
-  uint32_t word3  = LITTLEENDIAN(words[ 3]);
+  const uint32_t word3  = LITTLEENDIAN(words[ 3]);
   b = rotate(b + f1(c,d,a) + word3  + 0xc1bdceee, 22) + c;
 
-  uint32_t word4  = LITTLEENDIAN(words[ 4]);
+  const uint32_t word4  = LITTLEENDIAN(words[ 4]);
   a = rotate(a + f1(b,c,d) + word4  + 0xf57c0faf,  7) + b;
-  uint32_t word5  = LITTLEENDIAN(words[ 5]);
+  const uint32_t word5  = LITTLEENDIAN(words[ 5]);
   d = rotate(d + f1(a,b,c) + word5  + 0x4787c62a, 12) + a;
-  uint32_t word6  = LITTLEENDIAN(words[ 6]);
+  const uint32_t word6  = LITTLEENDIAN(words[ 6]);
   c = rotate(c + f1(d,a,b) + word6  + 0xa8304613, 17) + d;
-  uint32_t word7  = LITTLEENDIAN(words[ 7]);
+  const uint32_t word7  = LITTLEENDIAN(words[ 7]);
   b = rotate(b + f1(c,d,a) + word7  + 0xfd469501, 22) + c;
 
-  uint32_t word8  = LITTLEENDIAN(words[ 8]);
+  const uint32_t word8  = LITTLEENDIAN(words[ 8]);
   a = rotate(a + f1(b,c,d) + word8  + 0x698098d8,  7) + b;
-  uint32_t word9  = LITTLEENDIAN(words[ 9]);
+  const uint32_t word9  = LITTLEENDIAN(words[ 9]);
   d = rotate(d + f1(a,b,c) + word9  + 0x8b44f7af, 12) + a;
-  uint32_t word10 = LITTLEENDIAN(words[10]);
+  const uint32_t word10 = LITTLEENDIAN(words[10]);
   c = rotate(c + f1(d,a,b) + word10 + 0xffff5bb1, 17) + d;
-  uint32_t word11 = LITTLEENDIAN(words[11]);
+  const uint32_t word11 = LITTLEENDIAN(words[11]);
   b = rotate(b + f1(c,d,a) + word11 + 0x895cd7be, 22) + c;
 
-  uint32_t word12 = LITTLEENDIAN(words[12]);
+  const uint32_t word12 = LITTLEENDIAN(words[12]);
   a = rotate(a + f1(b,c,d) + word12 + 0x6b901122,  7) + b;
-  uint32_t word13 = LITTLEENDIAN(words[13]);
+  const uint32_t word13 = LITTLEENDIAN(words[13]);
   d = rotate(d + f1(a,b,c) + word13 + 0xfd987193, 12) + a;
-  uint32_t word14 = LITTLEENDIAN(words[14]);
+  const uint32_t word14 = LITTLEENDIAN(words[14]);
   c = rotate(c + f1(d,a,b) + word14 + 0xa679438e, 17) + d;
-  uint32_t word15 = LITTLEENDIAN(words[15]);
+  const uint32_t word15 = LITTLEENDIAN(words[15]);
   b = rotate(b + f1(c,d,a) + word15 + 0x49b40821, 22) + c;
 
   // second round
@@ -261,7 +263,7 @@ void MD5::processBuffer()
   paddedLength++;
 
   // number of bits must be (numBits % 512) = 448
-  size_t lower11Bits = paddedLength & 511;
+  const size_t lower11Bits = paddedLength & 511;
   if (lower11Bits <= 448)
     paddedLength +=       448 - lower11Bits;
   else
@@ -321,11 +323,11 @@ const char* MD5::getHash()
   // convert to hex string
   static char result[32+1];
   size_t written = 0;
-  for (int i = 0; i < HashBytes; i++)
+  for (const unsigned char i : rawHash)
   {
     static const char dec2hex[16+1] = "0123456789abcdef";
-    result[written++] = dec2hex[(rawHash[i] >> 4) & 15];
-    result[written++] = dec2hex[ rawHash[i]       & 15];
+    result[written++] = dec2hex[(i >> 4) & 15];
+    result[written++] = dec2hex[i & 15];
   }
   result[written] = 0;
   return const_cast<const char *>(result);

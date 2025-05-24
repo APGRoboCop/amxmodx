@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -53,7 +55,7 @@ void CLog::CloseFile()
 			// get time
 			time_t td;
 			time(&td);
-			tm *curTime = localtime(&td);
+			const tm *curTime = localtime(&td);
 
 			char date[32];
 			strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
@@ -73,7 +75,7 @@ void CLog::CreateNewFile()
 	// build filename
 	time_t td;
 	time(&td);
-	tm *curTime = localtime(&td);
+	const tm *curTime = localtime(&td);
 
 	char file[PLATFORM_MAX_PATH];
 	char name[256];
@@ -158,7 +160,7 @@ void CLog::Log(const char *fmt, ...)
 		// get time
 		time_t td;
 		time(&td);
-		tm *curTime = localtime(&td);
+		const tm *curTime = localtime(&td);
 
 		char date[32];
 		strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);
@@ -228,7 +230,7 @@ void CLog::LogError(const char *fmt, ...)
 	// get time
 	time_t td;
 	time(&td);
-	tm *curTime = localtime(&td);
+	const tm *curTime = localtime(&td);
 
 	char date[32];
 	strftime(date, 31, "%m/%d/%Y - %H:%M:%S", curTime);

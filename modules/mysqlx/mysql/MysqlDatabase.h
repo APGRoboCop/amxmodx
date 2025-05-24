@@ -26,16 +26,16 @@ namespace SourceMod
 		friend class MysqlQuery;
 	public:
 		MysqlDatabase(MYSQL *mysql, MysqlDriver *drvr);
-		~MysqlDatabase();
+		~MysqlDatabase() override;
 	public:
-		void FreeHandle();
-		ISQLDriver *Driver();
+		void FreeHandle() override;
+		ISQLDriver *Driver() override;
 	public:
-		IQuery *PrepareQueryFmt(const char *fmt, ...);
-		IQuery *PrepareQueryFmt(const char *fmt, va_list ap);
-		IQuery *PrepareQuery(const char *query);
-		int QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize);
-		bool SetCharacterSet(const char *characterset);
+		IQuery *PrepareQueryFmt(const char *fmt, ...) override;
+		IQuery *PrepareQueryFmt(const char *fmt, va_list ap) override;
+		IQuery *PrepareQuery(const char *query) override;
+		int QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize) override;
+		bool SetCharacterSet(const char *characterset) override;
 	private:
 		void Disconnect();
 	private:

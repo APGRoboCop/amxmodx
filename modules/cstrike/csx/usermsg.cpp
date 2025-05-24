@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -41,7 +43,7 @@ void Client_DeathMsg(void *mValue)
 	{
 	case 0:
 		{
-			killer_id = *(int *)mValue;
+			killer_id = *static_cast<int*>(mValue);
 			break;
 		}
 	//case 1:
@@ -51,12 +53,12 @@ void Client_DeathMsg(void *mValue)
 	//	}
 	case 2:
 		{
-			is_headshot = *(int *)mValue;
+			is_headshot = *static_cast<int*>(mValue);
 			break;
 		}
 	case 3:
 		{
-			name = (const char *)mValue;
+			name = static_cast<const char*>(mValue);
 			if (killer_id 
 				&& (strcmp(name, "knife") == 0))
 			{
@@ -75,13 +77,13 @@ void Client_WeaponList(void* mValue){
 
   switch (mState++) {
   case 0:
-    wpnName = (const char*)mValue;
+    wpnName = static_cast<const char*>(mValue);
     break;
   case 1:
-    iSlot = *(int*)mValue;
+    iSlot = *static_cast<int*>(mValue);
     break;
   case 7:
-    int iId = *(int*)mValue;
+	  const int iId = *static_cast<int*>(mValue);
     if ( (iId < 0 || iId >= MAX_WEAPONS ) || ( wpnList & (1<<iId) ) )
       break;
 
@@ -104,10 +106,10 @@ void Client_Damage(void* mValue){
   switch (mState++) {
   case 1: 
 	ignore = false;
-    damage = *(int*)mValue;
+    damage = *static_cast<int*>(mValue);
     break;
   case 2:
-    bits = *(int*)mValue;
+    bits = *static_cast<int*>(mValue);
     break;
   case 3:
 	  if (!mPlayer || !damage || bits){
@@ -166,15 +168,15 @@ void Client_CurWeapon(void* mValue){
   static int iId;
   switch (mState++){
   case 0: 
-    iState = *(int*)mValue;
+    iState = *static_cast<int*>(mValue);
     break;
   case 1:
     if (!iState) break; 
-    iId = *(int*)mValue;
+    iId = *static_cast<int*>(mValue);
     break;
   case 2:
 	if (!mPlayer || !iState ) break;
-    int iClip = *(int*)mValue;
+    const int iClip = *static_cast<int*>(mValue);
     if ((iClip > -1) && (iClip < mPlayer->weapons[iId].clip)) 
       mPlayer->saveShot(iId);
     mPlayer->weapons[iId].clip = iClip;
@@ -186,13 +188,13 @@ void Client_AmmoX(void* mValue){
   static int iAmmo;
   switch (mState++){
   case 0:
-    iAmmo = *(int*)mValue;
+    iAmmo = *static_cast<int*>(mValue);
     break;
   case 1:
 	if (!mPlayer ) break;
     for(int i = 1; i < MAX_WEAPONS ; ++i) 
       if (iAmmo == weaponData[i].ammoSlot)
-        mPlayer->weapons[i].ammo = *(int*)mValue;
+        mPlayer->weapons[i].ammo = *static_cast<int*>(mValue);
   }
 }
 
@@ -200,13 +202,13 @@ void Client_AmmoPickup(void* mValue){
   static int iSlot;
   switch (mState++){
   case 0:
-    iSlot = *(int*)mValue;
+    iSlot = *static_cast<int*>(mValue);
     break;
   case 1:
 	if (!mPlayer ) break;
     for(int i = 1; i < MAX_WEAPONS ; ++i)
       if (weaponData[i].ammoSlot == iSlot)
-        mPlayer->weapons[i].ammo += *(int*)mValue;
+        mPlayer->weapons[i].ammo += *static_cast<int*>(mValue);
   }
 }
 
@@ -214,18 +216,18 @@ void Client_ScoreInfo(void* mValue){
   static int index;
   switch (mState++){
   case 0:
-    index = *(int*)mValue;
+    index = *static_cast<int*>(mValue);
     break;
   case 4:
 	if ( index > 0 && index <= gpGlobals->maxClients )
-		GET_PLAYER_POINTER_I( index )->teamId = *(int*)mValue;
+		GET_PLAYER_POINTER_I( index )->teamId = *static_cast<int*>(mValue);
   }
 }
 
 void Client_SendAudio(void* mValue){
 	static const char* szText;
 	if ( mState == 1 ){
-		szText = (const char*)mValue;
+		szText = static_cast<const char*>(mValue);
 		if ( !mPlayer && szText[7]=='B' ) {
 			if ( szText[11]=='P' && g_Planter ){
 				GET_PLAYER_POINTER_I(g_Planter)->saveBPlant();
@@ -244,7 +246,7 @@ void Client_SendAudio(void* mValue){
 void Client_TextMsg(void* mValue){
 	static const char* szText;
 	if ( !mPlayer && mState==1 ){
-		szText = (const char*)mValue;
+		szText = static_cast<const char*>(mValue);
 		if ( szText[1]=='T' && szText[8]=='B' && g_Planter ){
 			GET_PLAYER_POINTER_I(g_Planter)->saveBExplode();
 			g_bombAnnounce = BOMB_EXPLODE;
@@ -254,7 +256,7 @@ void Client_TextMsg(void* mValue){
 }
 
 void Client_BarTime(void* mValue){
-	int iTime = *(int*)mValue;
+	const int iTime = *static_cast<int*>(mValue);
 	if ( !iTime || !mPlayer->IsAlive() ) return;
 	if ( iTime == 3 ){
 		g_Planter = mPlayerIndex;

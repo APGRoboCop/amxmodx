@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -58,7 +60,7 @@ static const char *returntypes[] =
 
 static cell AMX_NATIVE_CALL GetHamReturnInteger(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->GetInt(MF_GetAmxAddr(amx, params[1]));
@@ -66,7 +68,7 @@ static cell AMX_NATIVE_CALL GetHamReturnInteger(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetOrigHamReturnInteger(AMX *amx, cell *params)
 {
-	CHECK_STACK(OrigReturnStack);
+	CHECK_STACK(OrigReturnStack)
 	Data *dat=OrigReturnStack.front();
 
 	int ret=dat->GetInt(MF_GetAmxAddr(amx, params[1]));
@@ -74,7 +76,7 @@ static cell AMX_NATIVE_CALL GetOrigHamReturnInteger(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetHamReturnFloat(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->GetFloat(MF_GetAmxAddr(amx, params[1]));
@@ -82,7 +84,7 @@ static cell AMX_NATIVE_CALL GetHamReturnFloat(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetOrigHamReturnFloat(AMX *amx, cell *params)
 {
-	CHECK_STACK(OrigReturnStack);
+	CHECK_STACK(OrigReturnStack)
 	Data *dat=OrigReturnStack.front();
 
 	int ret=dat->GetFloat(MF_GetAmxAddr(amx, params[1]));
@@ -90,7 +92,7 @@ static cell AMX_NATIVE_CALL GetOrigHamReturnFloat(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetHamReturnVector(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->GetVector(MF_GetAmxAddr(amx, params[1]));
@@ -98,7 +100,7 @@ static cell AMX_NATIVE_CALL GetHamReturnVector(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetOrigHamReturnVector(AMX *amx, cell *params)
 {
-	CHECK_STACK(OrigReturnStack);
+	CHECK_STACK(OrigReturnStack)
 	Data *dat=OrigReturnStack.front();
 
 	int ret=dat->GetVector(MF_GetAmxAddr(amx, params[1]));
@@ -106,7 +108,7 @@ static cell AMX_NATIVE_CALL GetOrigHamReturnVector(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetHamReturnEntity(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->GetEntity(MF_GetAmxAddr(amx, params[1]));
@@ -114,7 +116,7 @@ static cell AMX_NATIVE_CALL GetHamReturnEntity(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetOrigHamReturnEntity(AMX *amx, cell *params)
 {
-	CHECK_STACK(OrigReturnStack);
+	CHECK_STACK(OrigReturnStack)
 	Data *dat=OrigReturnStack.front();
 
 	int ret=dat->GetEntity(MF_GetAmxAddr(amx, params[1]));
@@ -122,7 +124,7 @@ static cell AMX_NATIVE_CALL GetOrigHamReturnEntity(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetHamReturnString(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->GetString(MF_GetAmxAddr(amx, params[1]), params[2]);
@@ -130,7 +132,7 @@ static cell AMX_NATIVE_CALL GetHamReturnString(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL GetOrigHamReturnString(AMX *amx, cell *params)
 {
-	CHECK_STACK(OrigReturnStack);
+	CHECK_STACK(OrigReturnStack)
 	Data *dat=OrigReturnStack.front();
 
 	int ret=dat->GetString(MF_GetAmxAddr(amx, params[1]), params[2]);
@@ -138,7 +140,7 @@ static cell AMX_NATIVE_CALL GetOrigHamReturnString(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamReturnInteger(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->SetInt(&params[1]);
@@ -146,7 +148,7 @@ static cell AMX_NATIVE_CALL SetHamReturnInteger(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamReturnFloat(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->SetFloat(&params[1]);
@@ -154,7 +156,7 @@ static cell AMX_NATIVE_CALL SetHamReturnFloat(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamReturnVector(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->SetVector(MF_GetAmxAddr(amx, params[1]));
@@ -162,7 +164,7 @@ static cell AMX_NATIVE_CALL SetHamReturnVector(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamReturnEntity(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->SetEntity(&params[1]);
@@ -170,7 +172,7 @@ static cell AMX_NATIVE_CALL SetHamReturnEntity(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamReturnString(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStack);
+	CHECK_STACK(ReturnStack)
 	Data *dat=ReturnStack.front();
 
 	int ret=dat->SetString(MF_GetAmxAddr(amx, params[1]));
@@ -178,7 +180,7 @@ static cell AMX_NATIVE_CALL SetHamReturnString(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamParamInteger(AMX *amx, cell *params)
 {
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec = ParamStack.front();
 	if (vec->length() < (unsigned)params[1]) 
 	{ 
@@ -198,7 +200,7 @@ static cell AMX_NATIVE_CALL SetHamParamTraceResult(AMX *amx, cell *params)
 
 		return 0;
 	}
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec = ParamStack.front();
 	if (vec->length() < (unsigned)params[1]) 
 	{ 
@@ -212,7 +214,7 @@ static cell AMX_NATIVE_CALL SetHamParamTraceResult(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamParamFloat(AMX *amx, cell *params)
 {
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec = ParamStack.front();
 	if (vec->length() < (unsigned)params[1] || params[1] < 1) 
 	{ 
@@ -226,7 +228,7 @@ static cell AMX_NATIVE_CALL SetHamParamFloat(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL SetHamParamVector(AMX *amx, cell *params)
 {
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec = ParamStack.front();
 	if (vec->length() < (unsigned)params[1]) 
 	{ 
@@ -241,7 +243,7 @@ static cell AMX_NATIVE_CALL SetHamParamVector(AMX *amx, cell *params)
 
 cell SetParamEntity(AMX *amx, cell *params, bool updateIndex)
 {
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec = ParamStack.front();
 	if (vec->length() < (unsigned)params[1])
 	{
@@ -266,7 +268,7 @@ static cell AMX_NATIVE_CALL SetHamParamEntity2(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL SetHamParamString(AMX *amx, cell *params)
 {
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec=ParamStack.front(); 
 	if (vec->length() < (unsigned)params[1]) 
 	{ 
@@ -287,7 +289,7 @@ static cell AMX_NATIVE_CALL SetHamParamItemInfo(AMX *amx, cell *params)
 		return 0;
 	}
 
-	CHECK_STACK(ParamStack);
+	CHECK_STACK(ParamStack)
 	ke::Vector<Data *> *vec = ParamStack.front();
 
 	if (vec->length() < (unsigned)params[1])
@@ -465,7 +467,7 @@ static cell AMX_NATIVE_CALL SetHamItemInfo(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL GetHamReturnStatus(AMX *amx, cell *params)
 {
-	CHECK_STACK(ReturnStatus);
+	CHECK_STACK(ReturnStatus)
 	int *i=ReturnStatus.front();
 
 	return *i;

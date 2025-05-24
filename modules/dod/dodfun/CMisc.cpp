@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -43,7 +45,7 @@ void CPlayer::Init( int pi, edict_t* pe )
 }
 
 void CPlayer::killPlayer(){
-	pEdict->v.dmg_inflictor = NULL;
+	pEdict->v.dmg_inflictor = nullptr;
 	pEdict->v.health = 0;
 	pEdict->v.deadflag = DEAD_RESPAWNABLE;
 	pEdict->v.weaponmodel = 0;
@@ -67,7 +69,7 @@ void CObjective::SetKeyValue( int index, char *keyname, char *value ){
 
 	KeyValueData pkvd;
 
-	pkvd.szClassName = (char *)STRING(obj[index].pEdict->v.classname);
+	pkvd.szClassName = const_cast<char*>(STRING(obj[index].pEdict->v.classname));
 	pkvd.szKeyName = keyname; // type
 	pkvd.szValue = value;
 	pkvd.fHandled = false;
@@ -77,7 +79,7 @@ void CObjective::SetKeyValue( int index, char *keyname, char *value ){
 }
 
 void CObjective::InitObj(int dest , edict_t* ed ){
-	MESSAGE_BEGIN( dest, gmsgInitObj,0,ed );
+	MESSAGE_BEGIN( dest, gmsgInitObj,nullptr,ed );
 	WRITE_BYTE( count );
 	for ( int i=0; i<count; i++ ){
 		WRITE_SHORT(ENTINDEX(obj[i].pEdict));

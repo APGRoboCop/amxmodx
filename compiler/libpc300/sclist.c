@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*  Pawn compiler  - maintenance of various lists
  *
  *  o  Name list (aliases)
@@ -75,12 +77,10 @@ static stringpair *insert_stringpair(stringpair *root,char *first,char *second,i
 
 static void delete_stringpairtable(stringpair *root)
 {
-  stringpair *cur, *next;
-
-  assert(root!=NULL);
-  cur=root->next;
+	assert(root!=NULL);
+  stringpair* cur = root->next;
   while (cur!=NULL) {
-    next=cur->next;
+    stringpair* next = cur->next;
     assert(cur->first!=NULL);
     assert(cur->second!=NULL);
     free(cur->first);
@@ -111,10 +111,8 @@ static stringpair *find_stringpair(stringpair *cur,char *first,int matchlength)
 
 static int delete_stringpair(stringpair *root,stringpair *item)
 {
-  stringpair *cur;
-
-  assert(root!=NULL);
-  cur=root;
+	assert(root!=NULL);
+  stringpair* cur = root;
   while (cur->next!=NULL) {
     if (cur->next==item) {
       cur->next=item->next;     /* unlink from list */
@@ -151,10 +149,8 @@ static stringlist *insert_string(stringlist *root,char *string)
 
 static char *get_string(stringlist *root,int index)
 {
-  stringlist *cur;
-
-  assert(root!=NULL);
-  cur=root->next;
+	assert(root!=NULL);
+	const stringlist* cur = root->next;
   while (cur!=NULL && index-->0)
     cur=cur->next;
   if (cur!=NULL) {
@@ -166,13 +162,13 @@ static char *get_string(stringlist *root,int index)
 
 static int delete_string(stringlist *root,int index)
 {
-  stringlist *cur,*item;
+  stringlist *cur;
 
   assert(root!=NULL);
   for (cur=root; cur->next!=NULL && index>0; cur=cur->next,index--)
     /* nothing */;
   if (cur->next!=NULL) {
-    item=cur->next;
+	  stringlist* item = cur->next;
     cur->next=item->next;       /* unlink from list */
     assert(item->line!=NULL);
     free(item->line);
@@ -184,12 +180,10 @@ static int delete_string(stringlist *root,int index)
 
 SC_FUNC void delete_stringtable(stringlist *root)
 {
-  stringlist *cur,*next;
-
-  assert(root!=NULL);
-  cur=root->next;
+	assert(root!=NULL);
+  stringlist* cur = root->next;
   while (cur!=NULL) {
-    next=cur->next;
+    stringlist* next = cur->next;
     assert(cur->line!=NULL);
     free(cur->line);
     free(cur);
@@ -217,7 +211,7 @@ SC_FUNC stringpair *insert_alias(char *name,char *alias)
 
 SC_FUNC int lookup_alias(char *target,char *name)
 {
-  stringpair *cur=find_stringpair(alias_tab.next,name,strlen(name));
+	const stringpair *cur=find_stringpair(alias_tab.next,name,strlen(name));
   if (cur!=NULL) {
     assert(strlen(cur->second)<=sNAMEMAX);
     strcpy(target,cur->second);
@@ -301,11 +295,10 @@ SC_FUNC stringpair *insert_subst(char *pattern,char *substitution,int prefixlen)
 
 SC_FUNC stringpair *find_subst(char *name,int length)
 {
-  stringpair *item;
-  assert(name!=NULL);
+	assert(name!=NULL);
   assert(length>0);
   assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_' || *name==PUBLIC_CHAR);
-  item=substindex[(int)*name-PUBLIC_CHAR];
+  stringpair* item = substindex[(int)*name - PUBLIC_CHAR];
   if (item!=NULL)
     item=find_stringpair(item,name,length);
 
@@ -329,11 +322,10 @@ SC_FUNC stringpair *find_subst(char *name,int length)
 
 SC_FUNC int delete_subst(char *name,int length)
 {
-  stringpair *item;
-  assert(name!=NULL);
+	assert(name!=NULL);
   assert(length>0);
   assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_' || *name==PUBLIC_CHAR);
-  item=substindex[(int)*name-PUBLIC_CHAR];
+  stringpair* item = substindex[(int)*name - PUBLIC_CHAR];
   if (item!=NULL)
     item=find_stringpair(item,name,length);
   if (item==NULL)
@@ -345,9 +337,8 @@ SC_FUNC int delete_subst(char *name,int length)
 
 SC_FUNC void delete_substtable(void)
 {
-  int i;
-  delete_stringpairtable(&substpair);
-  for (i=0; i<sizeof substindex/sizeof substindex[0]; i++)
+	delete_stringpairtable(&substpair);
+  for (int i = 0; i<sizeof substindex/sizeof substindex[0]; i++)
     substindex[i]=NULL;
 }
 
@@ -480,9 +471,8 @@ SC_FUNC int popfront_heaplist(long *first, long *second)
 
 SC_FUNC void delete_heaplisttable(void)
 {
-  valuepair *cur;
-  while (heaplist.next!=NULL) {
-    cur=heaplist.next;
+	while (heaplist.next!=NULL) {
+    valuepair* cur = heaplist.next;
     heaplist.next=cur->next;
     free(cur);
   } /* while */
@@ -552,12 +542,11 @@ SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
               symname,sym->codeaddr,code_idx,sym->ident,sym->vclass);
 #endif
     if (sym->ident==iARRAY || sym->ident==iREFARRAY) {
-      symbol *sub;
 #if !defined NDEBUG
       count = sym->dim.array.level;
 #endif
       strcat(string," [ ");
-      for (sub=sym; sub!=NULL; sub=finddepend(sub)) {
+      for (const symbol* sub = sym; sub!=NULL; sub=finddepend(sub)) {
 #if !defined NDEBUG
         assert(sub->dim.array.level==count--);
 #endif

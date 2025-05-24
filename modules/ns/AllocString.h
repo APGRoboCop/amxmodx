@@ -82,8 +82,7 @@ public:
 
 		return MAKE_STRING(AllocStr->chars());
 
-	};
-
+	}
 };
 
 extern StringManager AllocStringList;

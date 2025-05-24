@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -626,7 +628,7 @@ static cell AMX_NATIVE_CALL SQL_SetCharset(AMX *amx, cell *params)
 		return 1;
 	}
 
-	return 0;
+	//return 0;
 }
 
 AMX_NATIVE_INFO g_BaseSqlNatives[] = 

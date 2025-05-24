@@ -56,8 +56,14 @@
 		class ListNode
 		{
 		public:
-			ListNode(const T & o) : obj(o) { };
-			ListNode() { };
+			ListNode(const T & o) : obj(o), next(nullptr), prev(nullptr)
+			{
+			}
+
+			ListNode(): next(nullptr), prev(nullptr)
+			{
+			}
+
 			T obj;
 			ListNode *next;
 			ListNode *prev;
@@ -78,8 +84,7 @@
 		}
 		List(const List &src) : m_Head(_Initialize()), m_Size(0)
 		{
-			iterator iter;
-			for (iter=src.begin(); iter!=src.end(); ++iter)
+			for (iterator iter = src.begin(); iter!=src.end(); ++iter)
 				push_back( (*iter) );
 		}
 		~List()
@@ -104,7 +109,7 @@
 
 			m_Size++;
 		}
-		size_t size()
+		size_t size() const
 		{
 			return m_Size;
 		}
@@ -112,20 +117,19 @@
 		void clear()
 		{
 			ListNode *node = m_Head->next;
-			ListNode *temp;
 			m_Head->next = m_Head;
 			m_Head->prev = m_Head;
 
 			// Iterate through the nodes until we find g_Head (the sentinel) again
 			while (node != m_Head)
 			{
-				temp = node->next;
+				ListNode* temp = node->next;
 				delete node;
 				node = temp;
 			}
 			m_Size = 0;
 		}
-		bool empty()
+		bool empty() const
 		{
 			return (m_Size == 0);
 		}
@@ -230,7 +234,7 @@
 		{
 			ListNode *pNode = where.m_This;
 			iterator iter(where);
-			iter++;
+			++iter;
 
 
 			// Works for all cases: empty list, erasing first element, erasing tail, erasing in the middle...
@@ -264,7 +268,7 @@
 		void remove(const T & obj)
 		{
 			iterator b;
-			for (b=begin(); b!=end(); b++)
+			for (b=begin(); b!=end(); ++b)
 			{
 				if ( (*b) == obj )
 				{
@@ -276,8 +280,7 @@
 		template <typename U>
 		iterator find(const U & equ)
 		{
-			iterator iter;
-			for (iter=begin(); iter!=end(); ++iter)
+			for (iterator iter = begin(); iter!=end(); ++iter)
 			{
 				if ( (*iter) == equ )
 					return iter;
@@ -287,8 +290,7 @@
 		List & operator =(const List &src)
 		{
 			clear();
-			iterator iter;
-			for (iter=src.begin(); iter!=src.end(); ++iter)
+			for (iterator iter = src.begin(); iter!=src.end(); ++iter)
 				push_back( (*iter) );
 			return *this;
 		}

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -70,10 +72,9 @@ IQuery *SqliteDatabase::PrepareQueryFmt(const char *fmt, va_list ap)
 IQuery *SqliteDatabase::PrepareQueryFmt(const char *fmt, ...)
 {
 	va_list ap;
-	IQuery *qry;
 
 	va_start(ap, fmt);
-	qry = PrepareQueryFmt(fmt, ap);
+	IQuery* qry = PrepareQueryFmt(fmt, ap);
 	va_end(ap);
 
 	return qry;
@@ -81,8 +82,8 @@ IQuery *SqliteDatabase::PrepareQueryFmt(const char *fmt, ...)
 
 int SqliteDatabase::QuoteString(const char *str, char buffer[], size_t maxlen, size_t *newsize)
 {
-	auto size = strlen(str);
-	auto needed = size * 2 + 1;
+	size_t size = strlen(str);
+	unsigned needed = size * 2 + 1;
 
 	if (maxlen < needed)
 	{
