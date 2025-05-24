@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\..\mysql-5.7\include;..\mysql;..\sdk;..\thread;..\..\..\metamod-bu\metamod;..\..\..\hlsdk-bu\common;..\..\..\hlsdk-bu\engine;..\..\..\hlsdk-bu\dlls;..\..\..\hlsdk-bu\pm_shared;..\..\..\hlsdk-bu\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_ITERATOR_DEBUG_LEVEL=0;_DEBUG;_WINDOWS;_USRDLL;MYSQL2_EXPORTS;SM_DEFAULT_THREADER;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
