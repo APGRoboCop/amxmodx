@@ -238,6 +238,7 @@ SC_FUNC int state_addlist(int *list,int count,int fsa)
     if ((ptr->states=(int*)malloc(count*sizeof(int)))==NULL) {
       free(ptr);
       error(103);       /* insufficient memory */
+      return 0;         /* dummy return */
     } /* if */
     memcpy(ptr->states,list,count*sizeof(int));
     ptr->numstates=count;

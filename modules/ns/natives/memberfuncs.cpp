@@ -189,11 +189,15 @@ static cell AMX_NATIVE_CALL ns_add_teamres(AMX *amx, cell *params)
 	{
 	case 1:
 		{
-			return amx_ftoc2(*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMA_RESOURCES)+=amx_ctof2(params[2]));
+			REAL *res = (REAL *)(static_cast<char*>(GameRules) + GAMERULES_TEAMA_RESOURCES);
+			*res += amx_ctof2(params[2]);
+			return amx_ftoc2(*res);
 		}
 	case 2:
 		{
-			return amx_ftoc2(*(REAL *)(static_cast<char*>(GameRules)+GAMERULES_TEAMB_RESOURCES)+=amx_ctof2(params[2]));
+			REAL *res = (REAL *)(static_cast<char*>(GameRules) + GAMERULES_TEAMB_RESOURCES);
+			*res += amx_ctof2(params[2]);
+			return amx_ftoc2(*res);
 		}
 	default:
 		{

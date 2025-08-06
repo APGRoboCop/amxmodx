@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
 	pc_printf("AMX Mod X Compiler %s\n", AMXX_VERSION);
 	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase\n");
-        pc_printf("Copyright (c) 2004-2024 AMX Mod X Team\n\n");
+        pc_printf("Copyright (c) 2004-2025 AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{

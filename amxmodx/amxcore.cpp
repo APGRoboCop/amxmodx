@@ -37,7 +37,8 @@
 #include <cassert>
 #include "amx.h"
 #if defined __WIN32__ || defined _WIN32 || defined WIN32 || defined _Windows
-  #include <Windows.h>
+#include <Windows.h>
+#include <WinNT.h>
 #endif
 
 /* A few compilers do not provide the ANSI C standard "time" functions */
