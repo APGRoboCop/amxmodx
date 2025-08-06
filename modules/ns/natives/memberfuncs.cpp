@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL ns_finish_weldable(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL ns_get_teamres(AMX *amx, cell *params)
 {
-	if (GameMan.IsCombat())
+	if (!GameMan.IsCombat())
 	{
 		return 0;
 	}
@@ -139,7 +139,7 @@ static cell AMX_NATIVE_CALL ns_get_teamres(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL ns_set_teamres(AMX *amx, cell *params)
 {
-	if (GameMan.IsCombat())
+	if (!GameMan.IsCombat())
 	{
 		return 0;
 	}
@@ -173,7 +173,7 @@ static cell AMX_NATIVE_CALL ns_set_teamres(AMX *amx, cell *params)
 }
 static cell AMX_NATIVE_CALL ns_add_teamres(AMX *amx, cell *params)
 {
-	if (GameMan.IsCombat())
+	if (!GameMan.IsCombat())
 	{
 		return 0;
 	}
