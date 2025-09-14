@@ -84,8 +84,8 @@ jobs:
           
           chdir %DEPENDENCIES_ROOT_WIN%
           git clone https://github.com/alliedmodders/ambuild
-          git clone https://github.com/alliedmodders/metamod-hl1 metamod-am
-          git clone https://github.com/alliedmodders/hlsdk
+          git clone https://github.com/Bots-United/metamod-hl1 metamod
+          git clone https://github.com/Bots-United/hlsdk
           
           curl -L -o "mysql-connector-c-6.1.1-win32.zip" https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.1-win32.zip
           7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
@@ -119,7 +119,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-bu --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk-bu --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
           ambuild
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -132,6 +132,6 @@ jobs:
           cl.exe
           mkdir build
           cd build
-          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.7
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod-bu --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk-bu --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.7
           ambuild
           
