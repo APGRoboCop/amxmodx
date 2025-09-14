@@ -105,6 +105,7 @@ static cell AMX_NATIVE_CALL ns_finish_weldable(AMX *amx, cell *params)
 	return 1;
 };
 
+//TODO: Might need to revert `!GameMan.IsCombat()` for Commander AI plugin to work for v1.7 or newer [APG]RoboCop[CL]
 static cell AMX_NATIVE_CALL ns_get_teamres(AMX *amx, cell *params)
 {
 	if (!GameMan.IsCombat())

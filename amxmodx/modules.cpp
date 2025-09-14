@@ -1913,4 +1913,16 @@ void operator delete[](void * ptr)
 	if (ptr)
 		free(ptr);
 }
+
+void operator delete(void* ptr, size_t)
+{
+	if (ptr)
+		free(ptr);
+}
+
+void operator delete[](void* ptr, size_t)
+{
+	if (ptr)
+		free(ptr);
+}
 #endif

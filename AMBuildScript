@@ -201,7 +201,7 @@ class AMXXConfig(object):
       '-msse4.2',
       '-mfpmath=sse',
       '-Wall',
-      '-Werror',
+      #'-Werror',
       '-Wno-uninitialized',
       '-Wno-unused',
       '-Wno-switch',
@@ -368,7 +368,7 @@ class AMXXConfig(object):
   def AddVersioning(self, binary):
     if builder.target_platform == 'windows':
       binary.compiler.rcdefines += [
-        'BINARY_NAME="{0}"'.format(binary.outputFile),
+        f'BINARY_NAME="{binary.outputFile}"'
         'RC_COMPILE',
       ]
       if self.use_auto_versioning():

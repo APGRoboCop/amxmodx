@@ -83,12 +83,12 @@ typedef int BOOL;
 //Fix for GCC 7 - [APG]RoboCop[CL]
 #include <algorithm>
 
-#ifndef min
+/*#ifndef min
 #define min(a,b)  (((a) < (b)) ? (a) : (b))
 #endif
 #ifndef max
 #define max(a,b)  (((a) > (b)) ? (a) : (b))
-#endif
+#endif*/
 
 // Header file containing definition of globalvars_t and entvars_t
 typedef unsigned int func_t;					//
