@@ -98,7 +98,6 @@ jobs:
             gcc-multilib g++-multilib libstdc++6 lib32stdc++6 \
             libc6-dev libc6-dev-i386 linux-libc-dev \
             linux-libc-dev:i386 lib32z1-dev nasm \
-            libmysqlclient-dev:i386 \
             ${{ matrix.compiler_cc }} ${{ matrix.compiler_install }}
       - name: Select compiler
         if: startsWith(runner.os, 'Linux')
@@ -114,7 +113,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=/mysql-5.7
           ambuild
       - uses: ilammy/msvc-dev-cmd@v1
         with:
