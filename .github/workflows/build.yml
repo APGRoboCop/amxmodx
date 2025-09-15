@@ -27,12 +27,7 @@ jobs:
           - os: windows-latest
             os_short: windows
             compiler_cc: msvc
-# MacOS 32 Bins seem not supported
-#           - os: macos-latest
-#             os_short: mac
-#             compiler_cc: clang
-#             compiler_cxx: clang++            
-      fail-fast: false
+    fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
     env:
@@ -64,6 +59,10 @@ jobs:
           git clone https://github.com/Bots-United/metamod-hl1 metamod
           git clone https://github.com/Bots-United/hlsdk
           
+          curl -L -o "mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz" https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz
+          tar -xzf mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz
+          mv mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit mysql-5.7
+          
           cd ambuild
           python3 setup.py install     
       - name: Install AMXModX dependencies (Windows)
@@ -83,7 +82,6 @@ jobs:
           curl -L -o "mysql-connector-c-6.1.1-win32.zip" https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.1-win32.zip
           7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
           cd mysql
-          dir
           ren mysql-connector-c-6.1.1-win32 mysql-5.7
           move /Y mysql-5.7 ..\
           
@@ -113,7 +111,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=/mysql-5.7
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
           ambuild
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -123,9 +121,12 @@ jobs:
         working-directory: amxmodx
         shell: cmd
         run: |
-          cl.exe
           mkdir build
           cd build
           python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.7
           ambuild
-          
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: amxmodx-build-${{ matrix.os_short }}-${{ matrix.compiler_cc }}
+          path: amxmodx/build/
