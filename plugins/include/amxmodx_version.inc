@@ -12,6 +12,6 @@
 #endif
 #define _amxmodx_version_included
 
-#define AMXX_VERSION		1.10.4
+#define AMXX_VERSION		1.10.5
 #define AMXX_VERSION_NUM	1105
-stock const AMXX_VERSION_STR[] = "1.10.4-APG";
+stock const AMXX_VERSION_STR[] = "1.10.5-APG";
