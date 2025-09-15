@@ -368,8 +368,9 @@ class AMXXConfig(object):
   def AddVersioning(self, binary):
     if builder.target_platform == 'windows':
       binary.compiler.rcdefines += [
-        f'BINARY_NAME="{binary.outputFile}"'
+        f'BINARY_NAME="{binary.outputFile}"',
         'RC_COMPILE',
+        f'AMXX_VERSION_FILE="amxx_version.h"' # <-- ADD THIS LINE
       ]
       if self.use_auto_versioning():
         binary.compiler.rcdefines += ['AMXX_GENERATED_BUILD']
@@ -379,6 +380,7 @@ class AMXXConfig(object):
           '-compatibility_version', '1.0.0',
           '-current_version', self.productVersion
         ]
+    
     if self.use_auto_versioning():
       binary.compiler.linkflags += [self.versionlib]
       binary.compiler.sourcedeps += AMXX.generated_headers

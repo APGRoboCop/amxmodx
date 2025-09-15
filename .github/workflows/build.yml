@@ -102,17 +102,19 @@ jobs:
             libc6-dev libc6-dev-i386 linux-libc-dev \
             linux-libc-dev:i386 lib32z1-dev nasm \
             ${{ matrix.compiler_cc }} ${{ matrix.compiler_install }}
+      - name: Debug Workspace Layout
+        run: ls -lR ${{ github.workspace }}
       - name: Extract local MySQL 5.7 Connector (Linux)
         if: startsWith(runner.os, 'Linux')
         run: |
           # Create the destination folder
           mkdir -p ${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
           
-          # Define the path to the local file in your repository
+          # This path assumes 'build_deps' is in your repository root
           MYSQL_ARCHIVE="${{ github.workspace }}/amxmodx/build_deps/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
           
           # Extract the local archive
-          tar -xzf $MYSQL_ARCHIVE --strip-components=1 -C ${{ env.DEPENDEN-CIES_ROOT }}/mysql-5.7
+          tar -xzf $MYSQL_ARCHIVE --strip-components=1 -C ${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
       - name: Select compiler
         if: startsWith(runner.os, 'Linux')
         run: |
