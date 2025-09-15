@@ -64,12 +64,13 @@ jobs:
           git clone https://github.com/Bots-United/metamod-hl1 metamod
           git clone https://github.com/Bots-United/hlsdk
           
-          curl -L -o "mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz" https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz
+          curl -L -o "mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz" https://cdn.mysql.com/Downloads/Connector-C/mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz
+          
           tar -xzf mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit.tar.gz
           mv mysql-connector-c-6.1.11-linux-glibc2.12-x86_32bit mysql-5.7
           
           cd ambuild
-          python3 setup.py install     
+          python3 setup.py install
       - name: Install AMXModX dependencies (Windows)
         if: startsWith(runner.os, 'Windows')
         shell: cmd
