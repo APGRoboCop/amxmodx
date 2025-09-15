@@ -31,9 +31,8 @@ jobs:
 #           - os: macos-latest
 #             os_short: mac
 #             compiler_cc: clang
-#             compiler_cxx: clang++       
-      fail-fast: false     
-    fail-fast: false
+#             compiler_cxx: clang++            
+      fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
     env:
@@ -136,3 +135,4 @@ jobs:
         with:
           name: amxmodx-build-${{ matrix.os_short }}-${{ matrix.compiler_cc }}
           path: amxmodx/build/
+          
