@@ -1,14 +1,7 @@
-name: Continuous Integration
-on: 
-  workflow_dispatch:
-  push:
-    branches:
-     - master
-     - 1.10-dev
-  pull_request:
-    branches:
-     - master
-     - 1.10-dev
+name: Build
+
+on: ["push", "workflow_dispatch"]
+
 jobs:
   test:
     strategy:
@@ -119,7 +112,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-bu --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk-bu --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
           ambuild
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -132,6 +125,6 @@ jobs:
           cl.exe
           mkdir build
           cd build
-          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod-bu --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk-bu --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.7
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.7
           ambuild
           
