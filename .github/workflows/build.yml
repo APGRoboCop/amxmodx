@@ -57,15 +57,18 @@ jobs:
           python3 -m pip install --upgrade pip setuptools wheel
           python3 --version
       - name: Install AMXModX dependencies (Linux)
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+        if: startsWith(runner.os, 'Linux')
         shell: bash
         run: |
-          mkdir -p ${{ env.DEPENDENCIES_FOLDER }}
-          cd ${{ env.DEPENDENCIES_FOLDER }}
+          mkdir -p ${{ env.DEPENDENCIES_ROOT }}
+          cd ${{ env.DEPENDENCIES_ROOT }}
           
-          # Satisfy checkout-deps requirement for a "amxmodx" folder.
-          mkdir -p amxmodx
-          ../amxmodx/support/checkout-deps.sh          
+          git clone https://github.com/alliedmodders/ambuild
+          git clone https://github.com/Bots-United/metamod-hl1 metamod
+          git clone https://github.com/Bots-United/hlsdk
+          
+          cd ambuild
+          python3 setup.py install     
       - name: Install AMXModX dependencies (Windows)
         if: startsWith(runner.os, 'Windows')
         shell: cmd
@@ -97,7 +100,22 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             gcc-multilib g++-multilib libstdc++6 lib32stdc++6 \
             libc6-dev libc6-dev-i386 linux-libc-dev \
-            linux-libc-dev:i386 lib32z1-dev nasm ${{ matrix.compiler_cc }} ${{ matrix.compiler_install }}
+            linux-libc-dev:i386 lib32z1-dev nasm \
+            ${{ matrix.compiler_cc }} ${{ matrix.compiler_install }}
+      - name: Install MySQL 5.7 Connector (Linux)
+        if: startsWith(runner.os, 'Linux')
+        run: |
+          # The URL for the 32-bit (i686) generic Linux connector compatible with MySQL 5.7
+          MYSQL_URL="https://downloads.mysql.com/archives/get/p/23/file/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
+          
+          # Download the archive
+          curl -L -o "mysql-connector.tar.gz" $MYSQL_URL
+          
+          # Create the destination folder
+          mkdir -p ${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
+          
+          # Extract the contents directly into the folder
+          tar -xzf mysql-connector.tar.gz --strip-components=1 -C ${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
       - name: Select compiler
         if: startsWith(runner.os, 'Linux')
         run: |
@@ -106,8 +124,8 @@ jobs:
           ${{ matrix.compiler_cc }} --version
           ${{ matrix.compiler_cxx }} --version
       - uses: ilammy/setup-nasm@v1
-      - name: Build Linux/macOS
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+      - name: Build Linux
+        if: startsWith(runner.os, 'Linux')
         working-directory: amxmodx
         run: |
           mkdir build
