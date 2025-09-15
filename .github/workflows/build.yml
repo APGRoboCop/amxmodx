@@ -105,8 +105,8 @@ jobs:
       - name: Install MySQL 5.7 Connector (Linux)
         if: startsWith(runner.os, 'Linux')
         run: |
-          # Use the DIRECT download URL to get the actual archive file
-          MYSQL_URL="https://downloads.mysql.com/archives/c-c/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
+          # Use the official CDN URL for a direct download
+          MYSQL_URL="https://cdn.mysql.com/archives/c-c/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
           
           # Download the archive
           curl -L -o "mysql-connector.tar.gz" $MYSQL_URL
