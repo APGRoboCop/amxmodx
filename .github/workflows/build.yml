@@ -131,7 +131,7 @@ jobs:
           python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.7
           ambuild
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: amxmodx-build-${{ matrix.os_short }}-${{ matrix.compiler_cc }}
           path: amxmodx/build/
