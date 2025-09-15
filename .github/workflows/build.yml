@@ -105,8 +105,8 @@ jobs:
       - name: Install MySQL 5.7 Connector (Linux)
         if: startsWith(runner.os, 'Linux')
         run: |
-          # The URL for the 32-bit (i686) generic Linux connector compatible with MySQL 5.7
-          MYSQL_URL="https://downloads.mysql.com/archives/get/p/23/file/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
+          # Use the DIRECT download URL to get the actual archive file
+          MYSQL_URL="https://downloads.mysql.com/archives/c-c/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
           
           # Download the archive
           curl -L -o "mysql-connector.tar.gz" $MYSQL_URL
