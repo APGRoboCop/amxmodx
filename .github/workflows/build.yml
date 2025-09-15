@@ -102,20 +102,17 @@ jobs:
             libc6-dev libc6-dev-i386 linux-libc-dev \
             linux-libc-dev:i386 lib32z1-dev nasm \
             ${{ matrix.compiler_cc }} ${{ matrix.compiler_install }}
-      - name: Install MySQL 5.7 Connector (Linux)
+      - name: Extract local MySQL 5.7 Connector (Linux)
         if: startsWith(runner.os, 'Linux')
         run: |
-          # Use the official CDN URL for a direct download
-          MYSQL_URL="https://cdn.mysql.com/archives/c-c/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
-          
-          # Download the archive
-          curl -L -o "mysql-connector.tar.gz" $MYSQL_URL
-          
           # Create the destination folder
           mkdir -p ${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
           
-          # Extract the contents directly into the folder
-          tar -xzf mysql-connector.tar.gz --strip-components=1 -C ${{ env.DEPENDENCIES_ROOT }}/mysql-5.7
+          # Define the path to the local file in your repository
+          MYSQL_ARCHIVE="${{ github.workspace }}/amxmodx/build_deps/mysql-connector-c-6.1.11-linux-glibc2.12-i686.tar.gz"
+          
+          # Extract the local archive
+          tar -xzf $MYSQL_ARCHIVE --strip-components=1 -C ${{ env.DEPENDEN-CIES_ROOT }}/mysql-5.7
       - name: Select compiler
         if: startsWith(runner.os, 'Linux')
         run: |
