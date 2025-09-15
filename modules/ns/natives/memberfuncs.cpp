@@ -33,7 +33,7 @@ using namespace fastdelegate::detail;
 void *GameRules= nullptr;
 
 
-bool dlclose_handle_invalid; // Linking errors with metamod
+mBOOL dlclose_handle_invalid; // Linking errors with metamod
 
 // void AvHBaseBuildable::StartRecycle()
 static void (GenericClass::*MFP_Recycle)();
