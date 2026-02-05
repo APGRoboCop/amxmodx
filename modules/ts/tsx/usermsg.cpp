@@ -114,14 +114,17 @@ void Client_TSHealth_End(void* mValue){
 			}
 		}
 		else if ( szCName[0] == 'k' ) {
-			//That line below triggers crash [APG]RoboCop[CL]
+			// Check if pvPrivateData is valid before accessing it - [APG]RoboCop[CL]
+			if (!enemy->pvPrivateData)
+				return;
+
 			edict_t* pOwner = reinterpret_cast<edict_t*>(*(static_cast<int*>(enemy->pvPrivateData) + gKnifeOffset));
 
 			if (FNullEnt(pOwner))
 				return;
 
 			pAttacker = GET_PLAYER_POINTER( pOwner );
-			
+
 			weapon = 37; // throwing knife
 			aim = pAttacker ? pAttacker->aiming : 0;
 			if (pAttacker)
