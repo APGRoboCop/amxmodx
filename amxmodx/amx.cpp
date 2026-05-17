@@ -295,7 +295,7 @@ typedef enum : std::uint8_t {
   static int check_endian()
   {
     uint16_t val=0x00ff;
-    unsigned char *ptr=(unsigned char *)&val;
+    const unsigned char *ptr=(unsigned char *)&val;
     /* "ptr" points to the starting address of "val". If that address
      * holds the byte "0xff", the computer stored the low byte of "val"
      * at the lower address, and so the memory lay out is Little Endian.

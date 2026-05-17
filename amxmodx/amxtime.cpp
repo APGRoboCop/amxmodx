@@ -42,7 +42,7 @@ static cell AMX_NATIVE_CALL _time(AMX *amx, cell *params)
   /* on DOS/Windows, the timezone is usually not set for the C run-time
    * library; in that case gmtime() and localtime() return the same value
    */
-  struct tm gtm = *localtime(&sec1970);
+  const struct tm gtm = *localtime(&sec1970);
   if (amx_GetAddr(amx,params[1],&cptr)==AMX_ERR_NONE)
     *cptr=gtm.tm_hour;
   if (amx_GetAddr(amx,params[2],&cptr)==AMX_ERR_NONE)
@@ -68,7 +68,7 @@ static cell AMX_NATIVE_CALL _date(AMX *amx, cell *params)
 
   time(&sec1970);
 
-  struct tm gtm = *localtime(&sec1970);
+  const struct tm gtm = *localtime(&sec1970);
   if (amx_GetAddr(amx,params[1],&cptr)==AMX_ERR_NONE)
     *cptr=gtm.tm_year+1900;
   if (amx_GetAddr(amx,params[2],&cptr)==AMX_ERR_NONE)

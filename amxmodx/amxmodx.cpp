@@ -532,7 +532,7 @@ static cell AMX_NATIVE_CALL next_hudchannel(AMX *amx, cell *params)
 		return 0;
 	}
 
-	CPlayer *pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer *pPlayer = GET_PLAYER_POINTER_I(index);
 	if (!pPlayer->ingame)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Player %d not in game", index);
@@ -875,7 +875,7 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 		return FALSE;
 	}
 
-	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	const CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 	if (!pPlayer->ingame)
 	{
@@ -1776,7 +1776,7 @@ static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params)
 	else				// -1 parameter - all commands
 		who = CMD_ConsoleCommand;
 
-	CmdMngr::Command* cmd = g_commands.getCmd(params[1], who, params[7]);
+	const CmdMngr::Command* cmd = g_commands.getCmd(params[1], who, params[7]);
 
 	if (cmd == nullptr)
 		return 0;
@@ -1806,7 +1806,7 @@ static cell AMX_NATIVE_CALL get_concmd_plid(AMX *amx, cell *params)
 		who = CMD_ConsoleCommand;
 	}
 
-	CmdMngr::Command *cmd = g_commands.getCmd(params[1], who, params[2]);
+	const CmdMngr::Command *cmd = g_commands.getCmd(params[1], who, params[2]);
 
 	if (cmd == nullptr)
 	{
@@ -1819,7 +1819,7 @@ static cell AMX_NATIVE_CALL get_concmd_plid(AMX *amx, cell *params)
 // native get_clcmd(index, command[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
 static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params)
 {
-	CmdMngr::Command* cmd = g_commands.getCmd(params[1], CMD_ClientCommand, params[7]);
+	const CmdMngr::Command* cmd = g_commands.getCmd(params[1], CMD_ClientCommand, params[7]);
 
 	if (cmd == nullptr)
 		return 0;
@@ -1841,7 +1841,7 @@ static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params)
 // native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
 static cell AMX_NATIVE_CALL get_srvcmd(AMX *amx, cell *params)
 {
-	CmdMngr::Command* cmd = g_commands.getCmd(params[1], CMD_ServerCommand, params[7]);
+	const CmdMngr::Command* cmd = g_commands.getCmd(params[1], CMD_ServerCommand, params[7]);
 
 	if (cmd == nullptr)
 		return 0;
@@ -2721,7 +2721,7 @@ static cell AMX_NATIVE_CALL remove_task(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 {
-	REAL flNewTime = amx_ctof(params[2]);
+	const REAL flNewTime = amx_ctof(params[2]);
 	return g_tasksMngr.changeTasks(params[1], params[3] ? nullptr : amx, flNewTime);
 }
 
@@ -4002,7 +4002,7 @@ static cell AMX_NATIVE_CALL plugin_flags(AMX *amx, cell *params)
 		}
 		if (params[1])
 		{
-			AMX_HEADER* hdr = (AMX_HEADER*)a->getAMX()->base;
+			const AMX_HEADER* hdr = (AMX_HEADER*)a->getAMX()->base;
 			return hdr->flags;
 		}
 
