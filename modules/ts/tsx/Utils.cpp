@@ -20,7 +20,7 @@
 weapon_t weaponData[] = { 
 	{ true,"Kung Fu","kung_fu",3 }, // id 0 like in WeaponInfo , DeathMsg 
 	{ false,"Glock-18","glock-18",1 },
-	{ false,"Unk1","Unk1",0 }, // bomb ?
+	{ false,"Beretta 92F", "beretta",0 },
 	{ false,"Mini-Uzi","mini-uzi",1 }, 
 	{ false,"BENELLI-M3","benelli_m3",1 }, 
 	{ false,"M4A1","m4a1",1 },
