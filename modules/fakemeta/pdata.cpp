@@ -30,15 +30,44 @@
 #if defined WIN32
 #define WINDOWS_LEAN_AND_MEAN
 #include <Windows.h>
+
+// IsBadReadPtr/IsBadWritePtr are deprecated (PVS V1109): they test memory by touching it, which
+// can use up a stack guard page. VirtualQuery asks Windows about the memory instead. [APG]RoboCop[CL]
+static bool IsAccessiblePtr(const void *ptr, DWORD allowedProtect)
+{
+	if (!ptr)
+		return false;
+
+	MEMORY_BASIC_INFORMATION mbi;
+	if (!VirtualQuery(ptr, &mbi, sizeof(mbi)))
+		return false;
+
+	if (mbi.State != MEM_COMMIT || (mbi.Protect & PAGE_GUARD))
+		return false;
+
+	return (mbi.Protect & allowedProtect) != 0;
+}
+
+static bool IsReadablePtr(const void *ptr)
+{
+	return IsAccessiblePtr(ptr, PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY
+		| PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY);
+}
+
+static bool IsWritablePtr(const void *ptr)
+{
+	return IsAccessiblePtr(ptr, PAGE_READWRITE | PAGE_WRITECOPY
+		| PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY);
+}
 #else
 //implement these with setjmp later.
-bool IsBadReadPtr(void *l, size_t size)
+static bool IsReadablePtr(const void *ptr) // was IsBadReadPtr [APG]RoboCop[CL]
 {
-	return l ? false : true;
+	return ptr != nullptr;
 }
-bool IsBadWritePtr(void *l, size_t size)
+static bool IsWritablePtr(const void *ptr) // was IsBadWritePtr [APG]RoboCop[CL]
 {
-	return l ? false : true;
+	return ptr != nullptr;
 }
 #endif
 
@@ -156,7 +185,7 @@ static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 		szData = get_pdata_direct<char*>(pEdict, iOffset);
 	}
 
-	if (IsBadReadPtr(szData, 1))
+	if (!IsReadablePtr(szData)) // was IsBadReadPtr(szData, 1) [APG]RoboCop[CL]
 	{
 		return 0;
 	}
@@ -192,11 +221,11 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 	if (params[4] == -1)
 	{
 		szData = get_pdata_direct<char*>(pEdict, iOffset);
-		if (IsBadWritePtr(szData, 1))
+		if (!IsWritablePtr(szData)) // was IsBadWritePtr(szData, 1) [APG]RoboCop[CL]
 			return 0;
 	} else {
 		szData = get_pdata<char*>(pEdict, iOffset);
-		if (IsBadWritePtr(szData, 1))
+		if (!IsWritablePtr(szData)) // was IsBadWritePtr(szData, 1) [APG]RoboCop[CL]
 			return 0;
 
 		if (len > static_cast<int>(strlen(szData)))
