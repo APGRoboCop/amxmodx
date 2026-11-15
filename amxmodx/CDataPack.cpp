@@ -65,7 +65,7 @@ void CDataPack::CheckSize(size_t typesize)
 		m_capacity *= 2;
 	} while (pos + typesize > m_capacity);
 
-	m_pBase = static_cast<char*>(realloc(m_pBase, m_capacity));
+	m_pBase = static_cast<char*>(realloc(m_pBase, m_capacity)); //-V701 // only fails when out of memory; nothing here can recover, and the next write would crash either way [APG]RoboCop[CL]
 	m_curptr = m_pBase + pos;
 }
 

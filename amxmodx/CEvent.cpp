@@ -453,7 +453,7 @@ void EventsMngr::executeEvents()
 
 	if (m_ParseVault)
 	{
-		memcpy(m_ReadVault, m_ParseVault, (m_ParsePos + 1) * sizeof(MsgDataEntry));
+		memcpy(m_ReadVault, m_ParseVault, (m_ParsePos + 1) * sizeof(MsgDataEntry)); //-V595 // false positive: m_ReadVault is always allocated when m_ParseVault is; the check below covers no event data [APG]RoboCop[CL]
 	}
 
 	// Reset this here so we don't trigger re-entrancy for unregistered messages
