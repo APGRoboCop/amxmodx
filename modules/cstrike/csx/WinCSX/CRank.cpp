@@ -301,7 +301,7 @@ bool RankSystem::loadRank( const char* filename )
 			RankStats* a = findEntryInRank( unique , name );
 
 			if ( a ) a->updatePosition( &d );
-		}
+		} //-V773 // false positive: findEntryInRank adds new entries to the rank list, which clear() frees [APG]RoboCop[CL]
 	}
 	fclose(bfp);
 
