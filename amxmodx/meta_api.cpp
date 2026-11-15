@@ -168,14 +168,14 @@ int FF_ClientConnectEx = -1;
 IFileSystem* g_FileSystem;
 HLTypeConversion TypeConversion;
 
-bool ColoredMenus(const char *ModName)
+bool ColoredMenus(const char* ModName)
 {
-	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
-	const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
+	const char* pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	constexpr size_t ModsCount = sizeof(pModNames) / sizeof(const char*);
 
-	for (size_t i = 0; i < ModsCount; ++i)
+	for (const char*& pModName : pModNames)
 	{
-		if (strcmp(ModName, pModNames[i]) == 0)
+		if (strcmp(ModName, pModName) == 0)
 			return true; // this game modification currently supports colored menus
 	}
 
@@ -718,7 +718,7 @@ void C_ServerDeactivate()
 
 		if (pPlayer->ingame)
 		{
-			const auto wasDisconnecting = pPlayer->disconnecting;
+			const bool wasDisconnecting = pPlayer->disconnecting;
 
 			pPlayer->Disconnect();
 			--g_players_num;
@@ -889,7 +889,7 @@ BOOL C_ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* psz
 
 		if (a)
 		{
-			auto playerToAuth = ke::AutoPtr<CPlayer *>(new CPlayer*(pPlayer));
+			ke::AutoPtr<CPlayer*> playerToAuth = ke::AutoPtr<CPlayer*>(new CPlayer*(pPlayer));
 			if (playerToAuth)
 				g_auth.append(Move(playerToAuth));
 		} else {
@@ -942,7 +942,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 		--g_players_num;
 	}
 
-	const auto wasDisconnecting = pPlayer->disconnecting;
+	const bool wasDisconnecting = pPlayer->disconnecting;
 
 	pPlayer->Disconnect();
 
@@ -956,7 +956,14 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 CPlayer* SV_DropClient_PreHook(edict_s *client, qboolean crash, const char *buffer, size_t buffer_size)
 {
-	const auto pPlayer = client ? GET_PLAYER_POINTER(client) : nullptr;
+	// Fix by adZ
+	edict_t *base = INDEXENT(0);
+	const ptrdiff_t index = client - base;
+
+	const bool validEdict = client != nullptr && index >= 0
+		&& index < gpGlobals->maxEntities && !client->free;
+
+	CPlayer* const pPlayer = validEdict ? GET_PLAYER_POINTER(client) : nullptr;
 
 	if (pPlayer)
 	{
@@ -989,7 +996,7 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	const auto pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
+	CPlayer* const pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
@@ -1001,7 +1008,7 @@ void SV_DropClient_RH(IRehldsHook_SV_DropClient *chain, IGameClient *cl, bool cr
 	char buffer[1024];
 	ke::SafeStrcpy(buffer, sizeof(buffer), format);
 
-	const auto pPlayer = SV_DropClient_PreHook(cl->GetEdict(), crash, buffer, ARRAY_LENGTH(buffer));
+	CPlayer* const pPlayer = SV_DropClient_PreHook(cl->GetEdict(), crash, buffer, ARRAY_LENGTH(buffer));
 
 	chain->callNext(cl, crash, buffer);
 
@@ -1064,7 +1071,7 @@ void C_ClientCommand(edict_t *pEntity)
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
 
 	META_RES result = MRES_IGNORED;
-	cell ret = 0;
+	cell ret;
 
 	const char* cmd = CMD_ARGV(0);
 	const char* arg = CMD_ARGV(1);
@@ -1100,6 +1107,12 @@ void C_ClientCommand(edict_t *pEntity)
 			RETURN_META(MRES_SUPERCEDE);
 		}
 	}
+
+	// Clients can send commands while still connecting (e.g. loading after a map change), before
+	// ClientPutInServer has created their player entity. HLSDK's ClientCommand ignores these too,
+	// so don't pass them to plugins, whose handlers expect a player that is in-game. [APG]RoboCop[CL]
+	if (!pPlayer->ingame)
+		RETURN_META(MRES_IGNORED);
 
 	if (executeForwards(FF_ClientCommand, pPlayer->index) > 0)
 		RETURN_META(MRES_SUPERCEDE);
@@ -1140,7 +1153,7 @@ void C_ClientCommand(edict_t *pEntity)
 
 					RETURN_META(MRES_SUPERCEDE);
 				}
-				else if (pPlayer->menu > 0 && !pPlayer->vgui)
+				if (pPlayer->menu > 0 && !pPlayer->vgui)
 				{
 					pPlayer->menu = 0;
 					pPlayer->keys = 0;
@@ -1242,13 +1255,12 @@ void C_StartFrame_Post()
 			if (strcmp(auth, "STEAM_ID_PENDING"))
 			{
 				(*player)->Authorize();
-				if (g_auth_funcs.size())
+				if (!g_auth_funcs.empty())
 				{
 					List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
-					AUTHORIZEFUNC fn;
 					for (iter=g_auth_funcs.begin(); iter!=end; ++iter)
 					{
-						fn = (*iter);
+						AUTHORIZEFUNC fn = (*iter);
 						fn((*player)->index, auth);
 					}
 				}
@@ -1434,7 +1446,7 @@ const char *C_Cmd_Args()
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-const char *C_Cmd_Argv(int argc)
+const char *C_Cmd_Argv(const int argc)
 {
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
@@ -1539,17 +1551,16 @@ void C_ChangeLevel(const char *map, const char *what)
 	RETURN_META(MRES_IGNORED);
 }
 
-void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const char *value)
+void C_CvarValue2(const edict_t *pEdict, const int requestId, const char *cvar, const char *value)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEdict);
 	if (pPlayer->queries.empty())
 		RETURN_META(MRES_IGNORED);
 
 	List<ClientCvarQuery_Info *>::iterator iter, end=pPlayer->queries.end();
-	ClientCvarQuery_Info *info;
 	for (iter=pPlayer->queries.begin(); iter!=end; ++iter)
 	{
-		info = (*iter);
+		const ClientCvarQuery_Info* info = (*iter);
 		if ( info->requestId == requestId )
 		{
 			if (info->paramLen)
@@ -1590,15 +1601,18 @@ C_DLLEXPORT	int	Meta_Query(const char	*ifvers, plugin_info_t **pPlugInfo,	mutil_
 		{
 			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
 			return (FALSE);
-		} else if (pmajor < mmajor) {
+		}
+		if (pmajor < mmajor) {
 			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 			return (FALSE);
-		} else if (pmajor == mmajor) {
+		}
+		if (pmajor == mmajor) {
 			if (pminor > mminor)
 			{
 				LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 				return FALSE;
-			} else if (pminor < mminor) {
+			}
+			if (pminor < mminor) {
 				LOG_MESSAGE(PLID, "warning: there may be a newer version of metamod available");
 			}
 		}
