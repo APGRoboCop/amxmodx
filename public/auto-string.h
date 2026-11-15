@@ -62,11 +62,14 @@ public:
   }
 
   AutoString &operator =(const char *ptr) {
-    free(ptr_);
+    char *old = ptr_; // free only after copying, in case ptr points into our own buffer [APG]RoboCop[CL]
     assign(ptr);
+    free(old);
     return *this;
   }
   AutoString &operator =(const AutoString &other) {
+    if (this == &other) // self-assignment would free the buffer before copying it (PVS V794) [APG]RoboCop[CL]
+      return *this;
     free(ptr_);
     assign(other.ptr(), other.length());
     return *this;

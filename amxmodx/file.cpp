@@ -305,7 +305,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params)
 			while (!fp->EndOfFile() && !fp->HasError())
 			{
 				++lines;
-				while (fp->Read(&ch, 1) == 1 && ch != '\n' && ch != EOF);
+				while (fp->Read(&ch, 1) == 1 && ch != '\n'); // was also "&& ch != EOF": a 0xFF byte read as -1 matched EOF and added a line (PVS V739) [APG]RoboCop[CL]
 			}
 
 			return lines;

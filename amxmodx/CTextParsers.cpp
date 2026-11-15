@@ -244,7 +244,7 @@ const char *FixupString(StringInfo &data)
 		{
 			for (size_t i = 0; i<len; i++)
 			{
-				if (data.ptr[i] == '\\' && i < len - 1)
+				if (i < len - 1 && data.ptr[i] == '\\') // checks swapped; the loop already keeps i < len (PVS V781) [APG]RoboCop[CL]
 				{
 					/* Resolve the next character. */
 					i++;

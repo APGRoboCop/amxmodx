@@ -353,16 +353,10 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 				const int grenId = (traceData[i].iId == 13 && g_map.detect_allies_country) ? 36 : traceData[i].iId;
 				const int rocketId = traceData[i].iId;
 
-				if(traceData[i].iAction&ACT_NADE_SHOT)
-				{
-					if(traceData[i].iId == 13 && g_map.detect_allies_country)
-						pPlayer->saveShot(grenId);
-					else
-						pPlayer->saveShot(traceData[i].iId);
-				}
-
-				else if(traceData[i].iAction&ACT_ROCKET_SHOT)
-					pPlayer->saveShot(traceData[i].iId);
+				// ACT_NADE_SHOT and ACT_ROCKET_SHOT are both (1<<0), so the old "else if(ACT_ROCKET_SHOT)" never ran and
+				// rockets already took the grenade branch. grenId is the weapon's own id except grenade 13 -> 36. (PVS V517) [APG]RoboCop[CL]
+				if(traceData[i].iAction&(ACT_NADE_SHOT|ACT_ROCKET_SHOT))
+					pPlayer->saveShot(grenId);
 
 				cell position[3];
 				position[0] = amx_ftoc(v2[0]);

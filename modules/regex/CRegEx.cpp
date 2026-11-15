@@ -670,7 +670,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 								 * ${n  or ${nn  or ${nx or ${nnx
 								 *    ^        ^       ^        ^
 								 */
-								if (*walk == '\0' || *walk != '}')
+								if (*walk != '}') // '\0' is never '}', so this still catches EOS; was "*walk == '\0' || *walk != '}'" (PVS V590) [APG]RoboCop[CL]
 								{
 									backref = -1;
 								}
