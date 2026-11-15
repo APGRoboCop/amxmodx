@@ -9,7 +9,9 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
+#include <algorithm> // std::any_of in ColoredMenus [APG]RoboCop[CL]
 #include <ctime>
+#include <iterator> // std::begin/std::end in ColoredMenus [APG]RoboCop[CL]
 #include "amxmodx.h"
 #include "fakemeta.h"
 #include "CMenu.h"
@@ -171,15 +173,11 @@ HLTypeConversion TypeConversion;
 bool ColoredMenus(const char* ModName)
 {
 	const char* pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
-	constexpr size_t ModsCount = sizeof(pModNames) / sizeof(const char*);
+	//constexpr size_t ModsCount = sizeof(pModNames) / sizeof(const char*); // ModsCount unused [APG]RoboCop[CL]
 
-	for (const char*& pModName : pModNames)
-	{
-		if (strcmp(ModName, pModName) == 0)
-			return true; // this game modification currently supports colored menus
-	}
-
-	return false; // no colored menus are supported for this game modification
+	// true if this game modification currently supports colored menus (std::any_of replaces the loop) [APG]RoboCop[CL]
+	return std::any_of(std::begin(pModNames), std::end(pModNames),
+		[ModName](const char* pModName) { return strcmp(ModName, pModName) == 0; });
 }
 
 void ParseAndOrAdd(CStack<ke::AString *> & files, const char *name)
