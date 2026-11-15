@@ -193,7 +193,7 @@ int RegEx::Match(const char *str)
 int RegEx::MatchAll(const char *str)
 {
 	int rr = 0;
-	int rc = 0; //Unused? [APG]RoboCop[CL]
+	//int rc = 0; // rc unused [APG]RoboCop[CL]
 	int startOffset = 0;
 	int exoptions = 0;
 	int notEmpty = 0;
@@ -576,14 +576,16 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 									char name[32];
 									/*size_t nameLength =*/ strncopy(name, walk, pch - walk + 1);
 
-									int flags, num = 0;
-									pcre_fullinfo(re, nullptr, PCRE_INFO_OPTIONS, &flags);
+									// was "int flags", which hid Replace's flags parameter; PCRE_INFO_OPTIONS writes an unsigned long [APG]RoboCop[CL]
+									unsigned long patternOptions = 0;
+									int num = 0;
+									pcre_fullinfo(re, nullptr, PCRE_INFO_OPTIONS, &patternOptions);
 
 									/**
 									 * If PCRE_DUPNAMES is set, the pcre_copy_named_substring function should be used
 									 * as pcre_get_stringnumber output order is not defined.
 									 */
-									if (flags & PCRE_DUPNAMES)
+									if (patternOptions & PCRE_DUPNAMES)
 									{
 										memset(ovector, 0, REGEX_MAX_SUBPATTERNS * sizeof(int));
 
@@ -629,9 +631,9 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 										 * Looking at the name table.
 										 */
 										bool found = false;
-										for (size_t i = 0; i < mSubsNameTable.length(); ++i)
+										for (size_t nameIndex = 0; nameIndex < mSubsNameTable.length(); ++nameIndex) // was "i", which hid the match index i [APG]RoboCop[CL]
 										{
-											if (!mSubsNameTable.at(i).name.compare(name))
+											if (!mSubsNameTable.at(nameIndex).name.compare(name))
 											{
 												--browsed;
 												s = --pch;
