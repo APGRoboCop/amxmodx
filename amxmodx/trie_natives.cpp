@@ -259,12 +259,19 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 	}
 
 	StringHashMap<Entry>::Result r = t->map.find(key);
-	if (!r.found() || !r->value.isArray())
+	if (!r.found())
 	{
 		return 0;
 	}
 
-	if (!r->value.array() || !params[4])
+	const Entry &entry = r->value; // avoids repeating r->value (PVS V807) [APG]RoboCop[CL]
+
+	if (!entry.isArray())
+	{
+		return 0;
+	}
+
+	if (!entry.array() || !params[4])
 	{
 		if (refSize)
 		{
@@ -274,8 +281,8 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 		return 1;
 	}
 
-	size_t length = r->value.arrayLength();
-	const cell *base = r->value.array();
+	size_t length = entry.arrayLength();
+	const cell *base = entry.array();
 
 	if (length > static_cast<size_t>(params[4]))
 	{
@@ -513,7 +520,7 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 	}
 
 	const size_t index = TrieIterHandles.create(handle);
-	CellTrieIter* iter = TrieIterHandles.lookup(index);
+	//CellTrieIter* iter = TrieIterHandles.lookup(index); // iter unused [APG]RoboCop[CL]
 
 	return static_cast<cell>(index);
 }
@@ -650,7 +657,14 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 
 	const StringHashMapCustom<Entry>::iterator& iter = handle->iter;
 
-	if (iter.empty() || !iter->value.isArray())
+	if (iter.empty())
+	{
+		return false;
+	}
+
+	const Entry &entry = iter->value; // avoids repeating iter->value (PVS V807) [APG]RoboCop[CL]
+
+	if (!entry.isArray())
 	{
 		return false;
 	}
@@ -658,14 +672,14 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 	cell* pOutput = get_amxaddr(amx, params[arg_output]);
 	cell* pSize = get_amxaddr(amx, params[arg_refsize]);
 
-	if (!iter->value.array() || !outputSize)
+	if (!entry.array() || !outputSize)
 	{
 		*pSize = 0;
 		return false;
 	}
 
-	size_t length = iter->value.arrayLength();
-	const cell* base = iter->value.array();
+	size_t length = entry.arrayLength();
+	const cell* base = entry.array();
 
 	if (length > static_cast<size_t>(outputSize))
 	{

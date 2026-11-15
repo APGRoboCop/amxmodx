@@ -80,10 +80,12 @@ void HamCommand()
 		{
 			for (size_t j = 0; j < hooks[i].length(); ++j)
 			{
-				HookCount++;
-				ForwardCount += hooks[i].at(j)->pre.length() + hooks[i].at(j)->post.length();
+				const Hook *hook = hooks[i].at(j); // avoids repeating hooks[i].at(j) (PVS V807) [APG]RoboCop[CL]
 
-				MF_PrintSrvConsole("%-24s | %-27s | %10d | %10d\n", hooklist[i].name, hooks[i].at(j)->ent, hooks[i].at(j)->pre.length(), hooks[i].at(j)->post.length());
+				HookCount++;
+				ForwardCount += hook->pre.length() + hook->post.length();
+
+				MF_PrintSrvConsole("%-24s | %-27s | %10d | %10d\n", hooklist[i].name, hook->ent, hook->pre.length(), hook->post.length());
 				if (count >= 5)
 				{
 					MF_PrintSrvConsole("--------------------------------------------------------------------------------\n");

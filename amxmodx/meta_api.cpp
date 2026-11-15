@@ -1685,12 +1685,12 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	if (amx_config.loadVault())
 	{
-		Vault::iterator	a =	amx_config.begin();
+		Vault::iterator iter = amx_config.begin(); // renamed from 'a', which hid the mod name 'a' above [APG]RoboCop[CL]
 
-		while (a != amx_config.end())
+		while (iter != amx_config.end())
 		{
-			SET_LOCALINFO(a.key().chars(), a.value().chars());
-			++a;
+			SET_LOCALINFO(iter.key().chars(), iter.value().chars());
+			++iter;
 		}
 		amx_config.clear();
 	}

@@ -54,7 +54,7 @@ edict_t *CPlayer::GetWeaponEdict() const
 	return nullptr;
 }
 
-edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcments) {
+edict_t *CreateWeapon(int id, const Vector &coord, short ttl, uint16_t clips, byte atcments) { // coord by const reference (PVS V813) [APG]RoboCop[CL]
 	edict_t *ent = CREATE_NAMED_ENTITY((string_t)MAKE_STRING("ts_groundweapon"));
 	if (FNullEnt(ent)) return nullptr;
 
@@ -94,7 +94,7 @@ edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcm
 	return ent;
 }
 
-edict_t *CreatePowerup(uint16_t type, Vector coord, short ttl) {
+edict_t *CreatePowerup(uint16_t type, const Vector &coord, short ttl) { // coord by const reference (PVS V813) [APG]RoboCop[CL]
 	edict_t *ent = CREATE_NAMED_ENTITY((string_t)MAKE_STRING("ts_powerup"));
 	if (FNullEnt(ent)) return nullptr;
 

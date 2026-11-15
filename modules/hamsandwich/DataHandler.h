@@ -96,8 +96,7 @@ public:
 	Data(int type, void *ptr, int *cptr) : m_data(ptr), m_index(cptr), m_type(type)
 	{ /* nothing */ }
 
-	~Data()
-	{ /* nothing */	}
+	~Data() = default; // was an empty body (PVS V832) [APG]RoboCop[CL]
 
 	int GetType() const
 	{

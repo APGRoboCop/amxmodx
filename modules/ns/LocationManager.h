@@ -61,13 +61,12 @@ public:
 		m_LocationList.append(Temp);
 	}
 
-	inline const char *Lookup(vec3_t origin, cell titlelookup)
+	inline const char *Lookup(const vec3_t &origin, cell titlelookup) // origin by const reference (PVS V813) [APG]RoboCop[CL]
 	{
 		unsigned int i=0;
-		location_data_t Temp;
 		while (i<m_LocationList.length())
 		{
-			Temp=m_LocationList[i++];
+			const location_data_t &Temp=m_LocationList[i++]; // reference instead of copying each entry [APG]RoboCop[CL]
 
 			if (origin.x <= Temp.maxs.x &&
 				origin.y <= Temp.maxs.y &&
